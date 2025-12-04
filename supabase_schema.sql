@@ -59,7 +59,15 @@ create or replace function public.handle_new_user()
 returns trigger as $$
 begin
   insert into public.profiles (id, email, full_name, role)
-  values (new.id, new.email, new.raw_user_meta_data->>'full_name', 'employee');
+  values (
+    new.id, 
+    new.email, 
+    new.raw_user_meta_data->>'full_name', 
+    case 
+      when new.email in ('ak@c4e.in', 'sg@c4e.in') then 'admin'
+      else 'employee'
+    end
+  );
   return new;
 end;
 $$ language plpgsql security definer;

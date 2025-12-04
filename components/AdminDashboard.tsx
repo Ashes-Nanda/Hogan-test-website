@@ -139,7 +139,10 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
               <span className="text-2xl font-oswald font-bold text-primary tracking-tight">CEREBRAL<span className="text-foreground">Q</span></span>
               <span className="ml-4 px-2 py-0.5 rounded-sm text-xs font-semibold bg-muted text-muted-foreground uppercase">Admin Console</span>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center gap-4">
+              <a href="/" className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm font-medium transition-colors">
+                <Activity size={16} /> Take Assessment
+              </a>
               <button onClick={onLogout} className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm font-medium transition-colors">
                 <LogOut size={16} /> Logout
               </button>
