@@ -1,4 +1,5 @@
-import { AnswerMap } from '../types';
+import { AnswerMap, Attempt } from '../types';
+import { supabase } from './supabaseClient';
 
 const STORAGE_KEY_ANSWERS = 'standalone_hogan_test_progress';
 const STORAGE_KEY_USER = 'standalone_hogan_user_session';
@@ -24,20 +25,19 @@ export const clearProgress = () => {
   localStorage.removeItem(STORAGE_KEY_ANSWERS);
 };
 
-export const saveUserSession = (email: string, token: string) => {
-  localStorage.setItem(STORAGE_KEY_USER, JSON.stringify({ email, token }));
-};
 
-export const loadUserSession = () => {
-  try {
-    const data = localStorage.getItem(STORAGE_KEY_USER);
-    return data ? JSON.parse(data) : null;
-  } catch (e) {
-    return null;
+
+export const saveAttempt = async (userId: string, attempt: Attempt) => {
+  const { error } = await supabase.from('attempts').insert({
+    user_id: userId,
+    attempt_number: attempt.number,
+    answers: attempt.answers,
+    result: attempt.result,
+    completed_at: attempt.completedAt
+  });
+
+  if (error) {
+    console.error('Error saving attempt:', error);
+    throw error;
   }
-};
-
-export const clearUserSession = () => {
-  localStorage.removeItem(STORAGE_KEY_USER);
-  clearProgress();
 };

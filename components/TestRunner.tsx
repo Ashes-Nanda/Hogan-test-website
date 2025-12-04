@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { AnswerMap } from '../types';
+import { AnswerMap, VisualScore } from '../types';
 import { MOCK_QUESTIONS, QUESTIONS_PER_PAGE } from '../constants';
 import { RadioLikertScale } from './RadioLikertScale';
 import { saveProgress } from '../services/storageService';
@@ -33,7 +33,7 @@ const LoadingOverlay = () => {
       <div className="relative mb-8">
         <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping"></div>
         <div className="bg-primary p-6 rounded-full shadow-2xl shadow-primary/40 relative z-10 animate-bounce-subtle">
-           <BrainCircuit size={64} className="text-primary-foreground" />
+          <BrainCircuit size={64} className="text-primary-foreground" />
         </div>
       </div>
       <h3 className="text-2xl font-oswald font-bold text-foreground mb-2">Processing Results</h3>
@@ -48,7 +48,7 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
   const [answers, setAnswers] = useState<AnswerMap>(initialAnswers);
   const [currentPage, setCurrentPage] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Refs to manage scrolling
   const questionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -65,18 +65,26 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
     (currentPage + 1) * QUESTIONS_PER_PAGE
   );
 
-  const handleAnswer = (qId: string, val: number, indexOnPage: number) => {
+  const handleAnswer = (qId: string, val: VisualScore, indexOnPage: number) => {
     setAnswers(prev => ({ ...prev, [qId]: val }));
 
     // Auto-scroll logic: Scroll to next question if available
     if (indexOnPage < currentQuestions.length - 1) {
-       setTimeout(() => {
-          const nextIndex = indexOnPage + 1;
-          const nextEl = questionRefs.current[nextIndex];
-          if (nextEl) {
-             nextEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-       }, 300);
+      setTimeout(() => {
+        const nextIndex = indexOnPage + 1;
+        const nextEl = questionRefs.current[nextIndex];
+        if (nextEl) {
+          // Scroll to the top of the next element with some offset for the sticky header
+          const headerOffset = 100;
+          const elementPosition = nextEl.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
+        }
+      }, 400); // Slightly longer delay for better UX
     }
   };
 
@@ -85,7 +93,10 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
   const handleNext = () => {
     if (currentPage < totalPages - 1) {
       setCurrentPage(prev => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Force scroll to top
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 50);
     } else {
       handleSubmit();
     }
@@ -94,7 +105,9 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
   const handleBack = () => {
     if (currentPage > 0) {
       setCurrentPage(prev => prev - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 50);
     }
   };
 
@@ -103,7 +116,7 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
     setTimeout(() => {
       const results = calculateScores(answers);
       onComplete(answers, results);
-    }, 4000); 
+    }, 4000);
   };
 
   if (isSubmitting) {
@@ -116,31 +129,31 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
       <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm transition-all duration-300">
         <div className="max-w-4xl mx-auto px-4 py-3 md:py-4">
           <div className="flex flex-col gap-3">
-             <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2 text-foreground">
-                  <div className="bg-primary/10 p-1.5 rounded-md">
-                    <BrainCircuit size={20} className="text-primary" />
-                  </div>
-                  <span className="font-oswald font-bold text-xl tracking-tight">CEREBRAL<span className="text-primary">Q</span></span>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2 text-foreground">
+                <div className="bg-primary/10 p-1.5 rounded-md">
+                  <BrainCircuit size={20} className="text-primary" />
                 </div>
-                <div className="flex items-center gap-4">
-                   <div className="text-right hidden sm:block">
-                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Completed</p>
-                      <p className="text-sm font-bold text-foreground font-mono">{answeredCount} / {MOCK_QUESTIONS.length}</p>
-                   </div>
-                   <div className="flex items-center justify-center bg-muted rounded-md px-3 py-1 border border-border">
-                      <span className="text-sm font-bold text-primary">{Math.round(progressPercent)}%</span>
-                   </div>
+                <span className="font-oswald font-bold text-xl tracking-tight">CEREBRAL<span className="text-primary">Q</span></span>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-right hidden sm:block">
+                  <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Completed</p>
+                  <p className="text-sm font-bold text-foreground font-mono">{answeredCount} / {MOCK_QUESTIONS.length}</p>
                 </div>
-             </div>
-             
-             {/* Progress Bar */}
-             <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
-                <div 
-                  className="bg-primary h-full transition-all duration-500 ease-out shadow-[0_0_10px_var(--primary)]"
-                  style={{ width: `${progressPercent}%` }}
-                />
-             </div>
+                <div className="flex items-center justify-center bg-muted rounded-md px-3 py-1 border border-border">
+                  <span className="text-sm font-bold text-primary">{Math.round(progressPercent)}%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+              <div
+                className="bg-primary h-full transition-all duration-500 ease-out shadow-[0_0_10px_var(--primary)]"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -148,8 +161,8 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
       <div className="flex-grow w-full max-w-4xl mx-auto px-4 md:px-0 pt-12">
         <div className="space-y-16">
           {currentQuestions.map((q, index) => (
-            <div 
-              key={q.id} 
+            <div
+              key={q.id}
               ref={(el) => { questionRefs.current[index] = el; }}
               className="animate-fade-in-up scroll-mt-32"
               style={{ animationDelay: `${index * 50}ms` }}
@@ -162,16 +175,16 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
                   {q.text}
                 </h3>
               </div>
-              
+
               <div className="bg-card rounded-lg p-4 sm:p-6 shadow-sm border border-border hover:shadow-md transition-shadow duration-300">
-                <RadioLikertScale 
-                  value={answers[q.id]} 
+                <RadioLikertScale
+                  value={answers[q.id]}
                   onChange={(val) => handleAnswer(q.id, val, index)}
                 />
               </div>
-              
+
               {index < currentQuestions.length - 1 && (
-                 <div className="w-16 h-1 rounded-full bg-border mx-auto mt-16" />
+                <div className="w-16 h-1 rounded-full bg-border mx-auto mt-16" />
               )}
             </div>
           ))}
@@ -201,18 +214,18 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
             onClick={handleNext}
             disabled={!canProceed || isSubmitting}
             className={`
-              flex items-center gap-2 px-8 py-2 rounded-md font-bold text-primary-foreground shadow-sm transition-all duration-200 transform
+              flex items-center gap-2 px-6 sm:px-8 py-2 rounded-md font-bold text-primary-foreground shadow-sm transition-all duration-200 transform
               ${!canProceed || isSubmitting
-                ? 'bg-muted text-muted-foreground cursor-not-allowed shadow-none' 
+                ? 'bg-muted text-muted-foreground cursor-not-allowed shadow-none'
                 : 'bg-primary hover:opacity-90 hover:-translate-y-1 active:translate-y-0'}
             `}
           >
             {isSubmitting ? (
-              <span className="flex items-center gap-2"><Loader2 className="animate-spin" size={20}/> Processing...</span>
+              <span className="flex items-center gap-2"><Loader2 className="animate-spin" size={20} /> Processing...</span>
             ) : currentPage === totalPages - 1 ? (
-              <>Finish Assessment <CheckCircle size={20} /></>
+              <>Finish <span className="hidden sm:inline">Assessment</span> <CheckCircle size={20} /></>
             ) : (
-              <>Next Page <ArrowRight size={20} /></>
+              <>Next <span className="hidden sm:inline">Page</span> <ArrowRight size={20} /></>
             )}
           </button>
         </div>

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, TestStatus, TestResult, DimensionScore } from '../types';
-import { MOCK_USERS } from '../constants';
-import { Download, Mail, Eye, UserPlus, LogOut, X, FileText, Activity } from 'lucide-react';
+import { supabase } from '../services/supabaseClient';
+import { Download, Mail, Eye, UserPlus, LogOut, X, FileText, Activity, Check, AlertCircle } from 'lucide-react';
 
 interface Props {
   onLogout: () => void;
@@ -9,36 +9,116 @@ interface Props {
 
 export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data: profiles, error: profilesError } = await supabase.from('profiles').select('*');
+        if (profilesError) throw profilesError;
+
+        const { data: attempts, error: attemptsError } = await supabase.from('attempts').select('*');
+        if (attemptsError) throw attemptsError;
+
+        const mappedUsers: User[] = profiles.map((p: any) => {
+          const userAttempts = attempts.filter((a: any) => a.user_id === p.id)
+            .sort((a: any, b: any) => new Date(a.completed_at).getTime() - new Date(b.completed_at).getTime())
+            .map((a: any) => ({
+              id: a.id,
+              number: a.attempt_number,
+              completedAt: a.completed_at,
+              answers: a.answers,
+              result: a.result
+            }));
+
+          return {
+            id: p.id,
+            email: p.email,
+            name: p.full_name || p.email,
+            status: userAttempts.length > 0 ? TestStatus.COMPLETED : TestStatus.PENDING,
+            token: 'admin-view',
+            attempts: userAttempts
+          };
+        });
+        setUsers(mappedUsers);
+      } catch (error) {
+        console.error('Error fetching admin data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const stats = {
-    total: MOCK_USERS.length - 1, // Exclude admin
-    completed: MOCK_USERS.filter(u => u.status === TestStatus.COMPLETED && u.email !== 'admin@acme.inc').length,
-    attempts: MOCK_USERS.reduce((acc, u) => acc + (u.attempts?.length || 0), 0),
-    pending: MOCK_USERS.filter(u => u.status === TestStatus.PENDING).length,
+    total: users.length,
+    completed: users.filter(u => u.status === TestStatus.COMPLETED).length,
+    attempts: users.reduce((acc, u) => acc + (u.attempts?.length || 0), 0),
+    pending: users.filter(u => u.status === TestStatus.PENDING).length,
   };
 
   const downloadCSV = (onlyOfficial: boolean) => {
-    let csv = "Email,Name,Status,Attempt_Num,Completed_At,HPI_Adj_Raw,HPI_Adj_Pct,Interpretation\n";
-    
-    MOCK_USERS.forEach(user => {
-      if (user.email === 'admin@acme.inc') return;
-      
+    // Define headers
+    const baseHeaders = ["Email", "Name", "Status", "Attempt_Num", "Completed_At", "Profile_Title", "Leadership_Potential", "Job_Fit", "Risk_Analysis"];
+
+    // Collect all unique keys dynamically
+    const allHpiKeys = new Set<string>();
+    const allHdsKeys = new Set<string>();
+    const allMvpiKeys = new Set<string>();
+
+    users.forEach(user => {
+      user.attempts.forEach(att => {
+        if (att.result.hpi) Object.keys(att.result.hpi).forEach(k => allHpiKeys.add(k));
+        if (att.result.hds) Object.keys(att.result.hds).forEach(k => allHdsKeys.add(k));
+        if (att.result.mvpi) Object.keys(att.result.mvpi).forEach(k => allMvpiKeys.add(k));
+      });
+    });
+
+    const hpiKeys = Array.from(allHpiKeys).sort();
+    const hdsKeys = Array.from(allHdsKeys).sort();
+    const mvpiKeys = Array.from(allMvpiKeys).sort();
+
+    const traitHeaders: string[] = [];
+    [...hpiKeys, ...hdsKeys, ...mvpiKeys].forEach(key => {
+      traitHeaders.push(`${key}_Raw`, `${key}_Pct`, `${key}_Int`);
+    });
+
+    let csv = [...baseHeaders, ...traitHeaders].join(",") + "\n";
+
+    users.forEach(user => {
+      if (user.email === 'admin@c4e.in') return; // Skip admin if needed
+
       const attemptsToExport = onlyOfficial ? user.attempts.slice(0, 1) : user.attempts;
-      
+
       attemptsToExport.forEach(att => {
-        // Simplified CSV row construction for demo
-        const adjScore = att.result.hpi['Adjustment'];
-        const row = [
+        const r = att.result;
+
+        // Base Data
+        const rowData = [
           user.email,
           user.name,
           user.status,
           att.number,
           att.completedAt,
-          adjScore?.raw || 0,
-          adjScore?.percentage || 0,
-          `"${adjScore?.interpretation || ''}"`
-        ].join(",");
-        csv += row + "\n";
+          `"${r.profileTitle}"`,
+          r.leadershipPotentialScore,
+          `"${r.jobFit.join('; ')}"`,
+          `"${r.riskAnalysis.join('; ')}"`
+        ];
+
+        // Trait Data
+        [...hpiKeys, ...hdsKeys, ...mvpiKeys].forEach(key => {
+          // Check HPI, HDS, MVPI
+          const score = r.hpi[key] || r.hds[key] || r.mvpi[key];
+          if (score) {
+            rowData.push(score.raw, score.percentage, `"${score.interpretation || ''}"`);
+          } else {
+            rowData.push(0, 0, "");
+          }
+        });
+
+        csv += rowData.join(",") + "\n";
       });
     });
 
@@ -93,23 +173,23 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
           <h2 className="text-xl font-oswald font-semibold text-foreground">Participants</h2>
           <div className="flex gap-3">
-             <button className="flex items-center gap-2 px-4 py-2 bg-card border border-input rounded-md text-sm font-medium text-foreground hover:bg-muted shadow-sm transition-colors">
+            <button className="flex items-center gap-2 px-4 py-2 bg-card border border-input rounded-md text-sm font-medium text-foreground hover:bg-muted shadow-sm transition-colors">
               <UserPlus size={16} /> Invite
             </button>
             <div className="flex rounded-md shadow-sm">
-                <button 
-                  onClick={() => downloadCSV(true)}
-                  className="px-4 py-2 bg-primary text-primary-foreground rounded-l-md text-sm font-medium hover:opacity-90 transition-colors border-r border-primary-foreground/20"
-                >
-                  Export Official
-                </button>
-                <button 
-                  onClick={() => downloadCSV(false)}
-                  className="px-3 py-2 bg-primary text-primary-foreground rounded-r-md text-sm font-medium hover:opacity-90 transition-colors"
-                  title="Export All Attempts"
-                >
-                  <Download size={16} />
-                </button>
+              <button
+                onClick={() => downloadCSV(true)}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-l-md text-sm font-medium hover:opacity-90 transition-colors border-r border-primary-foreground/20"
+              >
+                Export Official
+              </button>
+              <button
+                onClick={() => downloadCSV(false)}
+                className="px-3 py-2 bg-primary text-primary-foreground rounded-r-md text-sm font-medium hover:opacity-90 transition-colors"
+                title="Export All Attempts"
+              >
+                <Download size={16} />
+              </button>
             </div>
           </div>
         </div>
@@ -128,7 +208,9 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
                 </tr>
               </thead>
               <tbody className="bg-card divide-y divide-border">
-                {MOCK_USERS.filter(u => u.email !== 'admin@acme.inc').map((user) => (
+                {loading ? (
+                  <tr><td colSpan={5} className="px-6 py-4 text-center">Loading data...</td></tr>
+                ) : users.filter(u => u.email !== 'admin@c4e.in').map((user) => (
                   <tr key={user.email} className="hover:bg-muted/30 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -143,25 +225,25 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${user.status === 'COMPLETED' ? 'bg-green-100 text-green-800' : 
-                          user.status === 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-800' : 
-                          'bg-muted text-muted-foreground'}`}>
+                        ${user.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
+                          user.status === 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-muted text-muted-foreground'}`}>
                         {user.status.replace('_', ' ')}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground font-bold">
-                       {user.attempts.length}
+                      {user.attempts.length}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
-                      {user.attempts.length > 0 
-                        ? new Date(user.attempts[user.attempts.length-1].completedAt).toLocaleDateString() 
+                      {user.attempts.length > 0
+                        ? new Date(user.attempts[user.attempts.length - 1].completedAt).toLocaleDateString()
                         : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       {user.attempts.length > 0 ? (
-                        <button 
-                            onClick={() => setSelectedUser(user)}
-                            className="text-primary hover:text-primary/80 inline-flex items-center gap-1 bg-primary/5 px-3 py-1.5 rounded-md border border-primary/10"
+                        <button
+                          onClick={() => setSelectedUser(user)}
+                          className="text-primary hover:text-primary/80 inline-flex items-center gap-1 bg-primary/5 px-3 py-1.5 rounded-md border border-primary/10"
                         >
                           <Eye size={16} /> Details
                         </button>
@@ -182,61 +264,133 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
       {/* User Detail Modal */}
       {selectedUser && (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in-up">
-            <div className="bg-popover rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-border">
-                <div className="flex justify-between items-center p-6 border-b border-border bg-muted/30">
-                    <div>
-                        <h3 className="text-xl font-oswald font-bold text-foreground">{selectedUser.name}</h3>
-                        <p className="text-sm text-muted-foreground">{selectedUser.email}</p>
-                    </div>
-                    <button onClick={() => setSelectedUser(null)} className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground">
-                        <X size={24} />
-                    </button>
-                </div>
-                
-                <div className="p-6 overflow-y-auto bg-muted/10">
-                    <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">Attempt History</h4>
-                    <div className="space-y-6">
-                        {selectedUser.attempts.map((att) => (
-                            <div key={att.id} className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
-                                <div className="bg-muted/50 px-4 py-3 border-b border-border flex justify-between items-center">
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-bold text-foreground">Attempt #{att.number}</span>
-                                        {att.number === 1 && <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-sm border border-primary/20">OFFICIAL</span>}
-                                    </div>
-                                    <span className="text-xs text-muted-foreground">{new Date(att.completedAt).toLocaleString()}</span>
-                                </div>
-                                <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {/* HPI Summary for this attempt */}
-                                    <div className="col-span-2">
-                                        <p className="text-xs font-bold text-muted-foreground uppercase mb-2">Top Dimensions Analysis</p>
-                                        <div className="space-y-2">
-                                            {Object.entries(att.result.hpi).slice(0, 3).map(([key, val]) => {
-                                                const score = val as DimensionScore;
-                                                return (
-                                                  <div key={key} className="text-sm border-l-2 border-primary pl-3 py-1">
-                                                      <div className="flex justify-between">
-                                                          <span className="font-bold text-foreground">{key}</span>
-                                                          <span className="font-mono font-bold text-primary">{score.percentage}%</span>
-                                                      </div>
-                                                      <p className="text-muted-foreground text-xs mt-1 italic">{score.interpretation}</p>
-                                                  </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="p-4 border-t border-border flex justify-end gap-2 bg-card">
-                    <button onClick={() => setSelectedUser(null)} className="px-4 py-2 text-muted-foreground font-medium hover:bg-muted rounded-md transition-colors">Close</button>
-                    <button className="px-4 py-2 bg-primary text-primary-foreground font-bold rounded-md hover:opacity-90 shadow-sm flex items-center gap-2 transition-colors">
-                        <Download size={16}/> Download Report
-                    </button>
-                </div>
+          <div className="bg-popover rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col border border-border">
+            <div className="flex justify-between items-center p-6 border-b border-border bg-muted/30">
+              <div>
+                <h3 className="text-xl font-oswald font-bold text-foreground">{selectedUser.name}</h3>
+                <p className="text-sm text-muted-foreground">{selectedUser.email}</p>
+              </div>
+              <button onClick={() => setSelectedUser(null)} className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground">
+                <X size={24} />
+              </button>
             </div>
+
+            <div className="p-6 overflow-y-auto bg-muted/10">
+              <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">Attempt History</h4>
+              <div className="space-y-8">
+                {selectedUser.attempts.map((att) => (
+                  <div key={att.id} className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
+                    <div className="bg-muted/50 px-4 py-3 border-b border-border flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-foreground">Attempt #{att.number}</span>
+                        {att.number === 1 && <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-sm border border-primary/20">OFFICIAL</span>}
+                      </div>
+                      <span className="text-xs text-muted-foreground">{new Date(att.completedAt).toLocaleString()}</span>
+                    </div>
+
+                    <div className="p-6">
+                      {/* High Level Stats */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div className="bg-muted/20 p-3 rounded-md">
+                          <p className="text-xs text-muted-foreground uppercase">Profile Title</p>
+                          <p className="font-bold text-foreground">{att.result.profileTitle}</p>
+                        </div>
+                        <div className="bg-muted/20 p-3 rounded-md">
+                          <p className="text-xs text-muted-foreground uppercase">Leadership Potential</p>
+                          <p className="font-bold text-foreground">{att.result.leadershipPotentialScore}%</p>
+                        </div>
+                        <div className="bg-muted/20 p-3 rounded-md">
+                          <p className="text-xs text-muted-foreground uppercase">Risk Factors</p>
+                          <p className="font-bold text-foreground">{att.result.riskAnalysis.length > 0 ? att.result.riskAnalysis.length : 'None'}</p>
+                        </div>
+                      </div>
+
+                      {/* Detailed Scores */}
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* HPI */}
+                        <div>
+                          <h5 className="text-xs font-bold text-blue-600 uppercase mb-3 border-b border-blue-100 pb-1">HPI (Personality)</h5>
+                          <div className="space-y-3">
+                            {Object.entries(att.result.hpi).map(([key, val]) => (
+                              <div key={key} className="text-sm">
+                                <div className="flex justify-between mb-1">
+                                  <span className="font-medium">{key}</span>
+                                  <span className="font-bold">{val.percentage}%</span>
+                                </div>
+                                <div className="h-1.5 bg-blue-100 rounded-full overflow-hidden">
+                                  <div className="h-full bg-blue-500" style={{ width: `${val.percentage}%` }}></div>
+                                </div>
+                                <p className="text-[10px] text-muted-foreground mt-0.5">{val.interpretation}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* HDS */}
+                        <div>
+                          <h5 className="text-xs font-bold text-orange-600 uppercase mb-3 border-b border-orange-100 pb-1">HDS (Derailers)</h5>
+                          <div className="space-y-3">
+                            {Object.entries(att.result.hds).map(([key, val]) => (
+                              <div key={key} className="text-sm">
+                                <div className="flex justify-between mb-1">
+                                  <span className="font-medium">{key}</span>
+                                  <span className="font-bold">{val.percentage}%</span>
+                                </div>
+                                <div className="h-1.5 bg-orange-100 rounded-full overflow-hidden">
+                                  <div className="h-full bg-orange-500" style={{ width: `${val.percentage}%` }}></div>
+                                </div>
+                                <p className="text-[10px] text-muted-foreground mt-0.5">{val.interpretation}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* MVPI */}
+                        <div>
+                          <h5 className="text-xs font-bold text-green-600 uppercase mb-3 border-b border-green-100 pb-1">MVPI (Values)</h5>
+                          <div className="space-y-3">
+                            {Object.entries(att.result.mvpi).map(([key, val]) => (
+                              <div key={key} className="text-sm">
+                                <div className="flex justify-between mb-1">
+                                  <span className="font-medium">{key}</span>
+                                  <span className="font-bold">{val.percentage}%</span>
+                                </div>
+                                <div className="h-1.5 bg-green-100 rounded-full overflow-hidden">
+                                  <div className="h-full bg-green-500" style={{ width: `${val.percentage}%` }}></div>
+                                </div>
+                                <p className="text-[10px] text-muted-foreground mt-0.5">{val.interpretation}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Raw Answers (Collapsible or Scrollable) */}
+                      <div className="mt-6 pt-4 border-t border-border">
+                        <details className="group">
+                          <summary className="flex items-center gap-2 text-sm font-bold text-muted-foreground cursor-pointer hover:text-foreground">
+                            <FileText size={16} /> View Raw Answers
+                          </summary>
+                          <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2 text-xs max-h-40 overflow-y-auto p-2 bg-muted/30 rounded-md">
+                            {Object.entries(att.answers).map(([qid, score]) => (
+                              <div key={qid} className="flex justify-between p-1 border-b border-border/50">
+                                <span className="text-muted-foreground">{qid}</span>
+                                <span className="font-mono font-bold">{score}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </details>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-border flex justify-end gap-2 bg-card">
+              <button onClick={() => setSelectedUser(null)} className="px-4 py-2 text-muted-foreground font-medium hover:bg-muted rounded-md transition-colors">Close</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -61,7 +61,9 @@ export interface Attempt {
 }
 
 export interface User {
+  id: string; // Supabase UUID
   email: string;
+  role?: 'employee' | 'admin';
   name: string;
   passwordHash?: string; // Simulated
   status: TestStatus;
