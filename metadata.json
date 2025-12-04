@@ -1,0 +1,5 @@
+{
+  "name": "Hogan Assessment Platform",
+  "description": "A standalone, white-label enterprise assessment platform replicating the Hogan Personality Assessment logic with secure invite management and raw scoring.",
+  "requestFramePermissions": []
+}
