@@ -2,6 +2,7 @@ import React from 'react';
 import { Star, Download, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/ui/GlassCard';
+import { CircularProgress } from '@/components/ui/CircularProgress';
 
 interface HoganHeroSectionProps {
     hpiScores: any;
@@ -44,26 +45,50 @@ export const HoganHeroSection: React.FC<HoganHeroSectionProps> = ({ hpiScores, h
                     Prepared exclusively for <span className="font-semibold text-white">{firstname || 'User'}</span>
                 </p>
 
-                <div className="flex flex-wrap justify-center gap-4 w-full max-w-5xl">
-                    {topHpi.map(([name, score]) => (
-                        <div key={name} className="flex-1 min-w-[120px] max-w-[200px]">
-                            <GlassCard className="p-3 md:p-4 flex flex-col items-center cursor-default h-full justify-center bg-white/10 border-white/20">
-                                <div className="mb-2 p-2 rounded-full bg-white/10">
-                                    <Star size={16} className="text-white" />
+
+
+                <div className="flex flex-wrap justify-center gap-6 w-full max-w-5xl">
+                    {topHpi.map(([name, score], index) => (
+                        <motion.div
+                            key={name}
+                            className="flex-1 min-w-[140px] max-w-[200px]"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 + index * 0.1 }}
+                            whileHover={{ y: -5, scale: 1.05 }}
+                        >
+                            <GlassCard className="p-4 flex flex-col items-center cursor-default h-full justify-center bg-white/10 border-white/20 hover:bg-white/20 transition-colors duration-300 group">
+                                <div className="mb-3 relative">
+                                    <CircularProgress
+                                        value={score.percentage}
+                                        size={80}
+                                        strokeWidth={6}
+                                        color="#ffffff"
+                                        trackColor="rgba(255,255,255,0.15)"
+                                    >
+                                        <div className="flex flex-col items-center justify-center">
+                                            <span className="text-xl font-oswald font-bold text-white leading-none">
+                                                {score.percentage}<span className="text-xs align-top">%</span>
+                                            </span>
+                                        </div>
+                                    </CircularProgress>
+
+                                    {/* Glow effect behind circle */}
+                                    <div className="absolute inset-0 bg-white/20 blur-xl rounded-full opacity-0 group-hover:opacity-50 transition-opacity duration-500" />
                                 </div>
-                                <span className="text-3xl md:text-4xl font-oswald font-bold mb-1 text-white">{score.percentage}%</span>
-                                <span className="text-[10px] md:text-xs uppercase tracking-wider font-medium opacity-90 text-white/80">{name}</span>
+
+                                <div className="flex flex-col items-center gap-1">
+                                    <span className="text-xs uppercase tracking-wider font-bold text-white/90 text-center">{name}</span>
+                                    <div className="h-0.5 w-0 bg-white/50 group-hover:w-8 transition-all duration-300 rounded-full" />
+                                </div>
                             </GlassCard>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
 
-                <div className="mt-12 flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">
+                <div className="mt-12 flex justify-center w-full px-4 sm:px-0">
                     <button onClick={onDownload} className="bg-white text-indigo-900 px-8 py-3 rounded-full font-bold hover:bg-indigo-50 transition-colors shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto">
                         <Download size={18} /> Download PDF
-                    </button>
-                    <button className="bg-transparent border border-white/30 text-white px-8 py-3 rounded-full font-bold hover:bg-white/10 transition-colors flex items-center justify-center gap-2 w-full sm:w-auto">
-                        <Share2 size={18} /> Share Results
                     </button>
                 </div>
             </div>

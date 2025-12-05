@@ -2,6 +2,7 @@ import React from 'react';
 import { Lightbulb, Zap, AlertTriangle } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { motion } from 'framer-motion';
+import { getPersonalExample } from '@/lib/utils/report-content-generator';
 
 interface PersonalExamplesSectionProps {
     traitScores: any;
@@ -34,9 +35,9 @@ export const PersonalExamplesSection: React.FC<PersonalExamplesSectionProps> = (
                                     <h4 className="font-bold text-lg text-foreground">High {trait}</h4>
                                     <span className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded uppercase tracking-wider">Strength</span>
                                 </div>
+
                                 <p className="text-muted-foreground text-sm leading-relaxed">
-                                    Because you scored high in {trait}, you likely {score.interpretation?.toLowerCase() || 'exhibit strong traits'}.
-                                    For example, in a team meeting, you might be the one who ensures everyone is heard or drives the agenda forward efficiently.
+                                    {getPersonalExample(trait, true) || `Because you scored high in ${trait}, you likely exhibit strong traits.`}
                                 </p>
                             </motion.div>
                         ))}
@@ -57,8 +58,7 @@ export const PersonalExamplesSection: React.FC<PersonalExamplesSectionProps> = (
                                     <span className="px-2 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded uppercase tracking-wider">Risk Area</span>
                                 </div>
                                 <p className="text-muted-foreground text-sm leading-relaxed">
-                                    A lower score in {trait} suggests you might {score.interpretation?.toLowerCase() || 'struggle with this area'}.
-                                    In high-pressure situations, you might prefer to work independently rather than seek immediate collaboration.
+                                    {getPersonalExample(trait, false) || `A lower score in ${trait} suggests you might struggle with this area.`}
                                 </p>
                             </motion.div>
                         ))}

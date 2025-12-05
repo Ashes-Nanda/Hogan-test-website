@@ -7,7 +7,7 @@ export function calculateHogan(
   questionsData: TestQuestionsData
 ): HoganCalculatedResult {
   const questions = questionsData.questions;
-  
+
   // Initialize HPI scores
   const hpiScores: HPITraitScores = {
     adjustment: { score: 0, total: 0, percentage: 0 },
@@ -58,7 +58,7 @@ export function calculateHogan(
   Object.values(answers).forEach((answer) => {
     const dimension = answer.dimension;
     const selectedValue = answer.selectedValue;
-    
+
     // Convert selectedValue to numeric score (Hogan uses "1", "2", "4", "5")
     let score = 0;
     switch (selectedValue) {
@@ -68,14 +68,14 @@ export function calculateHogan(
       case "2": // Disagree
         score = 2;
         break;
-      case "4": // Agree
+      case "3": // Agree
         score = 4;
         break;
-      case "5": // Strongly Agree
+      case "4": // Strongly Agree
         score = 5;
         break;
       default:
-        score = 2; // Default to neutral if invalid value
+        score = 2; // Default to neutral/disagree if invalid value
     }
 
     // Add to appropriate dimension
@@ -94,7 +94,7 @@ export function calculateHogan(
     const count = dimensionCounts[dimension] || 0;
     hpiScores[dimension].total = count * 5; // Hogan uses 1-5 scale
     // Prevent division by zero - if no answers, percentage is 0
-    hpiScores[dimension].percentage = count > 0 
+    hpiScores[dimension].percentage = count > 0
       ? Math.round((hpiScores[dimension].score / hpiScores[dimension].total) * 100)
       : 0;
   });
@@ -121,19 +121,19 @@ export function calculateHogan(
 
   // Generate HPI Profile
   const hpiProfile = generateHPIProfile(hpiScores);
-  
+
   // Generate HDS Risk Areas
   const hdsRiskAreas = generateHDSRiskAreas(hdsScores);
-  
+
   // Generate MVPI Top Values
   const mvpiTopValues = generateMVPITopValues(mvpiScores);
-  
+
   // Generate Overall Hogan Profile
   const hoganProfile = generateHoganProfile(hpiScores, hdsScores, mvpiScores);
-  
+
   // Calculate Leadership Potential
   const leadershipPotential = calculateLeadershipPotential(hpiScores, hdsScores);
-  
+
   // Generate Job Fit Recommendations
   const jobFit = generateJobFitRecommendations(hpiScores, hdsScores, mvpiScores);
 
@@ -152,7 +152,7 @@ export function calculateHogan(
 
 function generateHPIProfile(hpiScores: HPITraitScores): string {
   const traits = Object.entries(hpiScores)
-    .sort(([,a], [,b]) => b.percentage - a.percentage)
+    .sort(([, a], [, b]) => b.percentage - a.percentage)
     .slice(0, 3)
     .map(([trait, scores]) => ({
       trait: trait.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
@@ -181,31 +181,31 @@ function generateHDSRiskAreas(hdsScores: HDSTraitScores): string[] {
     return ["No significant risk areas identified"];
   }
 
-  return riskAreas.map(area => 
+  return riskAreas.map(area =>
     `${area.trait} tendencies (${area.percentage}%) - May need attention in high-stress situations`
   );
 }
 
 function generateMVPITopValues(mvpiScores: MVPITraitScores): string[] {
   return Object.entries(mvpiScores)
-    .sort(([,a], [,b]) => b.percentage - a.percentage)
+    .sort(([, a], [, b]) => b.percentage - a.percentage)
     .slice(0, 3)
-    .map(([value, scores]) => 
+    .map(([value, scores]) =>
       `${value.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} (${scores.percentage}%)`
     );
 }
 
 function generateHoganProfile(hpiScores: HPITraitScores, hdsScores: HDSTraitScores, mvpiScores: MVPITraitScores): string {
   const topHPI = Object.entries(hpiScores)
-    .sort(([,a], [,b]) => b.percentage - a.percentage)[0];
-  
+    .sort(([, a], [, b]) => b.percentage - a.percentage)[0];
+
   const topMVPI = Object.entries(mvpiScores)
-    .sort(([,a], [,b]) => b.percentage - a.percentage)[0];
-  
+    .sort(([, a], [, b]) => b.percentage - a.percentage)[0];
+
   const riskCount = Object.values(hdsScores).filter(scores => scores.percentage >= 70).length;
-  
+
   let profile = `Your Hogan profile shows strong ${topHPI[0].replace(/_/g, ' ')} tendencies with ${topMVPI[0].replace(/_/g, ' ')} as your primary motivator.`;
-  
+
   if (riskCount === 0) {
     profile += " You demonstrate excellent emotional stability with no significant risk areas.";
   } else if (riskCount <= 2) {
@@ -213,7 +213,7 @@ function generateHoganProfile(hpiScores: HPITraitScores, hdsScores: HDSTraitScor
   } else {
     profile += " You may benefit from developing strategies to manage stress and emotional responses.";
   }
-  
+
   return profile;
 }
 
@@ -225,50 +225,50 @@ function calculateLeadershipPotential(hpiScores: HPITraitScores, hdsScores: HDST
     hpiScores.adjustment.percentage,
     hpiScores.prudence.percentage
   ];
-  
+
   const avgLeadership = leadershipTraits.reduce((sum, score) => sum + score, 0) / leadershipTraits.length;
-  
+
   // Reduce for high HDS risk scores
   const riskPenalty = Object.values(hdsScores)
     .filter(scores => scores.percentage >= 70)
     .length * 5;
-  
+
   return Math.max(0, Math.min(100, Math.round(avgLeadership - riskPenalty)));
 }
 
 function generateJobFitRecommendations(hpiScores: HPITraitScores, hdsScores: HDSTraitScores, mvpiScores: MVPITraitScores): string[] {
   const recommendations: string[] = [];
-  
+
   // Based on HPI scores
   if (hpiScores.ambition.percentage >= 70) {
     recommendations.push("Leadership roles", "Management positions", "Entrepreneurship");
   }
-  
+
   if (hpiScores.sociability.percentage >= 70) {
     recommendations.push("Sales", "Marketing", "Public relations", "Customer service");
   }
-  
+
   if (hpiScores.inquisitiveness.percentage >= 70) {
     recommendations.push("Research", "Analysis", "Consulting", "Education");
   }
-  
+
   if (hpiScores.prudence.percentage >= 70) {
     recommendations.push("Accounting", "Finance", "Quality assurance", "Project management");
   }
-  
+
   // Based on MVPI scores
   if (mvpiScores.aesthetic.percentage >= 70) {
     recommendations.push("Design", "Arts", "Creative industries");
   }
-  
+
   if (mvpiScores.commercial.percentage >= 70) {
     recommendations.push("Business development", "Investment", "Trading");
   }
-  
+
   if (mvpiScores.scientific.percentage >= 70) {
     recommendations.push("Science", "Technology", "Engineering", "Medicine");
   }
-  
+
   // Remove duplicates and return top 5
   return Array.from(new Set(recommendations)).slice(0, 5);
 }

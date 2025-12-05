@@ -58,7 +58,7 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
     pending: users.filter(u => u.status === TestStatus.PENDING).length,
   };
 
-  const downloadCSV = (onlyOfficial: boolean) => {
+  const downloadCSV = (onlyOfficial: boolean, targetUser?: User) => {
     // Define headers
     const baseHeaders = ["Email", "Name", "Status", "Attempt_Num", "Completed_At", "Profile_Title", "Leadership_Potential", "Job_Fit", "Risk_Analysis"];
 
@@ -67,7 +67,10 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
     const allHdsKeys = new Set<string>();
     const allMvpiKeys = new Set<string>();
 
-    users.forEach(user => {
+    // Determine which users to process
+    const usersToProcess = targetUser ? [targetUser] : users;
+
+    usersToProcess.forEach(user => {
       user.attempts.forEach(att => {
         if (att.result.hpi) Object.keys(att.result.hpi).forEach(k => allHpiKeys.add(k));
         if (att.result.hds) Object.keys(att.result.hds).forEach(k => allHdsKeys.add(k));
@@ -86,7 +89,7 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
 
     let csv = [...baseHeaders, ...traitHeaders].join(",") + "\n";
 
-    users.forEach(user => {
+    usersToProcess.forEach(user => {
       if (user.email === 'admin@c4e.in') return; // Skip admin if needed
 
       const attemptsToExport = onlyOfficial ? user.attempts.slice(0, 1) : user.attempts;
@@ -126,7 +129,13 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `hogan_export_${onlyOfficial ? 'official' : 'all'}.csv`;
+
+    // Dynamic filename
+    const filename = targetUser
+      ? `hogan_export_${targetUser.name.replace(/\s+/g, '_')}.csv`
+      : `hogan_export_${onlyOfficial ? 'official' : 'all'}.csv`;
+
+    a.download = filename;
     a.click();
   };
 
@@ -244,12 +253,21 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       {user.attempts.length > 0 ? (
-                        <button
-                          onClick={() => setSelectedUser(user)}
-                          className="text-primary hover:text-primary/80 inline-flex items-center gap-1 bg-primary/5 px-3 py-1.5 rounded-md border border-primary/10"
-                        >
-                          <Eye size={16} /> Details
-                        </button>
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => downloadCSV(false, user)}
+                            className="text-muted-foreground hover:text-primary p-1.5 rounded-md hover:bg-muted transition-colors"
+                            title="Download CSV"
+                          >
+                            <Download size={16} />
+                          </button>
+                          <button
+                            onClick={() => setSelectedUser(user)}
+                            className="text-primary hover:text-primary/80 inline-flex items-center gap-1 bg-primary/5 px-3 py-1.5 rounded-md border border-primary/10"
+                          >
+                            <Eye size={16} /> Details
+                          </button>
+                        </div>
                       ) : (
                         <button className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
                           <Mail size={16} /> Resend

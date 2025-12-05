@@ -225,7 +225,7 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
             ) : currentPage === totalPages - 1 ? (
               <>Finish <span className="hidden sm:inline">Assessment</span> <CheckCircle size={20} /></>
             ) : (
-              <>Next <span className="hidden sm:inline">Page</span> <ArrowRight size={20} /></>
+              <>Continue <ArrowRight size={20} /></>
             )}
           </button>
         </div>

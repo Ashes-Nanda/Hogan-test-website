@@ -55,7 +55,7 @@ export const ValuesMotivatorSection: React.FC<ValuesMotivatorSectionProps> = ({ 
                         {valuesAndMotivators.motivators.map((motivator, idx) => (
                             <div key={idx} className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm border border-border">
                                 <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold">
-                                    {String.fromCharCode(65 + idx)}
+                                    {idx + 1}
                                 </div>
                                 <span className="font-medium text-foreground text-lg">{motivator.title}</span>
                             </div>

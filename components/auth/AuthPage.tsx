@@ -180,6 +180,7 @@ export const AuthPage: React.FC = () => {
 
                                 <div className="bg-white/50 p-3 rounded text-xs font-mono text-muted-foreground">
                                     <p><strong>Diagnostics:</strong></p>
+                                    <p>Mode: {import.meta.env.DEV ? 'Development (Proxy)' : 'Production'}</p>
                                     <p>URL: {import.meta.env.VITE_SUPABASE_URL?.slice(0, 20)}...</p>
                                     <p>Status: {loading ? 'Checking...' : 'Failed'}</p>
                                     <div className="flex gap-2 mt-2">

@@ -1,25 +1,17 @@
 import { Question, User, TestStatus } from './types';
 
 // Visual to Logical Mapping
-// PRD: Visual 4 (Neutral) -> Logical 3 (Not scored) - Wait, PRD says "4 3 (Neutral – not scored)"
-// But user said "follow the prd".
-// PRD Table:
-// Visual	Logical
-// 1	1 (SD)
-// 2	2 (D)
-// 3	2 (D)
-// 4	3 (Neutral – not scored)
-// 5	4 (A)
-// 6	4 (A)
-// 7	5 (SA)
+// Visual to Logical Mapping
+// 4-point Likert Scale (SD to SA)
+// Visual 1 (SD) -> Logical 1
+// Visual 2 (D)  -> Logical 2
+// Visual 3 (A)  -> Logical 4
+// Visual 4 (SA) -> Logical 5
 export const VISUAL_TO_LOGICAL_MAP: Record<number, number> = {
-  1: 1,
-  2: 2,
-  3: 2,
-  4: 3, // Neutral
-  5: 4,
-  6: 4,
-  7: 5
+  1: 1, // SD
+  2: 2, // D
+  3: 4, // A
+  4: 5  // SA
 };
 
 export const TOTAL_QUESTIONS = 76;

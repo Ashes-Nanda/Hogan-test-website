@@ -5,27 +5,32 @@ import { HoganResultData } from "@/types/tests/hogan/results";
 import { HoganHeroSection } from "./HoganHeroSection";
 import { HoganIntroductionSection } from "./sections/HoganIntroductionSection";
 import { ExecutiveSummary } from "@/components/results/report/shared/ExecutiveSummary";
-import { ConfidenceScore } from "@/components/results/report/shared/ConfidenceScore";
+import { ConfidenceAndFamousSection } from "@/components/results/report/shared/ConfidenceAndFamousSection";
 import { PersonalExamplesSection } from "@/components/results/report/shared/sections/PersonalExamplesSection";
 import { HoganTraitsSection } from "./sections/HoganTraitsSection";
 import { CareerPathSection } from "@/components/results/report/shared/sections/CareerPathSection";
 import { RelationshipSection } from "@/components/results/report/shared/sections/RelationshipSection";
 import { GrowthSection } from "@/components/results/report/shared/sections/GrowthSection";
-import { DailyHabitsSection } from "@/components/results/report/shared/sections/DailyHabitsSection";
+
 import ValuesMotivatorSection from "@/components/results/report/shared/sections/ValuesMotivatorsSection";
 import ActionPlanSection from "./sections/ActionPlanSection";
 import { ReflectionPrompt } from "@/components/results/report/shared/ReflectionPrompt";
 import { LazySection } from "@/components/results/report/shared/LazySection";
 import { MobileBottomNav } from "@/components/results/report/shared/MobileBottomNav";
-import { FamousPeopleSection } from "@/components/results/report/mbti/FamousPeopleSection";
 import { VideoContentSection } from "@/components/results/report/mbti/VideoContentSection";
 import { RelatedResourcesSection } from "@/components/results/report/mbti/RelatedResourcesSection";
 import { TestimonialsCarousel } from "@/components/results/report/shared/SocialProof";
 import { GoalTrackingSystem } from "@/components/results/report/shared/GoalTrackingSystem";
-import CommunitySection from "@/components/results/report/shared/sections/CommunitySection";
+
 import { generateExecutiveSummary } from "@/lib/generate-executive-summary";
 import { calculateConfidenceScore } from "@/lib/calculate-confidence";
 import { convertHoganScoresToMBTIFormat } from "@/lib/utils/hogan-score-converter";
+import {
+  generateRelationshipInsights,
+  generateGrowthJourney,
+  generateValuesActionItems,
+  generateCareerActionSteps
+} from "@/lib/utils/report-content-generator";
 
 import { generateHoganPDF } from "@/lib/generate-hogan-pdf";
 
@@ -90,16 +95,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
         description: `With ${resultData.leadershipPotential}% leadership potential, you are driven to influence and lead others.`
       }
     ],
-    actionItems: [
-      {
-        number: 1,
-        description: "Focus on roles that align with your top values and motivations."
-      },
-      {
-        number: 2,
-        description: "Develop strategies to manage any identified risk areas."
-      }
-    ]
+    actionItems: generateValuesActionItems(resultData.mvpiTopValues || [])
   }), [resultData]);
 
   const careerData = React.useMemo(() => ({
@@ -120,20 +116,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
         description: "Focus on areas identified in your Hogan assessment for continued professional growth."
       }
     ],
-    actionSteps: [
-      {
-        number: 1,
-        description: "Review your Hogan profile insights regularly"
-      },
-      {
-        number: 2,
-        description: "Seek roles that align with your identified strengths"
-      },
-      {
-        number: 3,
-        description: "Work on areas for improvement identified in your assessment"
-      }
-    ],
+    actionSteps: generateCareerActionSteps(resultData.jobFit || []),
     suggestions: resultData.jobFit ? resultData.jobFit.slice(0, 5).map((role, index) => ({
       title: role,
       description: `This role aligns well with your Hogan personality profile and professional strengths.`,
@@ -151,48 +134,18 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
     })) : []
   }), [resultData]);
 
-  const dailyHabitsData = React.useMemo(() => ({
-    summary: "Build daily habits that align with your Hogan profile strengths and support your professional goals.",
-    habits: {
-      morning: {
-        title: "Morning Routine",
-        description: "Start your day with activities that align with your Hogan profile strengths."
-      },
-      afternoon: {
-        title: "Afternoon Focus",
-        description: "Maintain energy and focus during the afternoon hours."
-      },
-      evening: {
-        title: "Evening Reflection",
-        description: "End your day with reflection and preparation for tomorrow."
-      }
-    },
-    communication: {
-      summary: "Your communication style is professional and results-oriented.",
-      tips: []
-    }
-  }), []);
 
-  const communityData = React.useMemo(() => ({
-    summary: "Connect with professionals who share your Hogan profile and workplace behavioral patterns.",
-    suggestions: [
-      "Join professional development discussions",
-      "Connect with others who share your behavioral profile",
-      "Share workplace insights and strategies",
-      "Learn from others' career experiences"
-    ]
-  }), []);
+
+
 
   const handleDownload = () => {
     generateHoganPDF({
       resultData,
       executiveSummary,
-      confidenceScore,
+      confidenceScore: confidenceScore?.score || 0,
       convertedScores,
       valuesAndMotivators,
-      career: careerData,
-      dailyHabits: dailyHabitsData,
-      communityConnection: communityData
+      career: careerData
     });
   };
 
@@ -254,28 +207,32 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           </div>
         )}
 
-        {/* Executive Summary & Confidence Score */}
-        <div className="mbti-section-spacing grid grid-cols-1 md:grid-cols-2 gap-6 print:block print:space-y-6 print-break-inside-avoid">
-          {executiveSummary && (
-            <div className="print:mb-6">
-              <ExecutiveSummary
-                summary={executiveSummary}
-                personalityType={resultData.hoganProfile}
-                firstname={resultData?.firstname ?? undefined}
-                sectionNumber={1}
-              />
-            </div>
+        {/* Confidence Score & Famous People - Unified Card */}
+        <div className="mb-16 print-break-inside-avoid">
+          {confidenceScore !== null && (
+            <ConfidenceAndFamousSection
+              confidenceScore={confidenceScore.score}
+              reason={confidenceScore.reason}
+              personalityType={resultData.hoganProfile}
+            />
           )}
+        </div>
 
-          {/* Confidence Score */}
-          {confidenceScore && (
-            <div className="h-full print:h-auto">
-              <ConfidenceScore
-                confidenceScore={confidenceScore}
-                personalityType={resultData.hoganProfile}
-              />
-            </div>
-          )}
+        {/* Hogan Traits - Interactive Visualization */}
+        <div className="mbti-section-spacing print-break-before">
+          <HoganTraitsSection
+            hpiScores={resultData.hpiScores}
+            hdsScores={resultData.hdsScores}
+            mvpiScores={resultData.mvpiScores}
+            hpiProfile={resultData.hpiProfile}
+            hdsRiskAreas={resultData.hdsRiskAreas}
+            mvpiTopValues={resultData.mvpiTopValues}
+            sectionNumber={1}
+            firstname={resultData?.firstname ?? undefined}
+            id="explore-traits"
+            isPaidUser={isPaidUser}
+            testType="hogan"
+          />
         </div>
 
         {/* Personal Examples - How Test Answers Led to Results */}
@@ -289,40 +246,13 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           </div>
         )}
 
-        {/* Hogan Traits - Interactive Visualization */}
-        <div className="mbti-section-spacing print-break-before">
-          <HoganTraitsSection
-            hpiScores={resultData.hpiScores}
-            hdsScores={resultData.hdsScores}
-            mvpiScores={resultData.mvpiScores}
-            hpiProfile={resultData.hpiProfile}
-            hdsRiskAreas={resultData.hdsRiskAreas}
-            mvpiTopValues={resultData.mvpiTopValues}
-            sectionNumber={2}
-            firstname={resultData?.firstname ?? undefined}
-            id="explore-traits"
-            isPaidUser={isPaidUser}
-            testType="hogan"
-          />
-        </div>
-
-        {/* Reflection Prompt */}
-        <div className="max-w-4xl mx-auto px-4 print-break-inside-avoid">
-          <ReflectionPrompt
-            question="How do you see your Hogan personality profile showing up in your professional life?"
-            promptId="traits-reflection-hogan-full"
-            sectionId="traits"
-            placeholder="Share your thoughts on how these traits influence your work and leadership style..."
-          />
-        </div>
-
         {/* Values & Motivators */}
         <div className="mbti-section-spacing print-break-before">
           <ValuesMotivatorSection
             firstname={resultData?.firstname || null}
             valuesAndMotivators={valuesAndMotivators}
             personalityType={resultData.hoganProfile}
-            sectionNumber={4}
+            sectionNumber={3}
             id="values-motivators"
             isPaidUser={isPaidUser}
             testType="hogan"
@@ -337,28 +267,22 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               career={careerData}
               personalityType={resultData.hoganProfile}
               testType="hogan"
-              sectionNumber={5}
+              sectionNumber={4}
               id="career-path"
               isPaidUser={isPaidUser}
             />
           </LazySection>
         </div>
 
+
+
         {/* Relationship Insights - Lazy loaded */}
         <div className="mbti-section-spacing print-break-before">
           <LazySection>
             <RelationshipSection
               firstname={resultData?.firstname || null}
-              relationships={[{
-                title: "Relationships",
-                subtitle: "Your Hogan profile influences how you interact",
-                description: "Your Hogan profile influences how you interact and build relationships in professional settings.",
-                compatibleTypes: [],
-                superpowers: [],
-                growthAreas: [],
-                actionSteps: []
-              }]}
-              sectionNumber={6}
+              relationships={generateRelationshipInsights(resultData)}
+              sectionNumber={5}
               id="relationships"
               isPaidUser={isPaidUser}
               testType="hogan"
@@ -371,14 +295,8 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           <LazySection>
             <GrowthSection
               firstname={resultData?.firstname || null}
-              growth={{
-                summary: "Your Hogan assessment provides a roadmap for professional development and personal growth.",
-                superpowers: [],
-                growthAreas: [],
-                actionSteps: []
-              }}
-              personalityType={resultData.hoganProfile}
-              sectionNumber={8}
+              growth={generateGrowthJourney(resultData)}
+              sectionNumber={6}
               id="growth-journey"
               isPaidUser={isPaidUser}
               testType="hogan"
@@ -386,36 +304,9 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           </LazySection>
         </div>
 
-        {/* Daily Habits - Lazy loaded */}
-        <div className="mbti-section-spacing print-break-before">
-          <LazySection>
-            <DailyHabitsSection
-              firstname={resultData?.firstname || null}
-              dailyHabits={dailyHabitsData}
-              personalityType={resultData.hoganProfile}
-              sectionNumber={9}
-              id="daily-habits"
-              isPaidUser={isPaidUser}
-              testType="hogan"
-            />
-          </LazySection>
-        </div>
 
-        {/* Community Connection - Lazy loaded */}
-        <div className="mbti-section-spacing print-break-inside-avoid">
-          <LazySection>
-            <CommunitySection
-              firstname={resultData?.firstname || null}
-              communityConnection={communityData}
-              sectionNumber={10}
-              id="community"
-              personalityType={resultData.hoganProfile || "Hogan Profile"}
-              isPaidUser={isPaidUser}
-              userEmail={userEmail}
-              testType="hogan"
-            />
-          </LazySection>
-        </div>
+
+
 
         {/* Action Plan - Lazy loaded */}
         <div className="mbti-section-spacing print-break-before">
@@ -425,39 +316,15 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               firstname={resultData?.firstname || null}
               resultData={resultData}
               hoganProfile={resultData.hoganProfile}
-              sectionNumber={11}
+              sectionNumber={9}
               id="action-plan"
             />
           </LazySection>
         </div>
 
-        {/* Goal Tracking System - Apply your action plan */}
-        <div className="print-break-inside-avoid">
-          <GoalTrackingSystem
-            personalityType={resultData.hoganProfile}
-            userId={userId}
-          />
-        </div>
 
-        {/* Famous People Section - You're in good company */}
-        <div className="print-break-inside-avoid">
-          <FamousPeopleSection personalityType={resultData.hoganProfile} />
-        </div>
 
-        {/* Video Content Section - Learn visually */}
-        <div className="no-print">
-          <VideoContentSection personalityType={resultData.hoganProfile} />
-        </div>
 
-        {/* Related Resources - Continue learning */}
-        <div className="no-print">
-          <RelatedResourcesSection personalityType={resultData.hoganProfile} />
-        </div>
-
-        {/* Testimonials - Social proof */}
-        <div className="mbti-section-spacing no-print">
-          <TestimonialsCarousel />
-        </div>
       </div>
 
 

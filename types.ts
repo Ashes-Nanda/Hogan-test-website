@@ -13,8 +13,8 @@ export interface Question {
   dimensionName: string; // e.g., "Adjustment", "Ambition"
 }
 
-// 1-7 Visual Scale mapping
-export type VisualScore = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+// 1-4 Visual Scale mapping
+export type VisualScore = 1 | 2 | 3 | 4;
 
 // Storage for answers: { "q_1": 4, "q_2": 7 }
 export type AnswerMap = Record<string, VisualScore>;
