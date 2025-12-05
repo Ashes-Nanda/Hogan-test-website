@@ -134,7 +134,7 @@ export const AuthPage: React.FC = () => {
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         className="w-full pl-10 pr-4 py-2 rounded-md border border-input bg-background focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all text-sm"
-                                        placeholder="Jane Doe"
+                                        placeholder="Your Name"
                                     />
                                 </div>
                             </div>
@@ -150,7 +150,7 @@ export const AuthPage: React.FC = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full pl-10 pr-4 py-2 rounded-md border border-input bg-background focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all text-sm"
-                                    placeholder={`name@${COMPANY_DOMAIN}`}
+                                    placeholder="Email"
                                 />
                             </div>
                         </div>
@@ -216,7 +216,7 @@ export const AuthPage: React.FC = () => {
                             disabled={loading}
                             className="w-full bg-primary text-primary-foreground font-medium py-2 rounded-md hover:opacity-90 transition-all transform active:scale-[0.98] shadow-sm flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
                         >
-                            {loading ? 'Processing...' : (authMode === 'login' ? 'Sign In' : 'Start Assessment')}
+                            {loading ? 'Processing...' : (authMode === 'login' ? 'Unlock your Potential' : 'Start Assessment')}
                             {!loading && <ArrowRight size={18} />}
                         </button>
                     </form>
