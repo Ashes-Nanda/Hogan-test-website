@@ -12,4 +12,11 @@ const supabaseUrl = import.meta.env.DEV
   ? 'http://localhost:3000/supabase-proxy'
   : supabaseEnvUrl;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    storage: sessionStorage,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+});

@@ -4,11 +4,11 @@ import { motion } from 'framer-motion';
 interface TraitRowProps {
     name: string;
     score: number;
-    theme: 'blue' | 'orange' | 'green';
+    theme: 'blue' | 'orange' | 'green' | 'purple';
 }
 
 export const TraitRow: React.FC<TraitRowProps> = ({ name, score, theme }) => {
-    const color = theme === 'blue' ? 'bg-blue-600' : theme === 'orange' ? 'bg-orange-500' : 'bg-green-500';
+    const color = theme === 'blue' ? 'bg-blue-600' : theme === 'orange' ? 'bg-orange-500' : theme === 'green' ? 'bg-green-500' : 'bg-purple-600';
     return (
         <div className="mb-4 last:mb-0">
             <div className="flex justify-between text-sm font-medium mb-1">

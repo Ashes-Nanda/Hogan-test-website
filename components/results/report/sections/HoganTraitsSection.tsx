@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, Briefcase, AlertTriangle, Target } from 'lucide-react';
+import { Activity, Briefcase, AlertTriangle, Target, Brain } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { DetailCard } from '@/components/ui/DetailCard';
 import { TraitRow } from '@/components/ui/TraitRow';
@@ -8,6 +8,7 @@ interface HoganTraitsSectionProps {
     hpiScores: any;
     hdsScores: any;
     mvpiScores: any;
+    hbriScores?: any;
     hpiProfile?: any;
     hdsRiskAreas?: any;
     mvpiTopValues?: any;
@@ -18,12 +19,12 @@ interface HoganTraitsSectionProps {
     testType: string;
 }
 
-export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({ hpiScores, hdsScores, mvpiScores, id }) => {
+export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({ hpiScores, hdsScores, mvpiScores, hbriScores, id }) => {
     return (
         <section id={id} className="container py-12">
             <SectionHeader title="Detailed Trait Analysis" subtitle="Breakdown of your personality inventory across three dimensions." icon={Activity} />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 <DetailCard title="Personality (HPI)" icon={Briefcase} theme="blue">
                     <div className="space-y-5">
                         {Object.entries(hpiScores as Record<string, any>).slice(0, 7).map(([name, score]) => (
@@ -47,6 +48,16 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({ hpiScore
                         ))}
                     </div>
                 </DetailCard>
+
+                {hbriScores && (
+                    <DetailCard title="Reasoning (HBRI)" icon={Brain} theme="purple">
+                        <div className="space-y-5">
+                            {Object.entries(hbriScores as Record<string, any>).map(([name, score]) => (
+                                <TraitRow key={name} name={name} score={score.percentage} theme="purple" />
+                            ))}
+                        </div>
+                    </DetailCard>
+                )}
             </div>
         </section>
     );

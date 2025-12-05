@@ -4,17 +4,24 @@ export enum TestStatus {
   COMPLETED = 'COMPLETED'
 }
 
-export type DimensionType = 'HPI' | 'HDS' | 'MVPI';
+export type DimensionType = 'HPI' | 'HDS' | 'MVPI' | 'HBRI';
+
+export interface QuestionOption {
+  value: string;
+  label: string;
+}
 
 export interface Question {
   id: string;
   text: string;
   dimensionType: DimensionType;
   dimensionName: string; // e.g., "Adjustment", "Ambition"
+  options?: QuestionOption[];
+  correctAnswer?: string;
 }
 
-// 1-4 Visual Scale mapping
-export type VisualScore = 1 | 2 | 3 | 4;
+// 1-4 Visual Scale mapping or string for HBRI
+export type VisualScore = 1 | 2 | 3 | 4 | string;
 
 // Storage for answers: { "q_1": 4, "q_2": 7 }
 export type AnswerMap = Record<string, VisualScore>;
@@ -41,6 +48,7 @@ export interface TestResult {
   hpi: Record<string, DimensionScore>;
   hds: Record<string, DimensionScore>;
   mvpi: Record<string, DimensionScore>;
+  hbri?: Record<string, DimensionScore>;
   completedAt: string;
   attemptNumber: number;
   // Derived Insights

@@ -106,6 +106,7 @@ export const calculateScores = (answers: AnswerMap, attemptNumber: number = 1): 
     hpi: {},
     hds: {},
     mvpi: {},
+    hbri: {},
     completedAt: new Date().toISOString(),
     attemptNumber,
     profileTitle: "Assessment Incomplete",
@@ -134,17 +135,31 @@ export const calculateScores = (answers: AnswerMap, attemptNumber: number = 1): 
     let answeredCount = 0;
 
     questions.forEach(q => {
-      const visualValue = answers[q.id];
-      if (visualValue) {
-        const logicalValue = VISUAL_TO_LOGICAL_MAP[visualValue];
-        rawScore += logicalValue;
-        answeredCount++;
+      const answer = answers[q.id];
+      if (answer !== undefined) {
+        if (type === 'HBRI') {
+          if (answer === q.correctAnswer) {
+            rawScore += 1;
+          }
+          answeredCount++;
+        } else {
+          const visualValue = answer as number;
+          const logicalValue = VISUAL_TO_LOGICAL_MAP[visualValue];
+          if (logicalValue) {
+            rawScore += logicalValue;
+            answeredCount++;
+          }
+        }
       }
     });
 
-    // Max score is number of questions * 5 (since max logical value is 5)
-    // Wait, VISUAL_TO_LOGICAL_MAP maps 7 -> 5. So max per question is 5.
-    const maxScore = questions.length * 5;
+    let maxScore = 0;
+    if (type === 'HBRI') {
+      maxScore = questions.length;
+    } else {
+      maxScore = questions.length * 5;
+    }
+
     const percentage = maxScore > 0 ? (rawScore / maxScore) * 100 : 0;
     const finalPercentage = Math.round(percentage);
 
@@ -158,6 +173,7 @@ export const calculateScores = (answers: AnswerMap, attemptNumber: number = 1): 
     if (type === 'HPI') result.hpi[name] = scoreObject;
     if (type === 'HDS') result.hds[name] = scoreObject;
     if (type === 'MVPI') result.mvpi[name] = scoreObject;
+    if (type === 'HBRI' && result.hbri) result.hbri[name] = scoreObject;
   });
 
   // Derived Insights

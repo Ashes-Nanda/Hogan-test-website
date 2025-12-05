@@ -9,19 +9,31 @@ interface ConfidenceAndFamousSectionProps {
 
 export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProps> = ({ confidenceScore, reason, personalityType }) => {
     const famousPeopleMapping: Record<string, string[]> = {
-        'Ambition': ['Napoleon Bonaparte', 'Sheryl Sandberg', 'Satya Nadella'],
-        'Inquisitive': ['Elon Musk', 'Steve Jobs', 'Jeff Bezos', 'Marie Curie', 'Leonardo da Vinci'],
-        'Prudence': ['Warren Buffett', 'Angela Merkel', 'Tim Cook'],
-        'Interpersonal Sensitivity': ['Oprah Winfrey', 'Nelson Mandela', 'Mother Teresa'],
-        'Adjustment': ['Barack Obama', 'Captain Sully', 'Neil Armstrong'],
-        'Sociability': ['Bill Clinton', 'Richard Branson', 'Will Smith'],
-        'Learning Approach': ['Bill Gates', 'Albert Einstein', 'Isaac Newton']
+        'Ambition': ['Napoleon Bonaparte', 'Sheryl Sandberg', 'Satya Nadella', 'Indra Nooyi', 'Jeff Bezos', 'Jack Ma', 'Margaret Thatcher'],
+        'Inquisitive': ['Elon Musk', 'Steve Jobs', 'Jeff Bezos', 'Marie Curie', 'Leonardo da Vinci', 'Thomas Edison', 'Ada Lovelace'],
+        'Prudence': ['Warren Buffett', 'Angela Merkel', 'Tim Cook', 'Queen Elizabeth II', 'George Washington', 'Dwight D. Eisenhower'],
+        'Interpersonal Sensitivity': ['Oprah Winfrey', 'Nelson Mandela', 'Mother Teresa', 'Princess Diana', 'Dalai Lama', 'Mahatma Gandhi'],
+        'Adjustment': ['Barack Obama', 'Captain Sully', 'Neil Armstrong', 'Winston Churchill', 'Franklin D. Roosevelt', 'Abraham Lincoln'],
+        'Sociability': ['Bill Clinton', 'Richard Branson', 'Will Smith', 'Ellen DeGeneres', 'Tony Robbins', 'Magic Johnson'],
+        'Learning Approach': ['Bill Gates', 'Albert Einstein', 'Isaac Newton', 'Charles Darwin', 'Stephen Hawking', 'Nikola Tesla']
+    };
+
+    const getRandomPeople = (list: string[], count: number) => {
+        const shuffled = [...list].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
     };
 
     // Find matching people or default to a mix of leaders
-    const people = Object.entries(famousPeopleMapping).find(([key]) =>
+    const matchedList = Object.entries(famousPeopleMapping).find(([key]) =>
         personalityType.includes(key)
-    )?.[1] || ['Sheryl Sandberg', 'Satya Nadella', 'Elon Musk'];
+    )?.[1];
+
+    const defaultPool = [
+        'Sheryl Sandberg', 'Satya Nadella', 'Elon Musk', 'Jeff Bezos', 'Oprah Winfrey',
+        'Barack Obama', 'Bill Gates', 'Warren Buffett', 'Steve Jobs', 'Indra Nooyi'
+    ];
+
+    const people = getRandomPeople(matchedList || defaultPool, 3);
 
     return (
         <motion.div

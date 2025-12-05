@@ -1,11 +1,22 @@
 import { HoganAnswers } from "@/schema/hogan";
-import { HoganCalculatedResult, HPITraitScores, HDSTraitScores, MVPITraitScores } from "@/types/tests/hogan/test-response/calculatedResponse";
+import { HPITraitScores, HDSTraitScores, MVPITraitScores } from "@/types/tests/hogan/test-response/calculatedResponse";
 import { TestQuestionsData } from "@/types/tests/testQuestions";
+
+interface DimensionScore {
+  score: number;
+  total: number;
+  percentage: number;
+}
+
+export interface HBRITraitScores {
+  hbri_tactical: DimensionScore;
+  hbri_strategic: DimensionScore;
+}
 
 export function calculateHogan(
   answers: HoganAnswers,
   questionsData: TestQuestionsData
-): HoganCalculatedResult {
+): any {
   const questions = questionsData.questions;
 
   // Initialize HPI scores
@@ -48,6 +59,12 @@ export function calculateHogan(
     tradition: { score: 0, total: 0, percentage: 0 },
   };
 
+  // Initialize HBRI scores
+  const hbriScores: HBRITraitScores = {
+    hbri_tactical: { score: 0, total: 0, percentage: 0 },
+    hbri_strategic: { score: 0, total: 0, percentage: 0 },
+  };
+
   // Count questions per dimension
   const dimensionCounts: Record<string, number> = {};
   Object.values(answers).forEach((answer) => {
@@ -55,7 +72,7 @@ export function calculateHogan(
   });
 
   // Process answers and calculate scores
-  Object.values(answers).forEach((answer) => {
+  Object.entries(answers).forEach(([questionId, answer]) => {
     const dimension = answer.dimension;
     const selectedValue = answer.selectedValue;
 
@@ -85,6 +102,17 @@ export function calculateHogan(
       hdsScores[dimension as keyof HDSTraitScores].score += score;
     } else if (dimension in mvpiScores) {
       mvpiScores[dimension as keyof MVPITraitScores].score += score;
+    } else if (dimension in hbriScores) {
+      // HBRI scoring: 1 for correct, 0 for incorrect
+      // We need to find the question to check the correct answer
+      const question = questions.find(q => q.id === questionId);
+      if (question && (question as any).correctAnswer) {
+        // Check if the selected value (which is the option value) matches the correct answer
+        // Note: answer.selectedValue stores the value of the selected option
+        if (answer.selectedValue === (question as any).correctAnswer) {
+          hbriScores[dimension as keyof HBRITraitScores].score += 1;
+        }
+      }
     }
   });
 
@@ -119,6 +147,16 @@ export function calculateHogan(
       : 0;
   });
 
+  Object.keys(hbriScores).forEach((key) => {
+    const dimension = key as keyof HBRITraitScores;
+    const count = dimensionCounts[dimension] || 0;
+    hbriScores[dimension].total = count; // HBRI uses 0/1, so max score is count * 1
+    // Prevent division by zero
+    hbriScores[dimension].percentage = count > 0
+      ? Math.round((hbriScores[dimension].score / hbriScores[dimension].total) * 100)
+      : 0;
+  });
+
   // Generate HPI Profile
   const hpiProfile = generateHPIProfile(hpiScores);
 
@@ -144,6 +182,7 @@ export function calculateHogan(
     hdsRiskAreas,
     mvpiScores,
     mvpiTopValues,
+    hbriScores,
     hoganProfile,
     leadershipPotential,
     jobFit,

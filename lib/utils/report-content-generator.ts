@@ -48,6 +48,21 @@ export const generateRelationshipInsights = (resultData: HoganResultData) => {
         }
     }
 
+    // HBRI Insights
+    if (resultData.hbriScores) {
+        const tactical = resultData.hbriScores['Tactical']?.percentage || 0;
+        const strategic = resultData.hbriScores['Strategic']?.percentage || 0;
+
+        if (strategic > 70) {
+            insights.compatibleTypes.push("Partners who appreciate big-picture thinking");
+            insights.superpowers.push({ title: "Strategic Vision", description: "You can anticipate future trends and align teams." });
+        }
+        if (tactical > 70) {
+            insights.compatibleTypes.push("Colleagues who value practical solutions");
+            insights.superpowers.push({ title: "Problem Solving", description: "You quickly identify and fix operational issues." });
+        }
+    }
+
     return [insights];
 };
 
@@ -82,6 +97,24 @@ export const generateGrowthJourney = (resultData: HoganResultData) => {
                         description: `Watch out for ${trait.toLowerCase()} tendencies under stress.`
                     });
                 });
+        }
+    }
+
+    // HBRI Growth
+    if (resultData.hbriScores) {
+        const tactical = resultData.hbriScores['Tactical']?.percentage || 0;
+        const strategic = resultData.hbriScores['Strategic']?.percentage || 0;
+
+        if (strategic > 75) {
+            growth.superpowers.push({ title: "Strategic Thinking", description: "You excel at long-term planning." });
+        } else if (strategic < 35) {
+            growth.growthAreas.push({ title: "Big Picture", description: "Practice stepping back to see the broader context." });
+        }
+
+        if (tactical > 75) {
+            growth.superpowers.push({ title: "Tactical Execution", description: "You are excellent at solving immediate problems." });
+        } else if (tactical < 35) {
+            growth.growthAreas.push({ title: "Operational Detail", description: "Ensure you don't overlook practical implementation details." });
         }
     }
 
@@ -138,7 +171,7 @@ export const generateValuesActionItems = (topValues: string[]) => {
     return items;
 };
 
-export const generateCareerActionSteps = (jobFit: string[]) => {
+export const generateCareerActionSteps = (jobFit: string[], hbriScores?: Record<string, any>) => {
     const steps = [
         { number: 1, description: "Review your Hogan profile insights regularly." }
     ];
@@ -149,7 +182,16 @@ export const generateCareerActionSteps = (jobFit: string[]) => {
         steps.push({ number: 2, description: "Seek roles that align with your identified strengths." });
     }
 
-    steps.push({ number: 3, description: "Create a development plan addressing your specific risk factors." });
+    if (hbriScores) {
+        const strategic = hbriScores['Strategic']?.percentage || 0;
+        if (strategic > 70) {
+            steps.push({ number: 3, description: "Look for roles that involve long-term strategy and forecasting." });
+        } else {
+            steps.push({ number: 3, description: "Create a development plan addressing your specific risk factors." });
+        }
+    } else {
+        steps.push({ number: 3, description: "Create a development plan addressing your specific risk factors." });
+    }
 
     return steps;
 };

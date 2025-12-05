@@ -20,6 +20,7 @@ export const ResultsView: React.FC<Props> = ({ user, activeAttempt, onRetake }) 
         hpiScores: result.hpi,
         hdsScores: result.hds,
         mvpiScores: result.mvpi,
+        hbriScores: result.hbri,
         hoganProfile: result.profileTitle,
         leadershipPotential: result.leadershipPotentialScore,
         jobFit: result.jobFit,

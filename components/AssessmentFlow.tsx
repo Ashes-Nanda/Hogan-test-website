@@ -67,6 +67,7 @@ export const AssessmentFlow: React.FC = () => {
                         {user.role === 'admin' && (
                             <a href="/admin" className="text-sm font-bold text-primary hover:underline">Admin Console</a>
                         )}
+                        <button onClick={handleRetake} className="text-sm font-bold text-primary hover:text-primary/80 border border-primary/20 px-3 py-1.5 rounded-md hover:bg-primary/5 transition-colors">Retake Test</button>
                         <button onClick={() => logout()} className="text-sm font-bold text-muted-foreground hover:text-foreground border border-input px-3 py-1.5 rounded-md hover:bg-muted transition-colors">Sign Out</button>
                     </div>
                 </header>

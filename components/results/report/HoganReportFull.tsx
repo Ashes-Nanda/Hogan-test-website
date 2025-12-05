@@ -116,7 +116,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
         description: "Focus on areas identified in your Hogan assessment for continued professional growth."
       }
     ],
-    actionSteps: generateCareerActionSteps(resultData.jobFit || []),
+    actionSteps: generateCareerActionSteps(resultData.jobFit || [], resultData.hbriScores),
     suggestions: resultData.jobFit ? resultData.jobFit.slice(0, 5).map((role, index) => ({
       title: role,
       description: `This role aligns well with your Hogan personality profile and professional strengths.`,
@@ -224,6 +224,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
             hpiScores={resultData.hpiScores}
             hdsScores={resultData.hdsScores}
             mvpiScores={resultData.mvpiScores}
+            hbriScores={resultData.hbriScores}
             hpiProfile={resultData.hpiProfile}
             hdsRiskAreas={resultData.hdsRiskAreas}
             mvpiTopValues={resultData.mvpiTopValues}

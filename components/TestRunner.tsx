@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AnswerMap, VisualScore } from '../types';
 import { MOCK_QUESTIONS, QUESTIONS_PER_PAGE } from '../constants';
 import { RadioLikertScale } from './RadioLikertScale';
+import { HBRIOptions } from './HBRIOptions';
 import { saveProgress } from '../services/storageService';
 import { calculateScores } from '../utils/scoring';
 import { ArrowRight, ArrowLeft, CheckCircle, BrainCircuit, Loader2 } from 'lucide-react';
@@ -177,10 +178,18 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
               </div>
 
               <div className="bg-card rounded-lg p-4 sm:p-6 shadow-sm border border-border hover:shadow-md transition-shadow duration-300">
-                <RadioLikertScale
-                  value={answers[q.id]}
-                  onChange={(val) => handleAnswer(q.id, val, index)}
-                />
+                {q.dimensionType === 'HBRI' && q.options ? (
+                  <HBRIOptions
+                    options={q.options}
+                    value={answers[q.id]}
+                    onChange={(val) => handleAnswer(q.id, val, index)}
+                  />
+                ) : (
+                  <RadioLikertScale
+                    value={answers[q.id]}
+                    onChange={(val) => handleAnswer(q.id, val, index)}
+                  />
+                )}
               </div>
 
               {index < currentQuestions.length - 1 && (

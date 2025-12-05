@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../services/supabaseClient';
 import { useAuth } from '../../contexts/AuthContext';
 import { COMPANY_DOMAIN } from '../../constants';
-import { BrainCircuit, ArrowRight, ShieldCheck, Mail, Lock, User as UserIcon, CheckCircle } from 'lucide-react';
+import { BrainCircuit, ArrowRight, ShieldCheck, Mail, Lock, User as UserIcon, CheckCircle, Eye, EyeOff } from 'lucide-react';
 
 export const AuthPage: React.FC = () => {
+    const navigate = useNavigate();
     const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [name, setName] = useState('');
     const [error, setError] = useState('');
 
@@ -28,7 +31,7 @@ export const AuthPage: React.FC = () => {
         const isAllowed = allowedDomains.includes(domain) || allowedEmails.includes(email.toLowerCase());
 
         if (!isAllowed) {
-            setError(`Access restricted. Allowed domains: ${allowedDomains.join(', ')}`);
+            navigate('/access-restricted');
             setLoading(false);
             return;
         }
@@ -160,13 +163,20 @@ export const AuthPage: React.FC = () => {
                             <div className="relative">
                                 <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2 rounded-md border border-input bg-background focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all text-sm"
+                                    className="w-full pl-10 pr-10 py-2 rounded-md border border-input bg-background focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all text-sm"
                                     placeholder="••••••••"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
                             </div>
                         </div>
 
