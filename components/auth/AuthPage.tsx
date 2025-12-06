@@ -7,7 +7,7 @@ import { BrainCircuit, ArrowRight, ShieldCheck, Mail, Lock, User as UserIcon, Ch
 
 export const AuthPage: React.FC = () => {
     const navigate = useNavigate();
-    const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+    const [authMode, setAuthMode] = useState<'login' | 'signup'>('signup');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);

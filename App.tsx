@@ -8,7 +8,7 @@ import { AssessmentLandingPage } from './components/AssessmentLandingPage';
 import { AccessRestricted } from './components/auth/AccessRestricted';
 
 const App: React.FC = () => {
-    const { user, loading, logout } = useAuth();
+    const { user, loading, logout, isAdminAuthenticated } = useAuth();
 
     if (loading) {
         return <div className="h-screen flex items-center justify-center bg-background text-primary">Loading...</div>;
@@ -22,20 +22,10 @@ const App: React.FC = () => {
             {/* Access Restricted Route */}
             <Route path="/access-restricted" element={<AccessRestricted />} />
 
-            {/* Protected Admin Route */}
+            {/* Protected Admin Route - Dashboard handles its own auth check now */}
             <Route
                 path="/admin"
-                element={
-                    user ? (
-                        user.role === 'admin' ? (
-                            <AdminDashboard onLogout={logout} />
-                        ) : (
-                            <Navigate to="/" replace />
-                        )
-                    ) : (
-                        <Navigate to="/auth" replace />
-                    )
-                }
+                element={<AdminDashboard onLogout={logout} />}
             />
 
             {/* Assessment Flow (Test & Results) */}

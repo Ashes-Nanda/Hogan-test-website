@@ -5,9 +5,11 @@ import { User, TestStatus } from '../types';
 interface AuthContextType {
     user: User | null;
     loading: boolean;
+    isAdminAuthenticated: boolean;
     setUser: (user: User | null) => void;
     refreshUser: () => Promise<void>;
     logout: () => Promise<void>;
+    loginAdmin: (password: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,6 +17,38 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+
+    useEffect(() => {
+        // Check for admin session persistence
+        const adminSession = localStorage.getItem('admin_session');
+        if (adminSession === 'true') {
+            setIsAdminAuthenticated(true);
+        }
+
+        // Critical Env Check
+        // @ts-ignore
+        if (!process.env.ADMIN_PASSWORD) {
+            console.error("CRITICAL: ADMIN_PASSWORD is not set in environment variables. Admin login will fail.");
+        }
+    }, []);
+
+    const loginAdmin = async (password: string): Promise<boolean> => {
+        // @ts-ignore
+        const configuredPass = process.env.ADMIN_PASSWORD;
+
+        if (!configuredPass) {
+            console.error("Admin password not configured");
+            return false;
+        }
+
+        if (password === configuredPass) {
+            localStorage.setItem('admin_session', 'true');
+            setIsAdminAuthenticated(true);
+            return true;
+        }
+        return false;
+    };
 
     const fetchUserData = async (userId: string, email: string) => {
         console.log('fetchUserData started', userId);
@@ -61,7 +95,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 id: userId,
                 email: email,
                 name: profile?.full_name || email.split('@')[0],
-                role: profile?.role || 'employee',
+                role: 'employee', // FORCE_NORMAL_USER: Decoupled from DB/email. Admin access is now separate.
                 status: (attempts && attempts.length > 0) ? TestStatus.COMPLETED : TestStatus.PENDING,
                 token: 'supabase-session', // Placeholder
                 attempts: (attempts || []).map((a: any) => ({
@@ -89,6 +123,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const logout = async () => {
         await supabase.auth.signOut();
         setUser(null);
+        // Also clear admin session if they log out of the app
+        localStorage.removeItem('admin_session');
+        setIsAdminAuthenticated(false);
     };
 
     useEffect(() => {
@@ -139,7 +176,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, loading, setUser, refreshUser, logout }}>
+        <AuthContext.Provider value={{ user, loading, isAdminAuthenticated, setUser, refreshUser, logout, loginAdmin }}>
             {children}
         </AuthContext.Provider>
     );

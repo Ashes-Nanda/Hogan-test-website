@@ -1,18 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { User, TestStatus, TestResult, DimensionScore } from '../types';
 import { supabase } from '../services/supabaseClient';
-import { Download, Mail, Eye, UserPlus, LogOut, X, FileText, Activity, Check, AlertCircle } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { Download, Mail, Eye, UserPlus, LogOut, X, FileText, Activity, ShieldAlert, Lock, ArrowRight } from 'lucide-react';
 
 interface Props {
   onLogout: () => void;
 }
 
 export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
+  const { isAdminAuthenticated, loginAdmin, user } = useAuth();
+  const [passwordInput, setPasswordInput] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [verifying, setVerifying] = useState(false);
+
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const handleAdminLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError('');
+    setVerifying(true);
+    try {
+      const success = await loginAdmin(passwordInput);
+      if (!success) {
+        setAuthError('Invalid admin password');
+      }
+    } catch {
+      setAuthError('Error verifying password');
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+
   useEffect(() => {
+    if (!isAdminAuthenticated) return; // Don't fetch if not auth
+
     const fetchData = async () => {
       try {
         const { data: profiles, error: profilesError } = await supabase.from('profiles').select('*');
@@ -49,7 +74,7 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [isAdminAuthenticated]);
 
   const stats = {
     total: users.length,
@@ -138,6 +163,69 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
     a.download = filename;
     a.click();
   };
+
+  if (!isAdminAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="w-full max-w-md bg-card p-8 rounded-lg shadow-2xl border border-border animate-fade-in-up">
+          <div className="flex flex-col items-center mb-6">
+            <div className="bg-red-500/10 p-4 rounded-full mb-4">
+              <Lock className="text-red-600" size={32} />
+            </div>
+            <h1 className="text-2xl font-oswald font-bold text-foreground">Admin Access</h1>
+            <p className="text-muted-foreground text-sm mt-1">Authorized Personnel Only</p>
+          </div>
+
+          <form onSubmit={handleAdminLogin} className="space-y-4">
+            <div>
+              <label className="text-xs font-bold text-foreground uppercase tracking-wide">Enter Admin Password</label>
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                className="w-full mt-1 px-4 py-2 rounded-md border border-input bg-background focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                placeholder="••••••••"
+                autoFocus
+              />
+            </div>
+
+            {authError && (
+              <div className="flex items-center gap-2 text-sm text-red-500 bg-red-500/10 p-3 rounded-md">
+                <ShieldAlert size={16} />
+                <span>{authError}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={verifying}
+              className="w-full bg-red-600 text-white font-medium py-2 rounded-md hover:bg-red-700 transition-colors shadow-sm flex items-center justify-center gap-2"
+            >
+              {verifying ? 'Verifying...' : 'Access Dashboard'}
+              {!verifying && <ArrowRight size={18} />}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <a href="/" className="text-sm text-muted-foreground hover:text-foreground">Return to Home</a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If authenticated as admin but not logged in to app
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="text-center">
+          <h2 className="text-xl font-bold mb-4">Session Expired</h2>
+          <p className="mb-4 text-muted-foreground">You have verified admin access, but your user session has expired.</p>
+          <a href="/auth" className="text-primary hover:underline font-bold">Log in to continue</a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
