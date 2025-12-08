@@ -332,7 +332,7 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
       <main className="max-w-[1400px] mx-auto py-8 px-4 sm:px-6 lg:px-8">
 
         {/* 1. Metrics Header */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <MetricCard label="Total Employees" value={stats.total} icon={Users} colorClass="text-indigo-600" trend="+12% this month" />
           <MetricCard label="Completed Tests" value={stats.completed || stats.total * 0.4} icon={CheckCircle} colorClass="text-emerald-600" />
           <MetricCard label="Total Attempts" value={stats.attempts} icon={Activity} colorClass="text-blue-600" />
@@ -366,6 +366,9 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
           onExportUser={(u) => downloadCSV(false, [u])}
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
+          onBulkDelete={() => console.log("Bulk delete")}
+          onBulkInvite={() => console.log("Bulk invite")}
+          onDownloadPDF={(u) => console.log("Download PDF", u)}
         />
 
       </main>

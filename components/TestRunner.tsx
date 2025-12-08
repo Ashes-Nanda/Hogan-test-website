@@ -159,7 +159,7 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
         </div>
       </div>
 
-      <div className="flex-grow w-full max-w-4xl mx-auto px-4 md:px-0 pt-12">
+      <div className="flex-grow w-full max-w-4xl mx-auto px-4 pt-12">
         <div className="space-y-16">
           {currentQuestions.map((q, index) => (
             <div

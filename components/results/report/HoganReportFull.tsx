@@ -216,6 +216,9 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               mvpiScores={resultData.mvpiScores ? Object.fromEntries(
                 Object.entries(resultData.mvpiScores).map(([key, value]) => [key, value.percentage])
               ) : undefined}
+              hbriScores={resultData.hbriScores ? Object.fromEntries(
+                Object.entries(resultData.hbriScores).map(([key, value]) => [key, value.percentage])
+              ) : undefined}
               leadershipPotential={resultData.leadershipPotential}
               firstname={resultData?.firstname ?? undefined}
               isPaidUser={isPaidUser}

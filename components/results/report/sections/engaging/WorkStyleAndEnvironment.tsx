@@ -46,12 +46,22 @@ export const WorkStyleAndEnvironment: React.FC<WorkStyleProps> = ({
             <div className="max-w-5xl mx-auto">
                 <SectionHeader title="How You Work Best" subtitle="Optimizing your environment for peak performance." icon={Layout} />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-                    <WorkCard icon={Clock} title="Ideal Rhythm" text={style.rhythm} color="blue" />
-                    <WorkCard icon={Users} title="Team Environment" text={style.team} color="indigo" />
-                    <WorkCard icon={UserIcon} title="Manager Style" text={style.manager} color="purple" />
-                    <WorkCard icon={MessageSquare} title="Communication" text={style.communication} color="pink" />
-                    <WorkCard icon={Layout} title="Productivity Setup" text={style.setup} color="teal" />
+                <div className="flex flex-wrap justify-center gap-6 mt-12">
+                    <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                        <WorkCard icon={Clock} title="Ideal Rhythm" text={style.rhythm} color="blue" />
+                    </div>
+                    <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                        <WorkCard icon={Users} title="Team Environment" text={style.team} color="indigo" />
+                    </div>
+                    <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                        <WorkCard icon={UserIcon} title="Manager Style" text={style.manager} color="purple" />
+                    </div>
+                    <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                        <WorkCard icon={MessageSquare} title="Communication" text={style.communication} color="pink" />
+                    </div>
+                    <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                        <WorkCard icon={Layout} title="Productivity Setup" text={style.setup} color="teal" />
+                    </div>
                 </div>
             </div>
 
@@ -120,7 +130,7 @@ const WorkCard = ({ icon: Icon, title, text, color }: any) => {
     }[color] || "bg-slate-50";
 
     return (
-        <div className={`p-6 rounded-2xl border ${colors.split(' ')[2]} bg-white shadow-sm hover:shadow-md transition-all`}>
+        <div className={`p-6 rounded-2xl border ${colors.split(' ')[2]} bg-white shadow-sm hover:shadow-md transition-all h-full`}>
             <div className={`w-12 h-12 rounded-xl ${colors.split(' ')[0]} ${colors.split(' ')[1]} flex items-center justify-center mb-4`}>
                 <Icon size={24} />
             </div>
