@@ -22,6 +22,11 @@ import { RelatedResourcesSection } from "@/components/results/report/mbti/Relate
 import { TestimonialsCarousel } from "@/components/results/report/shared/SocialProof";
 import { GoalTrackingSystem } from "@/components/results/report/shared/GoalTrackingSystem";
 
+// NEW COMPONENTS
+import { IdentitySummary } from "./sections/engaging/IdentitySummary";
+import { WorkStyleAndEnvironment } from "./sections/engaging/WorkStyleAndEnvironment";
+import { ReflectionsAndHabits } from "./sections/engaging/ReflectionsAndHabits";
+
 import { generateExecutiveSummary } from "@/lib/generate-executive-summary";
 import { calculateConfidenceScore } from "@/lib/calculate-confidence";
 import { convertHoganScoresToMBTIFormat } from "@/lib/utils/hogan-score-converter";
@@ -42,6 +47,30 @@ interface HoganReportFullProps {
 }
 
 export default function HoganReportFull({ resultData, isPaidUser = false, userEmail, userId }: HoganReportFullProps) {
+  // State for AI Content
+  const [aiContent, setAiContent] = React.useState<any>(null);
+  const [isGenerating, setIsGenerating] = React.useState(false);
+
+  // Trigger AI generation on mount
+  React.useEffect(() => {
+    async function fetchAI() {
+      // Avoid re-fetching if already present (or check if cached)
+      if (aiContent) return;
+
+      setIsGenerating(true);
+      // Dynamically import generator to avoid server-side issues if any
+      const { generateHoganReportAI } = await import("@/lib/ai/hogan-generator");
+      const content = await generateHoganReportAI(resultData);
+
+      if (content) {
+        setAiContent(content);
+      }
+      setIsGenerating(false);
+    }
+
+    fetchAI();
+  }, [resultData]);
+
   // Convert Hogan scores to MBTI-like format for shared components
   const convertedScores = React.useMemo(() => {
     if (!resultData.hpiScores) return null;
@@ -134,10 +163,6 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
     })) : []
   }), [resultData]);
 
-
-
-
-
   const handleDownload = () => {
     generateHoganPDF({
       resultData,
@@ -161,7 +186,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
         `}
       </style>
 
-      {/* Hero Section */}
+      {/* 0. COVER / HEADER SECTION */}
       {resultData.hpiScores && (
         <div className="print-break-inside-avoid">
           <HoganHeroSection
@@ -176,28 +201,20 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
       )}
 
       <div className="p-4 mt-8 mbti-content-container-full print:p-0 print:mt-4">
-        {/* Introduction Section with Quick Insights */}
+
+        {/* 1. TRAIT SUMMARY TABLES */}
         {resultData.hpiScores && (
           <div className="mbti-section-spacing print-break-inside-avoid">
             <HoganIntroductionSection
               hoganProfile={resultData.hoganProfile}
               hpiScores={Object.fromEntries(
-                Object.entries(resultData.hpiScores).map(([key, value]) => [
-                  key,
-                  value.percentage
-                ])
+                Object.entries(resultData.hpiScores).map(([key, value]) => [key, value.percentage])
               )}
               hdsScores={resultData.hdsScores ? Object.fromEntries(
-                Object.entries(resultData.hdsScores).map(([key, value]) => [
-                  key,
-                  value.percentage
-                ])
+                Object.entries(resultData.hdsScores).map(([key, value]) => [key, value.percentage])
               ) : undefined}
               mvpiScores={resultData.mvpiScores ? Object.fromEntries(
-                Object.entries(resultData.mvpiScores).map(([key, value]) => [
-                  key,
-                  value.percentage
-                ])
+                Object.entries(resultData.mvpiScores).map(([key, value]) => [key, value.percentage])
               ) : undefined}
               leadershipPotential={resultData.leadershipPotential}
               firstname={resultData?.firstname ?? undefined}
@@ -207,7 +224,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           </div>
         )}
 
-        {/* Confidence Score & Famous People - Unified Card */}
+        {/* Confidence Data */}
         <div className="mb-16 print-break-inside-avoid">
           {confidenceScore !== null && (
             <ConfidenceAndFamousSection
@@ -218,13 +235,16 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           )}
         </div>
 
-        {/* Hogan Traits - Interactive Visualization */}
+        {/* 2. DETAILED TRAIT ANALYSIS (2A-2D) */}
         <div className="mbti-section-spacing print-break-before">
           <HoganTraitsSection
             hpiScores={resultData.hpiScores}
             hdsScores={resultData.hdsScores}
             mvpiScores={resultData.mvpiScores}
             hbriScores={resultData.hbriScores}
+            hpiAnalysis={aiContent?.hpiAnalysis}
+            hdsAnalysis={aiContent?.hdsAnalysis}
+            mvpiAnalysis={aiContent?.mvpiAnalysis}
             hpiProfile={resultData.hpiProfile}
             hdsRiskAreas={resultData.hdsRiskAreas}
             mvpiTopValues={resultData.mvpiTopValues}
@@ -236,7 +256,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           />
         </div>
 
-        {/* Personal Examples - How Test Answers Led to Results */}
+        {/* 3. PERSONAL EXAMPLES (Superpowers & Blind Spots) */}
         {convertedScores && (
           <div className="print-break-inside-avoid print-break-before">
             <PersonalExamplesSection
@@ -247,7 +267,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           </div>
         )}
 
-        {/* Values & Motivators */}
+        {/* 4. CORE VALUES & MOTIVATORS */}
         <div className="mbti-section-spacing print-break-before">
           <ValuesMotivatorSection
             firstname={resultData?.firstname || null}
@@ -260,7 +280,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           />
         </div>
 
-        {/* Career Path - Lazy loaded */}
+        {/* 5. CAREER & RELATIONSHIPS */}
         <div className="mbti-section-spacing print-break-before">
           <LazySection>
             <CareerPathSection
@@ -275,14 +295,12 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           </LazySection>
         </div>
 
-
-
-        {/* Relationship Insights - Lazy loaded */}
+        {/* 6. Relationship Insights (Part of Section 5) */}
         <div className="mbti-section-spacing print-break-before">
           <LazySection>
             <RelationshipSection
               firstname={resultData?.firstname || null}
-              relationships={generateRelationshipInsights(resultData)}
+              relationships={aiContent?.relationships || generateRelationshipInsights(resultData)}
               sectionNumber={5}
               id="relationships"
               isPaidUser={isPaidUser}
@@ -291,7 +309,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           </LazySection>
         </div>
 
-        {/* Growth Journey - Lazy loaded */}
+        {/* 6. YOUR GROWTH JOURNEY */}
         <div className="mbti-section-spacing print-break-before">
           <LazySection>
             <GrowthSection
@@ -301,15 +319,12 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               id="growth-journey"
               isPaidUser={isPaidUser}
               testType="hogan"
+              personalityType={resultData.hoganProfile}
             />
           </LazySection>
         </div>
 
-
-
-
-
-        {/* Action Plan - Lazy loaded */}
+        {/* 7. ACTION PLAN */}
         <div className="mbti-section-spacing print-break-before">
           <LazySection>
             <ActionPlanSection
@@ -317,17 +332,53 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               firstname={resultData?.firstname || null}
               resultData={resultData}
               hoganProfile={resultData.hoganProfile}
-              sectionNumber={9}
+              actionSteps={aiContent?.strategicActions}
+              sectionNumber={7}
               id="action-plan"
             />
           </LazySection>
         </div>
 
+        {/* --- ENGAGING MODULES (Sections 8-14) --- */}
 
+        {/* 8, 9, 11: Identity Summary, 5 Words, Social Experience */}
+        <div className="mbti-section-spacing print-break-before">
+          <LazySection>
+            <IdentitySummary
+              id="identity-summary"
+              sectionNumber={8}
+              topTakeaways={aiContent?.topTakeaways}
+              personalityWords={aiContent?.personalityWords}
+              socialExperience={aiContent?.socialExperience}
+            />
+          </LazySection>
+        </div>
 
+        {/* 10, 12: Work Style & Energy */}
+        <div className="mbti-section-spacing print-break-before">
+          <LazySection>
+            <WorkStyleAndEnvironment
+              id="work-style"
+              sectionNumber={10}
+              workStyle={aiContent?.workStyle}
+              energy={aiContent?.energyFlow}
+            />
+          </LazySection>
+        </div>
+
+        {/* 13, 14: Habits & Reflections */}
+        <div className="mbti-section-spacing print-break-before">
+          <LazySection>
+            <ReflectionsAndHabits
+              id="reflections-habits"
+              sectionNumber={13}
+              microHabits={aiContent?.microHabits}
+              coachQuestions={aiContent?.coachQuestions}
+            />
+          </LazySection>
+        </div>
 
       </div>
-
 
       {/* Mobile navigation */}
       <div className="no-print">

@@ -79,6 +79,22 @@ export interface User {
   attempts: Attempt[]; // New: History of attempts
 }
 
+// Admin Types
+export interface AuditLog {
+  id: string;
+  user_id: string;
+  action: string;
+  details: any;
+  created_at: string;
+}
+
+export interface AdminStats {
+  total: number;
+  completed: number;
+  attempts: number;
+  pending: number;
+}
+
 export interface AppState {
   currentUser: User | null;
   answers: AnswerMap;

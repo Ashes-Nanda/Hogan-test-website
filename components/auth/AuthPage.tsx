@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../services/supabaseClient';
 import { useAuth } from '../../contexts/AuthContext';
 import { COMPANY_DOMAIN } from '../../constants';
-import { BrainCircuit, ArrowRight, ShieldCheck, Mail, Lock, User as UserIcon, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { BrainCircuit, ArrowRight, ShieldCheck, Mail, Lock, User as UserIcon, CheckCircle, Lightbulb, Map, Zap, Check, Eye, EyeOff } from 'lucide-react';
 
 export const AuthPage: React.FC = () => {
     const navigate = useNavigate();
@@ -13,6 +13,7 @@ export const AuthPage: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [name, setName] = useState('');
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     const [loading, setLoading] = useState(false);
 
@@ -61,6 +62,10 @@ export const AuthPage: React.FC = () => {
                 ]) as any;
 
                 if (error) throw error;
+
+                // Show success message and wait briefly
+                setSuccessMessage('Welcome. You now have access — your assessment is ready when you are.');
+                await new Promise(resolve => setTimeout(resolve, 1500));
             }
 
             // Force a refresh of the user state with timeout
@@ -73,7 +78,14 @@ export const AuthPage: React.FC = () => {
 
         } catch (err: any) {
             console.error("Auth Error:", err);
-            setError(err.message || 'Authentication failed');
+            // Custom error message for domain issue if 403 or specific string, but generic fallback
+            // Spec requested: "This assessment is available only to verified members of your organisation. Try another email."
+            // We'll apply this generally for auth failures if it seems like a permissions/email issue, or keep generic if unknown.
+            if (err.message && (err.message.includes('domain') || err.message.includes('authorized'))) {
+                setError('This assessment is available only to verified members of your organisation. Try another email.');
+            } else {
+                setError(err.message || 'Authentication failed. Please try again.');
+            }
         } finally {
             if (mounted.current) setLoading(false);
         }
@@ -86,169 +98,209 @@ export const AuthPage: React.FC = () => {
     }, []);
 
     return (
-        <div className="min-h-screen flex flex-col lg:flex-row bg-background text-foreground">
+        <div className="h-screen flex flex-col lg:flex-row bg-background text-foreground overflow-hidden">
             {/* Left Side - Visual */}
-            <div className="hidden lg:flex w-1/2 bg-primary relative items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary/80 opacity-90"></div>
-                <div className="absolute top-0 left-0 w-full h-full opacity-10">
-                    <div className="absolute top-[10%] left-[20%] w-72 h-72 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-pulse-slow"></div>
-                    <div className="absolute bottom-[20%] right-[20%] w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-bounce-subtle"></div>
+            <div className="hidden lg:flex w-1/2 bg-slate-900 relative items-center justify-center overflow-hidden">
+                {/* Mesh Gradient Background */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-900 to-slate-900"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-purple-900/20 via-slate-900 to-slate-900"></div>
+
+                {/* Oversized Lock Symbol */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] text-white pointer-events-none">
+                    <Lock size={600} strokeWidth={0.5} />
                 </div>
-                <div className="relative z-10 max-w-lg px-12 text-primary-foreground">
-                    <div className="mb-6 flex items-center gap-3">
-                        <div className="bg-white/20 p-3 rounded-xl backdrop-blur-md">
-                            <BrainCircuit size={48} />
+
+                <div className="relative z-10 max-w-lg px-12 text-white">
+                    {/* Exclusivity Badge */}
+                    <div className="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-500/30 rounded-full px-3 py-1 mb-8 backdrop-blur-sm">
+                        <Lock size={12} className="text-indigo-300" />
+                        <span className="text-xs font-medium text-indigo-100 tracking-wide uppercase">Private Access: Invited Employees Only</span>
+                    </div>
+
+                    <h1 className="text-5xl font-oswald font-bold mb-6 leading-none tracking-tight">Unlock Your <br /> Professional Edge.</h1>
+
+                    <h2 className="text-lg font-montserrat font-medium text-slate-200 mb-2 leading-relaxed max-w-md">
+                        A private, organisation-only assessment that helps you understand how you work, lead, and grow.
+                    </h2>
+
+                    <p className="text-sm text-slate-400 mb-8 font-light">
+                        Your insights remain confidential and support your professional development.
+                    </p>
+
+                    {/* Mini-Benefits List */}
+                    <div className="space-y-4 mb-10">
+                        <div className="flex items-center gap-3 text-slate-300">
+                            <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                                <Zap size={18} className="text-indigo-400" />
+                            </div>
+                            <span className="font-light">Understand your work style</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-slate-300">
+                            <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                                <ShieldCheck size={18} className="text-indigo-400" />
+                            </div>
+                            <span className="font-light">Discover your leadership strengths</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-slate-300">
+                            <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                                <Map size={18} className="text-indigo-400" />
+                            </div>
+                            <span className="font-light">Map your growth opportunities</span>
                         </div>
                     </div>
-                    <h1 className="text-4xl lg:text-5xl font-oswald font-bold mb-6 leading-tight">Unlock Your Leadership Potential.</h1>
-                    <p className="text-lg text-primary-foreground/90 font-light leading-relaxed">
-                        The Hogan Assessment is the gold standard for predicting workplace performance.
-                        Discover your strengths, values, and derailers with CerebralQ's enterprise platform.
-                    </p>
-                    <div className="mt-12 flex gap-4 text-sm font-medium opacity-70">
-                        <span className="flex items-center gap-2"><ShieldCheck size={16} /> Secure</span>
-                        <span className="flex items-center gap-2"><Lock size={16} /> Confidential</span>
-                        <span className="flex items-center gap-2"><CheckCircle size={16} /> Validated</span>
+
+                    <div className="flex gap-6 text-xs font-medium text-slate-500 uppercase tracking-widest">
+                        <span className="flex items-center gap-2"><ShieldCheck size={14} className="text-emerald-500/70" /> Confidential to You</span>
+                        <span className="flex items-center gap-2"><Check size={14} className="text-blue-500/70" /> Designed for Your Organisation</span>
+                        <span className="flex items-center gap-2"><Lock size={14} className="text-purple-500/70" /> Secure Access</span>
                     </div>
                 </div>
             </div>
 
             {/* Right Side - Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-background">
-                <div className="w-full max-w-md bg-card p-8 rounded-lg shadow-sm border border-border">
-                    <div className="text-center mb-8">
-                        <h2 className="text-2xl font-oswald font-bold text-foreground">{authMode === 'login' ? 'Welcome Back' : 'Create Account'}</h2>
-                        <p className="text-muted-foreground text-sm mt-2">
-                            {authMode === 'login'
-                                ? 'Enter your credentials to access your dashboard.'
-                                : `Join your team on CerebralQ. Use your @${COMPANY_DOMAIN} email.`}
-                        </p>
-                    </div>
-
-                    <form onSubmit={handleAuth} className="space-y-4">
-                        {authMode === 'signup' && (
-                            <div className="space-y-1">
-                                <label className="text-xs font-bold text-foreground uppercase tracking-wide">Full Name</label>
-                                <div className="relative">
-                                    <UserIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                                    <input
-                                        type="text"
-                                        required
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 rounded-md border border-input bg-background focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all text-sm"
-                                        placeholder="Your Name"
-                                    />
-                                </div>
+            <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-4 lg:p-8 bg-background h-full">
+                <div className="w-full max-w-md bg-card p-6 rounded-lg shadow-sm border border-border">
+                    {successMessage ? (
+                        <div className="text-center py-12 animate-fade-in">
+                            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mb-6">
+                                <CheckCircle size={32} />
                             </div>
-                        )}
-
-                        <div className="space-y-1">
-                            <label className="text-xs font-bold text-foreground uppercase tracking-wide">Work Email</label>
-                            <div className="relative">
-                                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                                <input
-                                    type="email"
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2 rounded-md border border-input bg-background focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all text-sm"
-                                    placeholder="Email"
-                                />
+                            <h2 className="text-2xl font-bold text-foreground mb-2">Access Granted</h2>
+                            <p className="text-muted-foreground">{successMessage}</p>
+                            <div className="mt-8 flex justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                             </div>
                         </div>
-
-                        <div className="space-y-1">
-                            <label className="text-xs font-bold text-foreground uppercase tracking-wide">Password</label>
-                            <div className="relative">
-                                <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-10 pr-10 py-2 rounded-md border border-input bg-background focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all text-sm"
-                                    placeholder="••••••••"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
-                                >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                </button>
+                    ) : (
+                        <>
+                            <div className="text-center mb-6">
+                                <h2 className="text-2xl font-oswald font-bold text-foreground mb-1">{authMode === 'login' ? 'Welcome Back' : 'Access Your Assessment'}</h2>
+                                <p className="text-muted-foreground font-montserrat font-medium text-xs">
+                                    {authMode === 'login'
+                                        ? 'Enter your credentials to access your dashboard.'
+                                        : "Use your official work email to begin."}
+                                </p>
                             </div>
-                        </div>
 
-                        {error && (
-                            <div className="p-4 bg-destructive/10 text-destructive text-sm rounded-md animate-scale-in">
-                                <div className="flex items-center gap-2 font-bold mb-2">
-                                    <ShieldCheck size={16} className="flex-shrink-0" />
-                                    <span>Connection Error</span>
+                            <form onSubmit={handleAuth} className="space-y-3">
+                                {authMode === 'signup' && (
+                                    <div className="space-y-0.5">
+                                        <label className="text-[10px] font-bold text-foreground uppercase tracking-wide">Full Name</label>
+                                        <div className="relative">
+                                            <UserIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                                            <input
+                                                type="text"
+                                                required
+                                                value={name}
+                                                onChange={(e) => setName(e.target.value)}
+                                                className="w-full pl-9 pr-3 py-2.5 rounded-md border border-input bg-background focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all text-sm placeholder:text-muted-foreground/50"
+                                                placeholder="Your full name"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="space-y-0.5">
+                                    <label className="text-[10px] font-bold text-foreground uppercase tracking-wide">Work Email</label>
+                                    <div className="relative">
+                                        <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                                        <input
+                                            type="email"
+                                            required
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            // Make hint logic: If format is invalid, helper text shows "Use your official organisation email to unlock access."
+                                            // Using browser default validation for now + error state below
+                                            className="w-full pl-9 pr-3 py-2.5 rounded-md border border-input bg-background focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all text-sm placeholder:text-muted-foreground/50"
+                                            placeholder={authMode === 'login' ? 'name@company.com' : 'Your work email'}
+                                        />
+                                    </div>
                                 </div>
-                                <p className="mb-3">{error}</p>
 
-                                <div className="bg-white/50 p-3 rounded text-xs font-mono text-muted-foreground">
-                                    <p><strong>Diagnostics:</strong></p>
-                                    <p>Mode: {import.meta.env.DEV ? 'Development (Proxy)' : 'Production'}</p>
-                                    <p>URL: {import.meta.env.VITE_SUPABASE_URL?.slice(0, 20)}...</p>
-                                    <p>Status: {loading ? 'Checking...' : 'Failed'}</p>
-                                    <div className="flex gap-2 mt-2">
+                                <div className="space-y-0.5">
+                                    <label className="text-[10px] font-bold text-foreground uppercase tracking-wide">Password</label>
+                                    <div className="relative">
+                                        <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            required
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            className="w-full pl-9 pr-9 py-2.5 rounded-md border border-input bg-background focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all text-sm placeholder:text-muted-foreground/50"
+                                            placeholder="••••••••"
+                                        />
                                         <button
                                             type="button"
-                                            onClick={() => window.location.reload()}
-                                            className="text-primary hover:underline font-bold"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
                                         >
-                                            Reload Page
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={async () => {
-                                                try {
-                                                    const start = Date.now();
-                                                    const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/`, { method: 'HEAD', headers: { apikey: import.meta.env.VITE_SUPABASE_ANON_KEY } });
-                                                    alert(`Ping: ${Date.now() - start}ms. Status: ${res.status}`);
-                                                } catch (e) {
-                                                    alert(`Ping failed: ${e}`);
-                                                }
-                                            }}
-                                            className="text-primary hover:underline font-bold"
-                                        >
-                                            Test Connection
+                                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                         </button>
                                     </div>
                                 </div>
+
+                                {error && (
+                                    <div className="p-4 bg-destructive/5 text-destructive text-sm rounded-md animate-scale-in border border-destructive/20">
+                                        <div className="flex items-start gap-2">
+                                            <ShieldCheck size={16} className="mt-0.5 flex-shrink-0" />
+                                            <div>
+                                                <p className="font-medium">{error}</p>
+                                                <p className="text-xs mt-1 text-muted-foreground">Use your official organisation email to unlock access.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="pt-2">
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="group w-full bg-primary text-primary-foreground font-medium h-12 rounded-md hover:bg-primary/90 transition-all transform active:scale-[0.99] shadow-md flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                                    >
+                                        {loading ? 'Processing...' : (authMode === 'login' ? 'Log In' : 'Unlock My Assessment')}
+                                        {!loading && (
+                                            authMode === 'signup' ? (
+                                                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                            ) : (
+                                                <Lock size={14} className="group-hover:scale-110 transition-transform" />
+                                            )
+                                        )}
+                                    </button>
+                                </div>
+
+                                {authMode === 'signup' && (
+                                    <p className="text-center text-[10px] text-muted-foreground/70 mt-3 font-montserrat">
+                                        Your responses are private and visible only to you and authorised assessment partners.
+                                    </p>
+                                )}
+                            </form>
+
+                            <div className="mt-6 text-center border-t border-border/50 pt-4">
+                                <p className="text-xs text-foreground/80 font-medium">
+                                    {authMode === 'login' ? "Don't have an account?" : "Already have an account?"}{' '}
+                                    <button
+                                        onClick={() => { setAuthMode(authMode === 'login' ? 'signup' : 'login'); setError(''); }}
+                                        className="font-bold text-primary hover:text-primary/80 underline decoration-2 underline-offset-4"
+                                    >
+                                        {authMode === 'login' ? 'Sign Up' : 'Log In'}
+                                    </button>
+                                </p>
                             </div>
-                        )}
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-primary text-primary-foreground font-medium py-2 rounded-md hover:opacity-90 transition-all transform active:scale-[0.98] shadow-sm flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
-                        >
-                            {loading ? 'Processing...' : (authMode === 'login' ? 'Unlock your Potential' : 'Start Assessment')}
-                            {!loading && <ArrowRight size={18} />}
-                        </button>
-                    </form>
+                            <div className="mt-4 text-center">
+                                <p className="text-[10px] text-muted-foreground/60">
+                                    Access restricted to verified members of your organisation.
+                                </p>
+                            </div>
+                        </>
+                    )}
+                </div>
 
-                    <div className="mt-6 text-center">
-                        <p className="text-sm text-muted-foreground">
-                            {authMode === 'login' ? "Don't have an account?" : "Already have an account?"}{' '}
-                            <button
-                                onClick={() => { setAuthMode(authMode === 'login' ? 'signup' : 'login'); setError(''); }}
-                                className="font-bold text-primary hover:underline"
-                            >
-                                {authMode === 'login' ? 'Sign Up' : 'Log In'}
-                            </button>
-                        </p>
-                    </div>
-
-                    <div className="mt-8 pt-6 border-t border-border text-center">
-                        <p className="text-[10px] text-muted-foreground">
-                            Restricted Access: @{COMPANY_DOMAIN} <br />
-                            Authorized Personnel Only
-                        </p>
-                    </div>
+                {/* Footer Compliance Note */}
+                <div className="mt-8 text-center max-w-sm">
+                    <p className="text-[11px] font-montserrat text-muted-foreground/40 text-center leading-relaxed">
+                        This assessment is exclusive to your organisation and not publicly accessible.
+                    </p>
                 </div>
             </div>
         </div>

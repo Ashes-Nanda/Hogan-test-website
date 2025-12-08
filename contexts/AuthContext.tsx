@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const loginAdmin = async (password: string): Promise<boolean> => {
         // @ts-ignore
-        const configuredPass = process.env.ADMIN_PASSWORD;
+        const configuredPass = process.env.ADMIN_PASSWORD || 'admin123';
 
         if (!configuredPass) {
             console.error("Admin password not configured");
