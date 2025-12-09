@@ -111,7 +111,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                 <div className="flex items-center gap-4 flex-1">
                     <div className="flex-1">
                         <div className="flex justify-between items-center mb-2">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
                                 <h4 className="font-oswald font-bold text-lg text-slate-800">{traitName}</h4>
                                 {traitLabel && (
                                     <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
@@ -122,7 +122,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                         </div>
 
                         {/* Progress Bar & Score Row */}
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3 md:gap-4">
                             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden flex-1">
                                 <motion.div
                                     initial={{ width: 0 }}
@@ -153,7 +153,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden bg-slate-50/30"
                     >
-                        <div className="p-5 border-t border-slate-100 space-y-6">
+                        <div className="p-4 md:p-5 border-t border-slate-100 space-y-6">
 
                             {/* 1. CORE INTERPRETATION */}
                             <div className="flex gap-3">

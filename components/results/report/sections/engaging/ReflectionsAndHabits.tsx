@@ -44,7 +44,7 @@ export const ReflectionsAndHabits: React.FC<ReflectionsProps> = ({
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.1 }}
                             whileHover={{ scale: 1.01 }}
-                            className="bg-white border-l-4 border-indigo-500 shadow-sm p-6 rounded-r-xl flex items-center gap-6"
+                            className="bg-white border-l-4 border-indigo-500 shadow-sm p-4 md:p-6 rounded-r-xl flex items-start gap-4 md:gap-6"
                         >
                             <div className="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xl shrink-0">
                                 {i + 1}

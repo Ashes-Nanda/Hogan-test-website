@@ -51,7 +51,7 @@ export const HoganHeroSection: React.FC<HoganHeroSectionProps> = ({ hpiScores, h
                     {topHpi.map(([name, score], index) => (
                         <motion.div
                             key={name}
-                            className="flex-1 min-w-[140px] max-w-[200px]"
+                            className="flex-1 min-w-[130px] max-w-[200px]"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 + index * 0.1 }}

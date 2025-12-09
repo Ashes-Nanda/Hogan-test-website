@@ -44,7 +44,7 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
             className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row"
         >
             {/* Left Side: Confidence Score */}
-            <div className="flex-1 p-8 md:p-10 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+            <div className="flex-1 p-6 md:p-10 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
                 <div className="mb-4 flex items-center gap-2">
                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                     <span className="text-sm font-bold text-slate-500 uppercase tracking-wider">Confidence Score</span>
@@ -86,13 +86,13 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
             </div>
 
             {/* Right Side: Famous People */}
-            <div className="flex-1 p-8 md:p-10 flex flex-col items-center justify-center bg-white dark:bg-slate-900">
+            <div className="flex-1 p-6 md:p-10 flex flex-col items-center justify-center bg-white dark:bg-slate-900">
                 <div className="mb-8 flex items-center gap-2">
                     <div className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
                     <span className="text-sm font-bold text-slate-500 uppercase tracking-wider">You're in Good Company</span>
                 </div>
 
-                <div className="flex justify-center gap-6 flex-wrap">
+                <div className="flex justify-center gap-4 md:gap-6 flex-wrap">
                     {people.slice(0, 3).map((person, index) => (
                         <motion.div
                             key={person}
