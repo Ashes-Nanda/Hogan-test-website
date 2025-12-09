@@ -71,7 +71,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
     traitInteractionInsight,
     microAction
 }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(true);
 
     const themeConfig = {
         blue: { main: 'bg-blue-600', light: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', icon: 'text-blue-500' },
@@ -119,18 +119,21 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                                     </span>
                                 )}
                             </div>
-                            <span className={`font-bold ${themeConfig.text} bg-white px-2 py-0.5 rounded shadow-sm border ${themeConfig.border}`}>
+                        </div>
+
+                        {/* Progress Bar & Score Row */}
+                        <div className="flex items-center gap-4">
+                            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden flex-1">
+                                <motion.div
+                                    initial={{ width: 0 }}
+                                    whileInView={{ width: `${score}%` }}
+                                    transition={{ duration: 0.8 }}
+                                    className={`h-full ${themeConfig.main}`}
+                                />
+                            </div>
+                            <span className={`font-bold ${themeConfig.text} text-sm`}>
                                 {score}%
                             </span>
-                        </div>
-                        {/* Progress Bar */}
-                        <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                            <motion.div
-                                initial={{ width: 0 }}
-                                whileInView={{ width: `${score}%` }}
-                                transition={{ duration: 0.8 }}
-                                className={`h-full ${themeConfig.main}`}
-                            />
                         </div>
                     </div>
                 </div>
@@ -243,7 +246,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                                 <div className={`p-4 rounded-lg border ${themeConfig.border} ${themeConfig.light} flex gap-3 items-start`}>
                                     <Zap className={`shrink-0 mt-0.5 ${themeConfig.icon}`} size={18} />
                                     <div>
-                                        <h5 className={`text-sm font-bold uppercase tracking-wider mb-1 ${themeConfig.text}`}>Micro-Action</h5>
+                                        <h5 className={`text-sm font-bold uppercase tracking-wider mb-1 ${themeConfig.text}`}>Your next step</h5>
                                         <p className="text-sm text-slate-700 italic">"{microAction}"</p>
                                     </div>
                                 </div>

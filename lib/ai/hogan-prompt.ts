@@ -45,7 +45,7 @@ For EACH trait (7 total):
 - Under Pressure: Modify behaviour based on Excitable/Skeptical.
 - Social Impact: "others may see you as..."
 - Trait Interaction: Connect this trait to another (e.g. Ambition + Sociability).
-- Micro-Action: Specific, small.
+- Your next step: Specific, small.
 
 ## 4. RISK FACTORS (HDS)
 For EACH trait:

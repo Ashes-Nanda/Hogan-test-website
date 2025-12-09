@@ -64,7 +64,7 @@ export const AuthPage: React.FC = () => {
                 if (error) throw error;
 
                 // Show success message and wait briefly
-                setSuccessMessage('Welcome. You now have access — your assessment is ready when you are.');
+                setSuccessMessage('Welcome. You now have access - your assessment is ready when you are.');
                 await new Promise(resolve => setTimeout(resolve, 1500));
             }
 

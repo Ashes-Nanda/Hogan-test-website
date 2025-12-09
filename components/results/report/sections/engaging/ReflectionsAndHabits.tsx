@@ -68,21 +68,21 @@ export const ReflectionsAndHabits: React.FC<ReflectionsProps> = ({
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.15 }}
-                            className="bg-slate-900 text-white p-8 rounded-2xl md:rounded-3xl relative overflow-hidden group"
+                            className="bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 p-8 rounded-2xl md:rounded-3xl relative overflow-hidden group hover:shadow-md transition-all duration-300"
                         >
-                            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-125 transition-transform duration-700">
-                                <HelpCircle size={100} />
+                            <div className="absolute top-0 right-0 p-8 text-indigo-200 opacity-50 group-hover:scale-125 transition-transform duration-700 group-hover:rotate-12">
+                                <HelpCircle size={100} strokeWidth={1.5} />
                             </div>
 
                             <div className="relative z-10 flex gap-6">
                                 <div className="hidden md:flex flex-col items-center gap-2">
-                                    <div className="w-px h-8 bg-indigo-400/50" />
-                                    <div className="w-2 h-2 rounded-full bg-indigo-400" />
-                                    <div className="w-px h-full bg-indigo-400/50" />
+                                    <div className="w-px h-8 bg-indigo-300" />
+                                    <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                                    <div className="w-px h-full bg-indigo-300" />
                                 </div>
                                 <div>
-                                    <span className="text-indigo-300 font-bold tracking-widest text-xs uppercase mb-2 block">Reflection {i + 1}</span>
-                                    <h3 className="text-xl md:text-2xl font-serif leading-relaxed text-slate-100">
+                                    <span className="text-indigo-600 font-bold tracking-widest text-xs uppercase mb-2 block">Reflection {i + 1}</span>
+                                    <h3 className="text-xl md:text-2xl font-serif leading-relaxed text-slate-800">
                                         "{question}"
                                     </h3>
                                 </div>
@@ -92,6 +92,6 @@ export const ReflectionsAndHabits: React.FC<ReflectionsProps> = ({
                 </div>
             </div>
 
-        </section>
+        </section >
     );
 };

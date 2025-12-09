@@ -1350,7 +1350,7 @@ export const hoganTestQuestionsData: TestQuestionsData = {
     },
     {
       id: "hbri_str_12",
-      text: "Three employees—A, B, C—completed a task. If A finished before B, and C finished after B, who finished last?",
+      text: "Three employees - A, B, C - completed a task. If A finished before B, and C finished after B, who finished last?",
       dimension: "hbri_strategic",
       section: 14,
       correctAnswer: "C",

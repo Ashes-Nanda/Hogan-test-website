@@ -4,7 +4,7 @@ export const MOCK_HOGAN_REPORT: HoganReportContent = {
     hero: {
         identityTitle: "The Driven Leader",
         subTitle: "Prepared exclusively for Alex Mercer",
-        heroNarrative: "You bring a steady, grounded presence to your work and connect with others in thoughtful, meaningful ways. You take initiative when it matters, but you don’t push for attention — you prefer goals that feel purposeful. You learn quickly, enjoy exploring new ideas, and think more strategically than tactically. You’re motivated by influence and the chance to shape how things unfold. Overall, your profile reflects a confident, growth-oriented approach to leadership."
+        heroNarrative: "You bring a steady, grounded presence to your work and connect with others in thoughtful, meaningful ways. You take initiative when it matters, but you don’t push for attention - you prefer goals that feel purposeful. You learn quickly, enjoy exploring new ideas, and think more strategically than tactically. You’re motivated by influence and the chance to shape how things unfold. Overall, your profile reflects a confident, growth-oriented approach to leadership."
     },
     traitSummary: {
         snapshotParagraph: "Your traits show a balance of social confidence and emotional stability. In your work, you tend to push for results while maintaining a structured approach. You think conceptually, connecting dots between disparate ideas, and you're motivated by having a tangible impact. Together, these patterns highlight a leader who builds through influence and foresight.",
