@@ -15,8 +15,8 @@ interface IdentitySummaryProps {
     };
     personalityWords?: string[]; // 5 words
     socialExperience?: {
-        atBest: string[];
-        underPressure: string[];
+        atBest: string;
+        underPressure: string;
     };
 }
 
@@ -39,8 +39,8 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
     const words = personalityWords || ["Driven", "Strategic", "Direct", "Flexible", "Influential"];
 
     const social = socialExperience || {
-        atBest: ["Inspiring vision", "Decisive action", "Clear communication"],
-        underPressure: ["Can be impatient", "Might overlook details", "Intense interactions"]
+        atBest: "People experience you as open, decisive, and clear in your communication.",
+        underPressure: "In tense moments, you may become impatient and might overlook details."
     };
 
     return (
@@ -111,16 +111,9 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
                                 <span className="p-2 bg-emerald-100 rounded-lg"><Sparkles size={20} /></span>
                                 At Your Best
                             </h3>
-                            <ul className="space-y-4">
-                                {social.atBest.map((item, i) => (
-                                    <li key={i} className="flex gap-4 items-start bg-white/60 p-3 rounded-lg backdrop-blur-sm">
-                                        <div className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
-                                            {i + 1}
-                                        </div>
-                                        <span className="text-emerald-900 font-medium">{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
+                            <div className="space-y-4 text-slate-600 leading-relaxed">
+                                <p>{social.atBest}</p>
+                            </div>
                         </div>
                     </div>
 
@@ -132,16 +125,9 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
                                 <span className="p-2 bg-orange-100 text-orange-600 rounded-lg"><AlertCircle size={20} /></span>
                                 Under Pressure
                             </h3>
-                            <ul className="space-y-4">
-                                {social.underPressure.map((item, i) => (
-                                    <li key={i} className="flex gap-4 items-start bg-white/60 p-3 rounded-lg backdrop-blur-sm">
-                                        <div className="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
-                                            {i + 1}
-                                        </div>
-                                        <span className="text-slate-700 font-medium">{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
+                            <div className="space-y-4 text-slate-600 leading-relaxed">
+                                <p>{social.underPressure}</p>
+                            </div>
                         </div>
                     </div>
                 </div>

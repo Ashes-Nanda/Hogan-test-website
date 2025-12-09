@@ -60,7 +60,11 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
       setIsGenerating(true);
       // Dynamically import generator to avoid server-side issues if any
       const { generateHoganReportAI } = await import("@/lib/ai/hogan-generator");
-      const content = await generateHoganReportAI(resultData);
+
+      const content = await generateHoganReportAI(resultData, (partialData) => {
+        // PROGRESSIVE LOADING: Update state as pieces arrive
+        setAiContent(prev => ({ ...prev, ...partialData }));
+      });
 
       if (content) {
         setAiContent(content);
@@ -248,6 +252,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
             hpiAnalysis={aiContent?.hpiAnalysis}
             hdsAnalysis={aiContent?.hdsAnalysis}
             mvpiAnalysis={aiContent?.mvpiAnalysis}
+            hbriAnalysis={aiContent?.hbriAnalysis}
             hpiProfile={resultData.hpiProfile}
             hdsRiskAreas={resultData.hdsRiskAreas}
             mvpiTopValues={resultData.mvpiTopValues}
@@ -335,7 +340,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               firstname={resultData?.firstname || null}
               resultData={resultData}
               hoganProfile={resultData.hoganProfile}
-              actionSteps={aiContent?.strategicActions}
+              actionItems={aiContent?.actionPlan?.actionItems}
               sectionNumber={7}
               id="action-plan"
             />
@@ -364,7 +369,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               id="work-style"
               sectionNumber={10}
               workStyle={aiContent?.workStyle}
-              energy={aiContent?.energyFlow}
+              energy={aiContent?.energy}
             />
           </LazySection>
         </div>
@@ -375,7 +380,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
             <ReflectionsAndHabits
               id="reflections-habits"
               sectionNumber={13}
-              microHabits={aiContent?.microHabits}
+              microHabits={aiContent?.hpiAnalysis?.map((t: any) => t.microAction).filter(Boolean).slice(0, 3)}
               coachQuestions={aiContent?.coachQuestions}
             />
           </LazySection>

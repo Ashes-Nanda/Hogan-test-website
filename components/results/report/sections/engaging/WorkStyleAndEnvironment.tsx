@@ -3,15 +3,16 @@ import { motion } from 'framer-motion';
 import { Battery, BatteryCharging, Clock, Users, MessageSquare, Layout } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 
+// Interface update
 interface WorkStyleProps {
     id: string;
     sectionNumber: number;
     workStyle?: {
-        rhythm: string;
-        team: string;
-        manager: string;
-        communication: string;
-        setup: string;
+        rhythm: { title: string; body: string };
+        team: { title: string; body: string };
+        manager: { title: string; body: string };
+        communication: { title: string; body: string };
+        setup: { title: string; body: string };
     };
     energy?: {
         energisers: string[];
@@ -27,11 +28,11 @@ export const WorkStyleAndEnvironment: React.FC<WorkStyleProps> = ({
 
     // Default placeholders
     const style = workStyle || {
-        rhythm: "Fast-paced, iterative sprints",
-        team: "Collaborative, high-energy environment",
-        manager: "Hands-off, results-oriented",
-        communication: "Direct, concise, face-to-face",
-        setup: "Open plan or flexible workspace"
+        rhythm: { title: "Ideal Rhythm", body: "Fast-paced, iterative sprints" },
+        team: { title: "Team Environment", body: "Collaborative, high-energy environment" },
+        manager: { title: "Manager Style", body: "Hands-off, results-oriented" },
+        communication: { title: "Communication", body: "Direct, concise, face-to-face" },
+        setup: { title: "Productivity Setup", body: "Open plan or flexible workspace" }
     };
 
     const energyFlow = energy || {
@@ -48,19 +49,19 @@ export const WorkStyleAndEnvironment: React.FC<WorkStyleProps> = ({
 
                 <div className="flex flex-wrap justify-center gap-6 mt-12">
                     <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
-                        <WorkCard icon={Clock} title="Ideal Rhythm" text={style.rhythm} color="blue" />
+                        <WorkCard icon={Clock} title="Ideal Rhythm" text={style.rhythm.body} color="blue" />
                     </div>
                     <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
-                        <WorkCard icon={Users} title="Team Environment" text={style.team} color="indigo" />
+                        <WorkCard icon={Users} title="Team Environment" text={style.team.body} color="indigo" />
                     </div>
                     <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
-                        <WorkCard icon={UserIcon} title="Manager Style" text={style.manager} color="purple" />
+                        <WorkCard icon={UserIcon} title="Manager Style" text={style.manager.body} color="purple" />
                     </div>
                     <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
-                        <WorkCard icon={MessageSquare} title="Communication" text={style.communication} color="pink" />
+                        <WorkCard icon={MessageSquare} title="Communication" text={style.communication.body} color="pink" />
                     </div>
                     <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
-                        <WorkCard icon={Layout} title="Productivity Setup" text={style.setup} color="teal" />
+                        <WorkCard icon={Layout} title="Productivity Setup" text={style.setup.body} color="teal" />
                     </div>
                 </div>
             </div>

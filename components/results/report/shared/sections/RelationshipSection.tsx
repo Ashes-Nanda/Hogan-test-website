@@ -5,12 +5,12 @@ interface RelationshipSectionProps {
     firstname: string | null;
     relationships: {
         professional: {
-            strengths: string[];
-            growthAreas: string[];
+            strengths: { title: string; body: string }[];
+            growthAreas: { title: string; body: string }[];
         };
         personal: {
-            strengths: string[];
-            growthAreas: string[];
+            strengths: { title: string; body: string }[];
+            growthAreas: { title: string; body: string }[];
         };
     };
     sectionNumber: number;
@@ -22,8 +22,14 @@ interface RelationshipSectionProps {
 export const RelationshipSection: React.FC<RelationshipSectionProps> = ({ id, relationships }) => {
     // Fallback if data is missing (during transition)
     const data = relationships || {
-        professional: { strengths: ["Clear communication"], growthAreas: ["Patience with details"] },
-        personal: { strengths: ["Loyal friend"], growthAreas: ["expressing needs"] }
+        professional: {
+            strengths: [{ title: "Communication", body: "Clear communication" }],
+            growthAreas: [{ title: "Patience", body: "Patience with details" }]
+        },
+        personal: {
+            strengths: [{ title: "Loyalty", body: "Loyal friend" }],
+            growthAreas: [{ title: "Expression", body: "Expressing needs" }]
+        }
     };
 
     return (
@@ -39,7 +45,10 @@ export const RelationshipSection: React.FC<RelationshipSectionProps> = ({ id, re
                             <h4 className="text-sm font-bold text-blue-600 uppercase mb-3">Strengths</h4>
                             <ul className="space-y-2 text-sm text-muted-foreground">
                                 {data.professional?.strengths?.map((item, i) => (
-                                    <li key={i} className="flex gap-2"><CheckCircle size={14} className="text-blue-500 shrink-0 mt-1" /> {item}</li>
+                                    <li key={i} className="flex gap-2">
+                                        <CheckCircle size={14} className="text-blue-500 shrink-0 mt-1" />
+                                        <span><strong className="text-slate-700">{item.title}:</strong> {item.body}</span>
+                                    </li>
                                 ))}
                             </ul>
                         </div>
@@ -47,7 +56,10 @@ export const RelationshipSection: React.FC<RelationshipSectionProps> = ({ id, re
                             <h4 className="text-sm font-bold text-orange-600 uppercase mb-3">Growth Areas</h4>
                             <ul className="space-y-2 text-sm text-muted-foreground">
                                 {data.professional?.growthAreas?.map((item, i) => (
-                                    <li key={i} className="flex gap-2"><AlertTriangle size={14} className="text-orange-500 shrink-0 mt-1" /> {item}</li>
+                                    <li key={i} className="flex gap-2">
+                                        <AlertTriangle size={14} className="text-orange-500 shrink-0 mt-1" />
+                                        <span><strong className="text-slate-700">{item.title}:</strong> {item.body}</span>
+                                    </li>
                                 ))}
                             </ul>
                         </div>
@@ -63,7 +75,10 @@ export const RelationshipSection: React.FC<RelationshipSectionProps> = ({ id, re
                             <h4 className="text-sm font-bold text-pink-600 uppercase mb-3">Strengths</h4>
                             <ul className="space-y-2 text-sm text-muted-foreground">
                                 {data.personal?.strengths?.map((item, i) => (
-                                    <li key={i} className="flex gap-2"><CheckCircle size={14} className="text-pink-500 shrink-0 mt-1" /> {item}</li>
+                                    <li key={i} className="flex gap-2">
+                                        <CheckCircle size={14} className="text-pink-500 shrink-0 mt-1" />
+                                        <span><strong className="text-slate-700">{item.title}:</strong> {item.body}</span>
+                                    </li>
                                 ))}
                             </ul>
                         </div>
@@ -71,7 +86,10 @@ export const RelationshipSection: React.FC<RelationshipSectionProps> = ({ id, re
                             <h4 className="text-sm font-bold text-orange-600 uppercase mb-3">Growth Areas</h4>
                             <ul className="space-y-2 text-sm text-muted-foreground">
                                 {data.personal?.growthAreas?.map((item, i) => (
-                                    <li key={i} className="flex gap-2"><AlertTriangle size={14} className="text-orange-500 shrink-0 mt-1" /> {item}</li>
+                                    <li key={i} className="flex gap-2">
+                                        <AlertTriangle size={14} className="text-orange-500 shrink-0 mt-1" />
+                                        <span><strong className="text-slate-700">{item.title}:</strong> {item.body}</span>
+                                    </li>
                                 ))}
                             </ul>
                         </div>

@@ -11,9 +11,10 @@ interface HoganTraitsSectionProps {
     hpiProfile?: any;
     hdsRiskAreas?: any;
     mvpiTopValues?: any;
-    hpiAnalysis?: any[]; // New prop from AI
-    hdsAnalysis?: any[]; // New prop from AI
-    mvpiAnalysis?: any[]; // New prop from AI
+    hpiAnalysis?: any[];
+    hdsAnalysis?: any[];
+    mvpiAnalysis?: any[];
+    hbriAnalysis?: any[];
     sectionNumber: number;
     firstname?: string;
     id: string;
@@ -29,12 +30,26 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
     hpiAnalysis,
     hdsAnalysis,
     mvpiAnalysis,
+    hbriAnalysis,
     id
 }) => {
 
     // Helper to find analysis for a trait
     const getAnalysis = (list: any[] | undefined, name: string) => {
-        return list?.find((item: any) => item.traitName === name);
+        if (!list || !name) return undefined;
+        const searchName = name.toLowerCase();
+
+        return list.find((item: any) => {
+            const trait = item.traitName?.toLowerCase();
+            const value = item.valueName?.toLowerCase(); // MVPI
+            const style = item.styleName?.toLowerCase(); // HBRI
+
+            return (
+                (trait && (trait === searchName || trait.includes(searchName) || searchName.includes(trait))) ||
+                (value && (value === searchName || value.includes(searchName) || searchName.includes(value))) ||
+                (style && (style === searchName || style.includes(searchName) || searchName.includes(style)))
+            );
+        });
     };
 
     return (
@@ -67,10 +82,19 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                                     traitName={name}
                                     score={score.percentage}
                                     theme="blue"
+                                    traitLabel={analysis?.traitLabel}
                                     interpretation={analysis?.interpretation || `Your score on ${name} suggests a specific behavioral pattern.`}
-                                    strengths={analysis?.strengths || [`Strength of ${name} A`, `Strength of ${name} B`]}
-                                    watchOuts={analysis?.watchOuts || [`Risk of ${name} A`, `Risk of ${name} B`]}
-                                    microAction={analysis?.microAction || `Try to practice behaviors related to ${name}.`}
+
+                                    // HPI Fields
+                                    innerExperience={analysis?.innerExperience}
+                                    atWork={analysis?.atWork}
+                                    underPressure={analysis?.underPressure}
+                                    socialImpact={analysis?.socialImpact}
+
+                                    strengths={analysis?.strengths}
+                                    watchOuts={analysis?.watchOuts}
+                                    traitInteractionInsight={analysis?.traitInteractionInsight}
+                                    microAction={analysis?.microAction}
                                 />
                             );
                         })}
@@ -99,10 +123,19 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                                         traitName={name}
                                         score={score.percentage}
                                         theme="orange"
-                                        interpretation={analysis?.definition}
-                                        strengths={analysis?.recenterStrategies} // Mapping equivalent props
-                                        watchOuts={analysis?.stressSigns}
-                                        microAction={analysis?.selfManagementTip}
+                                        interpretation={analysis?.interpretation}
+
+                                        // HDS Fields
+                                        triggers={analysis?.triggerConditions}
+                                        behaviorUnderStress={analysis?.behaviourUnderStress}
+                                        socialImpact={analysis?.socialImpact}
+
+                                        strengths={analysis?.strengthExpressions} // Mapping
+                                        watchOuts={analysis?.frictionPatterns} // Mapping
+
+                                        regulationStrategies={analysis?.regulationStrategies}
+                                        traitInteractionInsight={analysis?.traitInteractionInsight}
+                                        microAction={analysis?.microAction}
                                     />
                                 );
                             })}
@@ -125,17 +158,25 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                             {Object.entries(mvpiScores as Record<string, any>).map(([name, score]) => {
-                                const analysis = getAnalysis(mvpiAnalysis, name);
+                                const analysis = getAnalysis(mvpiAnalysis, name); // Might match valueName
                                 return (
                                     <TraitAnalysisCard
                                         key={name}
                                         traitName={name}
                                         score={score.percentage}
                                         theme="green"
-                                        interpretation={analysis?.coreMeaning}
-                                        strengths={analysis?.priorities}
-                                        watchOuts={analysis?.socialRead}
-                                        microAction={analysis?.growthSuggestion}
+                                        interpretation={analysis?.interpretation}
+
+                                        // MVPI Fields
+                                        drivers={analysis?.drivers}
+                                        workBehaviour={analysis?.workBehaviour}
+                                        socialImpact={analysis?.socialImpact}
+
+                                        strengths={analysis?.strengthSituations} // Mapping
+                                        watchOuts={analysis?.tensionSituations} // Mapping
+
+                                        traitInteractionInsight={analysis?.interactionInsight}
+                                        microAction={analysis?.microAction}
                                     />
                                 );
                             })}
@@ -157,20 +198,34 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                            {Object.entries(hbriScores as Record<string, any>).map(([name, score]) => (
-                                <TraitAnalysisCard
-                                    key={name}
-                                    traitName={name}
-                                    score={score.percentage}
-                                    theme="purple"
-                                // HBRI is currently less detailed in the AI schema, standard props available
-                                />
-                            ))}
+                            {Object.entries(hbriScores as Record<string, any>).map(([name, score]) => {
+                                const analysis = getAnalysis(hbriAnalysis, name); // Matches styleName
+                                return (
+                                    <TraitAnalysisCard
+                                        key={name}
+                                        traitName={name}
+                                        score={score.percentage}
+                                        theme="purple"
+                                        interpretation={analysis?.interpretation}
+
+                                        // HBRI Fields
+                                        coreThinkingStyle={analysis?.coreThinkingStyle}
+                                        problemSolving={analysis?.problemSolving}
+                                        collaborationImpact={analysis?.collaborationImpact}
+
+                                        strengths={analysis?.strengthSituations} // Mapping
+                                        watchOuts={analysis?.blindSpots} // Mapping
+
+                                        traitInteractionInsight={analysis?.interactionInsight}
+                                        microAction={analysis?.microAction}
+                                    />
+                                );
+                            })}
                         </div>
                     </div>
                 )}
             </div>
-        </section>
+        </section >
     );
 };
 export default HoganTraitsSection;

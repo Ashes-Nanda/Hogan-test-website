@@ -1,107 +1,225 @@
 import { z } from "zod";
 
-// Schema for individual trait analysis (HPI)
-export const TraitAnalysisSchema = z.object({
-    traitName: z.string(),
-    score: z.number().nullable(), // Percentage
-    interpretation: z.string().describe("1-sentence explanation of the trait in plain English."),
-    strengths: z.array(z.string()).describe("List of 2-3 strengths."),
-    watchOuts: z.array(z.string()).describe("List of 2-3 watch-outs or risks."),
-    microAction: z.string().describe("A small, 1-2 sentence micro-habit.")
+// 1. HEADER / HERO
+export const HeroSectionSchema = z.object({
+    identityTitle: z.string().describe("2-3 word personality title (e.g. 'The Balanced Professional')."),
+    heroNarrative: z.string().describe("5-component narrative paragraph describing core disposition, work style, thinking, drivers, and pattern."),
+    subTitle: z.string().describe("e.g. 'Prepared exclusively for [Name]'")
 });
 
-// Schema for risk factors (HDS)
+// 2. TRAIT SUMMARY
+export const TraitSummarySchema = z.object({
+    snapshotParagraph: z.string().describe("4-component narrative overview (disposition, work style, thinking, values)."),
+    headlineInsights: z.array(z.string()).describe("3-4 short summary chips (e.g. 'Driven and goal-oriented')."),
+    standOutCard: z.string().nullable().describe("Optional 1-2 line insight about the most extreme score.")
+});
+
+// 3A. DETAILED TRAIT ANALYSIS - HPI
+export const TraitAnalysisSchema = z.object({
+    traitName: z.string(),
+    score: z.number().nullable(),
+    traitLabel: z.string().describe("1-2 word personal descriptor."),
+    interpretation: z.string().describe("1 sentence explanation based on score band."),
+    innerExperience: z.string().describe("1-2 sentences describing internal state."),
+    atWork: z.string().describe("2 sentences describing observable behaviour."),
+    underPressure: z.string().describe("1 sentence modified by HDS traits."),
+    socialImpact: z.string().describe("1-2 sentences on how others interpret this."),
+    strengths: z.array(z.string()).describe("3 bullet points."),
+    watchOuts: z.array(z.string()).describe("3 bullet points relative to frictions/blind spots."),
+    traitInteractionInsight: z.string().describe("1-2 sentences connecting to another trait."),
+    microAction: z.string().describe("One actionable behaviour.")
+});
+
+// 3B. RISKS - HDS
 export const RiskFactorSchema = z.object({
     traitName: z.string(),
     score: z.number().nullable(),
-    definition: z.string().describe("One clear sentence describing the risk trait."),
-    behaviorInfo: z.string().describe("How this score tends to show up."),
-    stressSigns: z.array(z.string()).describe("Early signs you are under stress."),
-    recenterStrategies: z.array(z.string()).describe("What helps you recenter."),
-    selfManagementTip: z.string().describe("1 sentence behavioural suggestion.")
+    interpretation: z.string().describe("Interpretation based on score band."),
+    triggerConditions: z.string().describe("2 triggers (e.g. 'sudden change or unmet expectations')."),
+    behaviourUnderStress: z.string().describe("How this looks under stress."),
+    socialImpact: z.string().describe("How others might read this behavior."),
+    strengthExpressions: z.array(z.string()).describe("2 positive expressions of this trait."),
+    frictionPatterns: z.array(z.string()).describe("2 friction points."),
+    regulationStrategies: z.string().describe("1-2 line strategy to manage this."),
+    traitInteractionInsight: z.string().describe("Insight connecting this risk to HPI traits."),
+    microAction: z.string().describe("Single-line behaviour.")
 });
 
-// Schema for values (MVPI)
+// 3C. VALUES - MVPI
 export const ValueSchema = z.object({
     valueName: z.string(),
-    coreMeaning: z.string().describe("1-sentence description of the value."),
-    influence: z.string().describe("How this value influences decisions."),
-    priorities: z.array(z.string()).describe("What you tend to prioritise."),
-    socialRead: z.array(z.string()).describe("How others may experience you."),
-    growthSuggestion: z.string().describe("Simple 1-line shift.")
+    score: z.number().nullable(),
+    interpretation: z.string().describe("Influence level based on score."),
+    drivers: z.string().describe("What drives you (e.g. 'desire to influence')."),
+    workBehaviour: z.string().describe("How this shows up at work."),
+    strengthSituations: z.array(z.string()).describe("2 situations where this helps."),
+    tensionSituations: z.array(z.string()).describe("2 situations creating tension."),
+    socialImpact: z.string().describe("How others experience this value."),
+    interactionInsight: z.string().describe("Connection to HPI traits."),
+    microAction: z.string().describe("Single specific action.")
 });
 
-// Schema for relationships
-export const RelationshipSchema = z.object({
+// 3D. REASONING - HBRI
+export const ReasoningSchema = z.object({
+    styleName: z.string().describe("'Tactical' or 'Strategic'"),
+    score: z.number().nullable(),
+    interpretation: z.string(),
+    coreThinkingStyle: z.string().describe("Descriptors of thinking style."),
+    problemSolving: z.string().describe("How you solve problems."),
+    strengthSituations: z.array(z.string()).describe("2 situations where this helps."),
+    blindSpots: z.array(z.string()).describe("2 potential blind spots."),
+    collaborationImpact: z.string().describe("How colleagues experience this reasoning."),
+    interactionInsight: z.string().describe("Connection to HPI traits."),
+    microAction: z.string()
+});
+
+// 4. PERSONAL EXAMPLES
+export const PersonalExamplesSchema = z.object({
+    superpowers: z.array(z.object({
+        title: z.string(),
+        tag: z.string().describe("'Strength'"),
+        body: z.string().describe("2-3 sentences rooted in trait behaviour.")
+    })).describe("2-3 superpower cards."),
+    blindSpots: z.array(z.object({
+        title: z.string(),
+        tag: z.string().describe("'Risk Area'"),
+        body: z.string().describe("2-3 sentences on trigger and regulation.")
+    })).describe("2-3 blind spot cards.")
+});
+
+// 5. CORE VALUES SUMMARY
+export const ValuesSummarySchema = z.object({
+    summaryParagraph: z.string().describe("1-2 sentences summarizing top values."),
+    motivatorTags: z.array(z.string()).describe("2-3 chips (e.g. 'Driven by Results').")
+});
+
+// 6. CAREER
+export const CareerSchema = z.object({
+    workEnvironmentFit: z.string().describe("Narrative paragraph on fit."),
+    leadershipStyle: z.array(z.object({
+        dimension: z.string().describe("e.g. 'Strategy', 'People'"),
+        description: z.string().describe("1-2 sentences.")
+    })).describe("5 dimensions of leadership style."),
+    recommendedRoles: z.array(z.object({
+        role: z.string(),
+        matchPercentage: z.number(),
+        explanation: z.string()
+    }))
+});
+
+// 7. RELATIONSHIPS
+export const RelationshipsSchema = z.object({
     professional: z.object({
-        strengths: z.array(z.string()),
-        growthAreas: z.array(z.string())
+        strengths: z.array(z.object({ title: z.string(), body: z.string() })),
+        growthAreas: z.array(z.object({ title: z.string(), body: z.string() }))
     }),
     personal: z.object({
-        strengths: z.array(z.string()),
-        growthAreas: z.array(z.string())
+        strengths: z.array(z.object({ title: z.string(), body: z.string() })),
+        growthAreas: z.array(z.object({ title: z.string(), body: z.string() }))
     })
 });
 
-// Full Report Content Schema
+// 8. GROWTH JOURNEY
+export const GrowthJourneySchema = z.object({
+    phases: z.array(z.object({
+        phaseTitle: z.string(),
+        themeLine: z.string(),
+        insights: z.array(z.object({
+            body: z.string().describe("Insight sentence.")
+        })),
+        practice: z.object({
+            text: z.string().describe("Actionable practice.")
+        })
+    })).length(3).describe("Immediate, Short-term, Long-term phases.")
+});
+
+// 9. ACTION PLAN
+export const ActionPlanSchema = z.object({
+    actionItems: z.array(z.object({
+        title: z.string(),
+        body: z.string().describe("2 sentences: Focus on X... This works because..."),
+        type: z.string().describe("Self-Regulation, Execution, etc.")
+    })).min(3).max(5)
+});
+
+// 10. HOW OTHERS EXPERIENCE YOU
+export const SocialExperienceSchema = z.object({
+    atBest: z.string().describe("1 paragraph, 3 sentences (Social presence, Contribution, Impact)."),
+    underPressure: z.string().describe("1 paragraph, 3 sentences (Stress expression, Behaviour, Interpretation).")
+});
+
+// 11. HOW YOU WORK BEST
+export const WorkStyleSchema = z.object({
+    rhythm: z.object({ title: z.string(), body: z.string() }),
+    team: z.object({ title: z.string(), body: z.string() }),
+    manager: z.object({ title: z.string(), body: z.string() }),
+    communication: z.object({ title: z.string(), body: z.string() }),
+    setup: z.object({ title: z.string(), body: z.string() })
+});
+
+// 12. ENERGY
+export const EnergySchema = z.object({
+    energisers: z.array(z.string()).length(4),
+    drainers: z.array(z.string()).length(4)
+});
+
+
+// === FULL REPORT SCHEMA ===
 export const HoganReportContentSchema = z.object({
-    // Section 0/Summary
-    executiveSummary: z.string().describe("A 3-4 sentence comprehensive summary of the profile."),
-    confidenceScoreReason: z.string().describe("Explanation for the confidence score."),
+    hero: HeroSectionSchema,
+    traitSummary: TraitSummarySchema,
 
-    // Section 1 & 2A (HPI)
-    hpiAnalysis: z.array(TraitAnalysisSchema).describe("Analysis for all 7 HPI traits."),
+    hpiAnalysis: z.array(TraitAnalysisSchema),
+    hdsAnalysis: z.array(RiskFactorSchema),
+    mvpiAnalysis: z.array(ValueSchema),
+    hbriAnalysis: z.array(ReasoningSchema),
 
-    // Section 2B (HDS)
-    hdsAnalysis: z.array(RiskFactorSchema).describe("Analysis for relevant HDS traits (at least top 2-3 risks)."),
+    personalExamples: PersonalExamplesSchema,
+    valuesSummary: ValuesSummarySchema,
 
-    // Section 2C (MVPI)
-    mvpiAnalysis: z.array(ValueSchema).describe("Analysis for top 3 MVPI values."),
+    career: CareerSchema,
+    relationships: RelationshipsSchema,
+    growthJourney: GrowthJourneySchema,
+    actionPlan: ActionPlanSchema,
 
-    // Section 5 (Relationships) - Note: Section 3 & 4 are handled separately or less dynamic
-    relationships: RelationshipSchema,
+    socialExperience: SocialExperienceSchema,
+    workStyle: WorkStyleSchema,
+    energy: EnergySchema,
 
-    // Section 7 (Action Plan)
-    strategicActions: z.array(z.string()).describe("3 distinct strategic steps."),
+    // Legacy / Other
+    confidenceScoreReason: z.string().nullable(),
+    personalityWords: z.array(z.string()).nullable(),
+    coachQuestions: z.array(z.string()).nullable()
+});
 
-    // Section 8 (Takeaways) (IdentitySummary)
-    topTakeaways: z.object({
-        highestHPI: z.string().describe("Format: 'Trait - Description'"),
-        lowestHPI: z.string().describe("Format: 'Trait - Description'"),
-        highestRisk: z.string().describe("Format: 'Trait - Description'"),
-        highestValue: z.string().describe("Format: 'Trait - Description'"),
-        reasoningStyle: z.string().describe("Format: 'Style - Description'")
-    }),
+// === PARTIAL SCHEMAS FOR PARALLEL GENERATION ===
 
-    // Section 9 (Identity)
-    personalityWords: z.array(z.string()).length(5).describe("5 powerful adjectives describing the user."),
+export const Part1_CoreSchema = z.object({
+    hero: HeroSectionSchema,
+    traitSummary: TraitSummarySchema,
+});
 
-    // Section 10 (Work Style) (WorkStyleAndEnvironment)
-    workStyle: z.object({
-        rhythm: z.string(),
-        team: z.string(),
-        manager: z.string(),
-        communication: z.string(),
-        setup: z.string()
-    }),
+export const Part2_AnalysisSchema = z.object({
+    hpiAnalysis: z.array(TraitAnalysisSchema),
+    hdsAnalysis: z.array(RiskFactorSchema),
+    mvpiAnalysis: z.array(ValueSchema),
+    hbriAnalysis: z.array(ReasoningSchema),
+});
 
-    // Section 11 (Social Insight) (IdentitySummary - socialExperience)
-    socialExperience: z.object({
-        atBest: z.array(z.string()).describe("3 bullet points"),
-        underPressure: z.array(z.string()).describe("3 bullet points")
-    }),
-
-    // Section 12 (Energy) (WorkStyleAndEnvironment)
-    energyFlow: z.object({
-        energisers: z.array(z.string()).min(2).max(4).describe("2-4 things that energise the user."),
-        drainers: z.array(z.string()).min(2).max(4).describe("2-4 things that drain the user.")
-    }),
-
-    // Section 13 (Micro Habits) (ReflectionsAndHabits)
-    microHabits: z.array(z.string()).min(3).max(5).describe("3-5 specific micro-habits."),
-
-    // Section 14 (Coach Reflections) (ReflectionsAndHabits)
-    coachQuestions: z.array(z.string()).length(3).describe("3 deep reflective questions.")
+export const Part3_ApplicationSchema = z.object({
+    personalExamples: PersonalExamplesSchema,
+    valuesSummary: ValuesSummarySchema,
+    career: CareerSchema,
+    relationships: RelationshipsSchema,
+    growthJourney: GrowthJourneySchema,
+    actionPlan: ActionPlanSchema,
+    socialExperience: SocialExperienceSchema,
+    workStyle: WorkStyleSchema,
+    energy: EnergySchema,
+    // Include legacy fields here as they fit "application/summary"
+    confidenceScoreReason: z.string().nullable(),
+    personalityWords: z.array(z.string()).nullable(),
+    coachQuestions: z.array(z.string()).nullable()
 });
 
 export type HoganReportContent = z.infer<typeof HoganReportContentSchema>;

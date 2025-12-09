@@ -7,19 +7,19 @@ interface ActionPlanSectionProps {
     firstname: string | null;
     resultData: any;
     hoganProfile: string;
-    actionSteps?: string[]; // New prop
+    actionItems?: { title: string; body: string; type: string }[]; // Updated prop
     sectionNumber: number;
     id: string;
 }
 
-export const ActionPlanSection: React.FC<ActionPlanSectionProps> = ({ id, actionSteps }) => {
-    const defaultActions = [
-        "Leverage your high Ambition by taking on a new leadership project.",
-        "Mitigate risk of being 'Excitable' by practicing a 10-second pause before reacting.",
-        "Utilize your Interpersonal Sensitivity to mentor a junior team member."
-    ];
+export const ActionPlanSection: React.FC<ActionPlanSectionProps> = ({ id, actionItems }) => {
 
-    const stepsToDisplay = (actionSteps && actionSteps.length > 0) ? actionSteps : defaultActions;
+    // Default fallback
+    const stepsToDisplay = actionItems || [
+        { title: "Leverage Ambition", body: "Take on a new leadership project to utilize your drive.", type: "Growth" },
+        { title: "Manage Excitability", body: "Practice a 10-second pause before reacting to stressful news.", type: "Regulation" },
+        { title: "Mentor Others", body: "Utilize your Interpersonal Sensitivity to mentor a junior team member.", type: "Social" }
+    ];
 
     return (
         <section id={id} className="bg-slate-50 py-16 border-y border-border break-inside-avoid">
@@ -34,8 +34,11 @@ export const ActionPlanSection: React.FC<ActionPlanSectionProps> = ({ id, action
                                 {i + 1}
                             </div>
                             <div>
-                                <h4 className="font-bold text-foreground mb-1">Action Step {i + 1}</h4>
-                                <p className="text-muted-foreground text-sm leading-relaxed">{step}</p>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <h4 className="font-bold text-foreground">Action Step {i + 1}: {step.title}</h4>
+                                    <span className="text-xs px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full uppercase tracking-wider font-bold">{step.type}</span>
+                                </div>
+                                <p className="text-muted-foreground text-sm leading-relaxed">{step.body}</p>
                             </div>
                         </div>
                     ))}

@@ -52,8 +52,8 @@ export const CareerPathSection: React.FC<CareerPathSectionProps> = ({ career }) 
                         <h3 className="font-oswald font-bold text-lg mb-2 flex items-center gap-2 w-full">
                             <Activity className="text-primary" size={20} /> Leadership Style
                         </h3>
-                        <div className="flex-grow w-full h-[300px] -ml-6">
-                            <ResponsiveContainer width="100%" height="100%">
+                        <div className="flex-grow w-full -ml-6">
+                            <ResponsiveContainer width="100%" height={300}>
                                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
                                     <PolarGrid stroke="#e2e8f0" />
                                     <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: '#64748b' }} />
