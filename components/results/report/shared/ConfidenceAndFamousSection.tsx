@@ -50,8 +50,8 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
                     <span className="text-sm font-bold text-slate-500 uppercase tracking-wider">Confidence Score</span>
                 </div>
 
-                <div className="relative w-40 h-40 flex items-center justify-center mb-6">
-                    <svg className="w-full h-full transform -rotate-90">
+                <div className="relative w-40 h-40 shrink-0 flex items-center justify-center mb-6">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
                         <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-slate-200 dark:text-slate-800" />
                         <motion.circle
                             cx="80" cy="80" r="70"
