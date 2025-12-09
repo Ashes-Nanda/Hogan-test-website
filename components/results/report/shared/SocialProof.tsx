@@ -39,7 +39,7 @@ export const TestimonialsCarousel: React.FC = () => {
                     <Quote size={48} className="mx-auto text-primary mb-8 opacity-50" />
 
                     <div className="min-h-[200px] flex flex-col justify-center">
-                        <p className="text-2xl md:text-3xl font-light italic mb-8 leading-relaxed">
+                        <p className="text-2xl md:text-3xl font-light mb-8 leading-relaxed">
                             "{testimonials[current].text}"
                         </p>
                         <div className="flex flex-col items-center gap-1">

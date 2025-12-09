@@ -14,6 +14,17 @@ You will receive JSON scores for:
 - MVPI (Values)
 - HBRI (Reasoning - Tactical/Strategic)
 
+# DIAGNOSTIC DIMENSIONS
+Your output must excel in these 8 dimensions:
+1. DEPTH: Avoid surface-level blurbs. Reveal the "why" and "how".
+2. PERSONALISATION: Cross-calibrate traits. Never describe a trait in isolation.
+3. INNER vs OUTER: Distinctly describe internal feeling vs. external signal. Do not paraphrase.
+4. SITUATIONALITY: Describe behavior in specific contexts (meetings, conflict, deep work).
+5. STRESS INTEGRATION: Explicitly reference how HDS traits (Excitable, Skeptical, etc.) modify HPI behavior.
+6. STRENGTHS & WATCH-OUTS: Contextual, behavioral, and connected to other traits.
+7. TRAIT INTERACTION: Explicitly name the interacting trait (e.g. "Because of your high Prudence...").
+8. ACTIONABILITY: Micro-actions must be "Tiny Habits" addressing specific friction.
+
 # GENERATIVE LOGIC & RULESET
 You MUST follow these rules for each section.
 
@@ -39,33 +50,35 @@ C. Stand Out Card (Optional): Highlight extremes.
 
 ## 3. DETAILED TRAIT ANALYSIS (HPI)
 For EACH trait (7 total):
-- Interpretation: 1 sentence based on score band.
-- Inner Experience: "You often feel..." (High) / "You may feel..." (Low).
-- At Work: "Colleagues often notice..."
-- Under Pressure: Modify behaviour based on Excitable/Skeptical.
-- Social Impact: "others may see you as..."
-- Trait Interaction: Connect this trait to another (e.g. Ambition + Sociability).
-- Your next step: Specific, small.
+- Interpretation: Deep dive into the nuance of their specific score. Avoid generic definitions.
+- Inner Experience: Describe the INTERNAL emotional landscape. How does it FEEL to be them? distinct from how they act. (e.g., "Internally, you feel a constant drive to...")
+- At Work: Describe observable behavior in specific contexts (e.g., "In high-stakes meetings, you...").
+- Under Pressure: MANDATORY: Reference a specific HDS trait (e.g. Excitable, Skeptical) or low HPI trait that modifies this behavior under stress. (e.g. "When your high Excitable kicks in, this steadiness turns into...")
+- Social Impact: "What others think but don't say." The unspoken reputation.
+- Strengths: 2 bullet points. Contextual and specific.
+- Watch-outs: 2 bullet points. situational risks.
+- Trait Interaction Insight: MUST name another specific trait (HPI or HDS) and explain the combined effect. (e.g. "Your high Ambition amplifies this by...")
+- Your next step: A "Tiny Habit" format. Specific, triggered, and small. (e.g. "When you feel X, do Y.")
 
 ## 4. RISK FACTORS (HDS)
 For EACH trait:
-- Interpretation: Sensitivity to pressure definition.
-- Trigger Conditions: 2 triggers (e.g. "sudden change").
-- Behaviour Under Stress: "You may react by..."
-- Social Impact: "Others may see your reactions as..."
-- Strength Expressions: 2 positive aspects.
-- Friction Patterns: 2 friction points.
-- Regulation Strategy: 1-2 line strategy.
-- Trait Interaction: Connect risk to HPI trait (e.g. Excitable + High Adjustment).
+- Interpretation: High-level diagnosis of the risk pattern.
+- Trigger Conditions: 2 specific situational triggers (e.g., "Ambiguous leadership", "Public criticism"). 
+- Behaviour Under Stress: Specific descriptions of the "mask" they wear or behavior they adopt.
+- Social Impact: How this pushes people away or creates confusion.
+- Strength Expressions: 2 positive aspects of this risk trait (e.g. "Passionate", "Vigilant").
+- Friction Patterns: 2 specific ways this hurts relationships or performance.
+- Regulation Strategy: A cognitive reframing or behavioral interupt.
+- Trait Interaction: Connect this risk to a stabilizing or amplifying HPI trait (e.g., "Your High Adjustment helps dampen this...")
 
 ## 5. VALUES (MVPI)
 For EACH value:
-- Interpretation: Influence level.
-- Drivers: "You are driven by..."
-- Work Behaviour: "At work, this appears as..."
-- Strength Situations: 2 situations.
-- Tension Situations: 2 situations.
-- Social Impact: How others read this value.
+- Interpretation: The "Why" behind their choices.
+- Drivers: "You are deeply driven by..."
+- Work Behaviour: "You intentionally shape your environment to..."
+- Strength Situations: 2 situations where this value shines.
+- Tension Situations: 2 situations where this value causes conflict (e.g. with opposite values).
+- Social Impact: How your values are perceived by others.
 - Interaction Insight: Connect to HPI (e.g. Power + Ambition).
 
 ## 6. REASONING (HBRI)
@@ -114,10 +127,23 @@ For Tactical & Strategic:
 - 4 Energisers: Cognitive, Social, motivational, structural.
 - 4 Drainers: Emotional, Social, structural, motivational.
 
+## 15. TOP TAKEAWAYS (IDENTITY SUMMARY)
+- Highest HPI: Select the highest HPI trait. Format: "Trait Name - Short Strength Descriptor" (e.g. "Ambition - Natural Leader").
+- Lowest HPI: Select the lowest HPI trait. Format: "Trait Name - Positive Spin Descriptor" (e.g. "Prudence - Flexible Thinker").
+- Highest Risk: Select the highest HDS risk. Format: "Trait Name - Risk Descriptor" (e.g. "Excitable - Passionate Intensity").
+- Highest Value: Select the highest MVPI value. Format: "Value Name - Driver Descriptor" (e.g. "Power - Driven by Influence").
+- Reasoning Style: Select the dominant HBRI style (Strategic or Tactical). Format: "Style Name - Thinking Descriptor" (e.g. "Strategic - Big Picture Thinker").
+
+## 16. PERSONALITY IN 5 WORDS
+- Generate 5 distinct, high-impact adjectives that capture the user's essence based on their top 3 HPI traits and top Value. 
+- Do NOT use common words like "Nice" or "Good". Use premium vocabulary (e.g. "Tenacious", "Insightful", "Grounded").
+
 # TONE GUIDELINES
 - Warm, reassuring, thoughtful. NOT clinical.
 - "You" focused.
 - Acknowledge complexity ("This combination suggests...").
 
-OUTPUT FORMAT: JSON ONLY. Adhere strictly to the defined Zod schema.
+# FORMATTING RULES
+- NO EM DASHES (—). Use hyphens (-) or colons (:) instead.
+- JSON ONLY. Adhere strictly to the defined Zod schema.
 `;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, Clock, BrainCircuit, ArrowRight, ShieldCheck, ScrollText } from 'lucide-react';
@@ -7,7 +7,6 @@ import { useAuth } from '../contexts/AuthContext';
 export const AssessmentLandingPage: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
-    const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
@@ -23,35 +22,8 @@ export const AssessmentLandingPage: React.FC = () => {
 
     const hasCompleted = user?.attempts && user.attempts.length > 0;
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (!containerRef.current) return;
-
-            const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-            // Check if user is near the bottom (within 50px)
-            if (scrollHeight - scrollTop <= clientHeight + 50) {
-                setIsScrolledToBottom(true);
-            }
-        };
-
-        const container = containerRef.current;
-        if (container) {
-            container.addEventListener('scroll', handleScroll);
-            // Check initially in case content fits without scrolling
-            if (container.scrollHeight <= container.clientHeight) {
-                setIsScrolledToBottom(true);
-            }
-        }
-
-        return () => {
-            if (container) {
-                container.removeEventListener('scroll', handleScroll);
-            }
-        };
-    }, []);
-
     // If user has completed, they can always proceed (to view results)
-    const canStart = hasCompleted || isScrolledToBottom || isChecked;
+    const canStart = hasCompleted || isChecked;
 
     const handleStart = () => {
         if (canStart) {
@@ -227,7 +199,7 @@ export const AssessmentLandingPage: React.FC = () => {
                     <div className="text-sm text-muted-foreground hidden md:block">
                         {canStart
                             ? (hasCompleted ? "Your results are ready." : "You are ready to begin.")
-                            : "Please scroll to the bottom or accept the terms to proceed."}
+                            : "Please accept the terms to proceed."}
                     </div>
 
                     <motion.button

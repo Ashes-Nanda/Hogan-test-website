@@ -164,6 +164,15 @@ export const EnergySchema = z.object({
 });
 
 
+// 15. TOP TAKEAWAYS (Identity Summary)
+export const TopTakeawaysSchema = z.object({
+    highestHPI: z.string().describe("Format: '[Trait Name] - [Short Strength Descriptor]' (e.g., 'Ambition - Natural Leader')"),
+    lowestHPI: z.string().describe("Format: '[Trait Name] - [Short Positive Descriptor]' (e.g., 'Prudence - Flexible Thinker')"),
+    highestRisk: z.string().describe("Format: '[Trait Name] - [Risk Descriptor]' (e.g., 'Excitable - Passionate Intensity')"),
+    highestValue: z.string().describe("Format: '[Value Name] - [Driver Descriptor]' (e.g., 'Power - Driven by Influence')"),
+    reasoningStyle: z.string().describe("Format: '[Style Name] - [Thinking Descriptor]' (e.g., 'Strategic - Big Picture Thinker')")
+});
+
 // === FULL REPORT SCHEMA ===
 export const HoganReportContentSchema = z.object({
     hero: HeroSectionSchema,
@@ -186,9 +195,12 @@ export const HoganReportContentSchema = z.object({
     workStyle: WorkStyleSchema,
     energy: EnergySchema,
 
+    // Engaging & Identity
+    topTakeaways: TopTakeawaysSchema,
+    personalityWords: z.array(z.string()).length(5).describe("5 distinct adjectives capturing the user's essence."),
+
     // Legacy / Other
     confidenceScoreReason: z.string().nullable(),
-    personalityWords: z.array(z.string()).nullable(),
     coachQuestions: z.array(z.string()).nullable()
 });
 
@@ -216,9 +228,12 @@ export const Part3_ApplicationSchema = z.object({
     socialExperience: SocialExperienceSchema,
     workStyle: WorkStyleSchema,
     energy: EnergySchema,
+
+    topTakeaways: TopTakeawaysSchema,
+    personalityWords: z.array(z.string()).length(5),
+
     // Include legacy fields here as they fit "application/summary"
     confidenceScoreReason: z.string().nullable(),
-    personalityWords: z.array(z.string()).nullable(),
     coachQuestions: z.array(z.string()).nullable()
 });
 

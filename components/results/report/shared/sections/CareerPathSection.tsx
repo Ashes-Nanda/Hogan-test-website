@@ -3,6 +3,12 @@ import { Briefcase, CheckCircle, Activity } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 
+interface CareerSectionData {
+    workEnvironmentFit: string;
+    leadershipStyle: { dimension: string; description: string }[];
+    recommendedRoles: { role: string; matchPercentage: number; explanation: string }[];
+}
+
 interface CareerPathSectionProps {
     firstname: string | null;
     career: {
@@ -17,6 +23,7 @@ interface CareerPathSectionProps {
             qualityMatches: any[];
         }[];
     };
+    careerData?: CareerSectionData;
     personalityType: string;
     testType: string;
     sectionNumber: number;
@@ -24,7 +31,7 @@ interface CareerPathSectionProps {
     isPaidUser: boolean;
 }
 
-export const CareerPathSection: React.FC<CareerPathSectionProps> = ({ career }) => {
+export const CareerPathSection: React.FC<CareerPathSectionProps> = ({ career, careerData }) => {
     const radarData = [
         { subject: 'Strategy', A: 80, fullMark: 100 },
         { subject: 'Execution', A: 65, fullMark: 100 },
@@ -44,7 +51,9 @@ export const CareerPathSection: React.FC<CareerPathSectionProps> = ({ career }) 
                             <Briefcase className="text-primary" size={20} /> Work Environment
                         </h3>
                         <div className="space-y-6">
-                            <p className="text-sm text-muted-foreground">{career.summary}</p>
+                            <p className="text-sm text-muted-foreground">
+                                {careerData ? careerData.workEnvironmentFit : career.summary}
+                            </p>
                         </div>
                     </div>
 
@@ -52,16 +61,28 @@ export const CareerPathSection: React.FC<CareerPathSectionProps> = ({ career }) 
                         <h3 className="font-oswald font-bold text-lg mb-2 flex items-center gap-2 w-full">
                             <Activity className="text-primary" size={20} /> Leadership Style
                         </h3>
-                        <div className="flex-grow w-full -ml-6">
-                            <ResponsiveContainer width="100%" height={300}>
-                                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                                    <PolarGrid stroke="#e2e8f0" />
-                                    <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: '#64748b' }} />
-                                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                                    <Radar name="You" dataKey="A" stroke="#6257e3" strokeWidth={2} fill="#6257e3" fillOpacity={0.3} />
-                                </RadarChart>
-                            </ResponsiveContainer>
-                        </div>
+
+                        {careerData ? (
+                            <div className="w-full space-y-4 mt-4">
+                                {careerData.leadershipStyle.map((style, idx) => (
+                                    <div key={idx} className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                        <h4 className="font-bold text-slate-700 text-sm mb-1">{style.dimension}</h4>
+                                        <p className="text-xs text-muted-foreground leading-relaxed">{style.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex-grow w-full -ml-6">
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
+                                        <PolarGrid stroke="#e2e8f0" />
+                                        <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: '#64748b' }} />
+                                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                                        <Radar name="You" dataKey="A" stroke="#6257e3" strokeWidth={2} fill="#6257e3" fillOpacity={0.3} />
+                                    </RadarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        )}
                     </div>
 
                     <div className="bg-gradient-to-b from-emerald-50 to-teal-50 border border-emerald-100 rounded-xl p-6 shadow-sm relative overflow-hidden break-inside-avoid">
@@ -72,14 +93,25 @@ export const CareerPathSection: React.FC<CareerPathSectionProps> = ({ career }) 
                             <CheckCircle className="text-emerald-600" size={20} /> Recommended Roles
                         </h3>
                         <div className="space-y-3 relative z-10">
-                            {career.suggestions.map((job, i) => (
-                                <div key={i} className="bg-white p-3 rounded-lg shadow-sm border border-emerald-100 flex justify-between items-center">
-                                    <span className="font-medium text-emerald-900">{job.title}</span>
-                                    <span className="text-xs font-bold bg-emerald-100 text-emerald-700 px-2 py-1 rounded">
-                                        {job.matchPercentage}% Match
-                                    </span>
-                                </div>
-                            ))}
+                            {careerData ? (
+                                careerData.recommendedRoles.map((job, i) => (
+                                    <div key={i} className="bg-white p-3 rounded-lg shadow-sm border border-emerald-100 flex justify-between items-center">
+                                        <span className="font-medium text-emerald-900">{job.role}</span>
+                                        <span className="text-xs font-bold bg-emerald-100 text-emerald-700 px-2 py-1 rounded">
+                                            {job.matchPercentage}% Match
+                                        </span>
+                                    </div>
+                                ))
+                            ) : (
+                                career.suggestions.map((job, i) => (
+                                    <div key={i} className="bg-white p-3 rounded-lg shadow-sm border border-emerald-100 flex justify-between items-center">
+                                        <span className="font-medium text-emerald-900">{job.title}</span>
+                                        <span className="text-xs font-bold bg-emerald-100 text-emerald-700 px-2 py-1 rounded">
+                                            {job.matchPercentage}% Match
+                                        </span>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>

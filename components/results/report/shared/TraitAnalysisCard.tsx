@@ -172,7 +172,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                                         <h5 className="text-sm font-bold uppercase tracking-wider mb-1 text-slate-700">
                                             {core.label}
                                         </h5>
-                                        <p className="text-sm text-slate-600 italic">"{core.text}"</p>
+                                        <p className="text-sm text-slate-600">"{core.text}"</p>
                                     </div>
                                 </div>
                             )}
@@ -210,7 +210,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
                                                 {s}
                                             </li>
-                                        )) : <li className="text-sm text-slate-400 italic">None listed</li>}
+                                        )) : <li className="text-sm text-slate-400">None listed</li>}
                                     </ul>
                                 </div>
 
@@ -225,7 +225,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                                                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
                                                 {w}
                                             </li>
-                                        )) : <li className="text-sm text-slate-400 italic">None listed</li>}
+                                        )) : <li className="text-sm text-slate-400">None listed</li>}
                                     </ul>
                                 </div>
                             </div>
@@ -247,7 +247,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                                     <Zap className={`shrink-0 mt-0.5 ${themeConfig.icon}`} size={18} />
                                     <div>
                                         <h5 className={`text-sm font-bold uppercase tracking-wider mb-1 ${themeConfig.text}`}>Your next step</h5>
-                                        <p className="text-sm text-slate-700 italic">"{microAction}"</p>
+                                        <p className="text-sm text-slate-700">"{microAction}"</p>
                                     </div>
                                 </div>
                             </div>

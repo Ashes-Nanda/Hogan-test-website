@@ -4,6 +4,12 @@ import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { CircularProgress } from '@/components/ui/CircularProgress';
 
+interface HeroData {
+    identityTitle: string;
+    heroNarrative: string;
+    subTitle: string;
+}
+
 interface HoganHeroSectionProps {
     hpiScores: any;
     hoganProfile: string;
@@ -11,9 +17,10 @@ interface HoganHeroSectionProps {
     firstname?: string;
     completionDate: string;
     onDownload?: () => void;
+    heroData?: HeroData;
 }
 
-export const HoganHeroSection: React.FC<HoganHeroSectionProps> = ({ hpiScores, hoganProfile, firstname, onDownload }) => {
+export const HoganHeroSection: React.FC<HoganHeroSectionProps> = ({ hpiScores, hoganProfile, firstname, onDownload, heroData }) => {
     const topHpi = Object.entries(hpiScores as Record<string, any>)
         .sort(([, a], [, b]) => b.percentage - a.percentage)
         .slice(0, 5);
@@ -38,12 +45,16 @@ export const HoganHeroSection: React.FC<HoganHeroSectionProps> = ({ hpiScores, h
                 </div>
 
                 <h1 className="text-4xl md:text-7xl font-oswald font-black mb-6 leading-none tracking-tight text-white drop-shadow-md">
-                    {hoganProfile}
+                    {heroData?.identityTitle || hoganProfile}
                 </h1>
 
-                <p className="text-xl md:text-2xl text-white/90 max-w-2xl font-light mb-12">
-                    Prepared exclusively for <span className="font-semibold text-white">{firstname || 'User'}</span>
+                <p className="text-xl md:text-2xl text-white/90 max-w-2xl font-light mb-8">
+                    {heroData?.subTitle || (
+                        <>Prepared exclusively for <span className="font-semibold text-white">{firstname || 'User'}</span></>
+                    )}
                 </p>
+
+
 
 
 

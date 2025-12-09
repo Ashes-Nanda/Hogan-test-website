@@ -26,6 +26,7 @@ import { GoalTrackingSystem } from "@/components/results/report/shared/GoalTrack
 import { IdentitySummary } from "./sections/engaging/IdentitySummary";
 import { WorkStyleAndEnvironment } from "./sections/engaging/WorkStyleAndEnvironment";
 import { ReflectionsAndHabits } from "./sections/engaging/ReflectionsAndHabits";
+import { HoganNarrativeSection } from "./sections/HoganNarrativeSection";
 
 import { generateExecutiveSummary } from "@/lib/generate-executive-summary";
 import { calculateConfidenceScore } from "@/lib/calculate-confidence";
@@ -200,11 +201,17 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
             firstname={resultData?.firstname ?? undefined}
             completionDate={resultData.takenAt}
             onDownload={handleDownload}
+            heroData={aiContent?.hero}
           />
         </div>
       )}
 
       <div className="p-4 mt-8 mbti-content-container-full print:p-0 print:mt-4">
+
+        {/* Narrative Section (Moved from Hero) */}
+        {aiContent?.hero?.heroNarrative && (
+          <HoganNarrativeSection narrative={aiContent.hero.heroNarrative} />
+        )}
 
         {/* 1. TRAIT SUMMARY TABLES */}
         {resultData.hpiScores && (
@@ -212,21 +219,22 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
             <HoganIntroductionSection
               hoganProfile={resultData.hoganProfile}
               hpiScores={Object.fromEntries(
-                Object.entries(resultData.hpiScores).map(([key, value]) => [key, value.percentage])
+                Object.entries(resultData.hpiScores).map(([key, value]) => [key, (value as any).percentage])
               )}
               hdsScores={resultData.hdsScores ? Object.fromEntries(
-                Object.entries(resultData.hdsScores).map(([key, value]) => [key, value.percentage])
+                Object.entries(resultData.hdsScores).map(([key, value]) => [key, (value as any).percentage])
               ) : undefined}
               mvpiScores={resultData.mvpiScores ? Object.fromEntries(
-                Object.entries(resultData.mvpiScores).map(([key, value]) => [key, value.percentage])
+                Object.entries(resultData.mvpiScores).map(([key, value]) => [key, (value as any).percentage])
               ) : undefined}
               hbriScores={resultData.hbriScores ? Object.fromEntries(
-                Object.entries(resultData.hbriScores).map(([key, value]) => [key, value.percentage])
+                Object.entries(resultData.hbriScores).map(([key, value]) => [key, (value as any).percentage])
               ) : undefined}
               leadershipPotential={resultData.leadershipPotential}
               firstname={resultData?.firstname ?? undefined}
               isPaidUser={isPaidUser}
               userEmail={userEmail}
+              traitSummary={aiContent?.traitSummary}
             />
           </div>
         )}
@@ -271,6 +279,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               traitScores={convertedScores}
               personalityType={resultData.hoganProfile}
               firstname={resultData?.firstname ?? undefined}
+              personalExamples={aiContent?.personalExamples}
             />
           </div>
         )}
@@ -285,6 +294,10 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
             id="values-motivators"
             isPaidUser={isPaidUser}
             testType="hogan"
+            valuesData={aiContent?.valuesSummary && aiContent?.mvpiAnalysis ? {
+              summary: aiContent.valuesSummary,
+              analysis: aiContent.mvpiAnalysis
+            } : undefined}
           />
         </div>
 
@@ -299,6 +312,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               sectionNumber={4}
               id="career-path"
               isPaidUser={isPaidUser}
+              careerData={aiContent?.career}
             />
           </LazySection>
         </div>
@@ -328,6 +342,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               isPaidUser={isPaidUser}
               testType="hogan"
               personalityType={resultData.hoganProfile}
+              growthData={aiContent?.growthJourney}
             />
           </LazySection>
         </div>

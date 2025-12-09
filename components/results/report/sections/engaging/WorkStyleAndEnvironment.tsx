@@ -44,7 +44,7 @@ export const WorkStyleAndEnvironment: React.FC<WorkStyleProps> = ({
         <section id={id} className="container py-16 space-y-24 bg-slate-50/50">
 
             {/* Section 10: How You Work Best */}
-            <div className="max-w-5xl mx-auto">
+            <div>
                 <SectionHeader title="How You Work Best" subtitle="Optimizing your environment for peak performance." icon={Layout} />
 
                 <div className="flex flex-wrap justify-center gap-6 mt-12">
@@ -67,7 +67,7 @@ export const WorkStyleAndEnvironment: React.FC<WorkStyleProps> = ({
             </div>
 
             {/* Section 12: Energisers & Drainers */}
-            <div className="max-w-5xl mx-auto">
+            <div>
                 <SectionHeader title="Energisers & Drainers" subtitle="Managing your motivational battery." icon={Battery} />
 
                 <div className="mt-12 flex flex-col md:flex-row gap-8 items-stretch">

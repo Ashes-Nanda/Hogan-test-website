@@ -13,6 +13,11 @@ interface HoganIntroductionSectionProps {
     firstname?: string;
     isPaidUser: boolean;
     userEmail?: string;
+    traitSummary?: {
+        snapshotParagraph: string;
+        headlineInsights: string[];
+        standOutCard: string | null;
+    };
 }
 
 const SummaryCard = ({ title, icon: Icon, scores, theme, delay }: any) => {
@@ -60,7 +65,8 @@ export const HoganIntroductionSection: React.FC<HoganIntroductionSectionProps> =
     hpiScores,
     hdsScores,
     mvpiScores,
-    hbriScores
+    hbriScores,
+    traitSummary
 }) => {
     return (
         <section className="container py-8 md:py-12">
@@ -109,6 +115,60 @@ export const HoganIntroductionSection: React.FC<HoganIntroductionSectionProps> =
                     />
                 )}
             </div>
+
+            {traitSummary && (
+                <div className="mt-12 max-w-3xl mx-auto flex flex-col items-center gap-8">
+                    {/* Snapshot Paragraph */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                        className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 text-center"
+                    >
+                        <p className="font-montserrat text-slate-700 text-lg leading-relaxed">
+                            {traitSummary.snapshotParagraph}
+                        </p>
+                    </motion.div>
+
+                    {/* Headline Insights */}
+                    <div className="flex flex-wrap justify-center gap-3">
+                        {traitSummary.headlineInsights.map((insight, idx) => (
+                            <motion.span
+                                key={idx}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.6 + (idx * 0.1) }}
+                                className={`px-4 py-2 rounded-full font-semibold text-sm shadow-sm ${idx % 3 === 0 ? 'bg-blue-100 text-blue-700' :
+                                    idx % 3 === 1 ? 'bg-purple-100 text-purple-700' :
+                                        'bg-green-100 text-green-700'
+                                    }`}
+                            >
+                                {insight}
+                            </motion.span>
+                        ))}
+                    </div>
+
+                    {/* Stand Out Card (Optional) */}
+                    {traitSummary.standOutCard && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.8 }}
+                            className="w-full bg-gradient-to-r from-slate-50 to-white border border-slate-200 rounded-xl p-6 relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500" />
+                            <h4 className="font-oswald font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <Target size={18} className="text-indigo-500" />
+                                What Stands Out Most
+                            </h4>
+                            <p className="font-montserrat text-slate-600">
+                                {traitSummary.standOutCard}
+                            </p>
+                        </motion.div>
+                    )}
+                </div>
+            )}
+
         </section>
     );
 };

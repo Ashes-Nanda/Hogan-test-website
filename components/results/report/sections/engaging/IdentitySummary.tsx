@@ -65,7 +65,20 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
                             className={`p-6 rounded-xl border ${item.color} flex flex-col justify-between h-32 hover:shadow-md transition-shadow`}
                         >
                             <span className="text-xs font-bold uppercase tracking-wider opacity-70">{item.label}</span>
-                            <span className="font-oswald font-bold text-lg leading-tight">{item.value}</span>
+                            <div className="flex flex-col">
+                                {item.value.includes(' - ') ? (
+                                    <>
+                                        <span className="font-oswald font-bold text-xl leading-tight mb-1">
+                                            {item.value.split(' - ')[0]}
+                                        </span>
+                                        <span className="font-montserrat font-medium text-sm opacity-90 leading-tight">
+                                            {item.value.split(' - ')[1]}
+                                        </span>
+                                    </>
+                                ) : (
+                                    <span className="font-oswald font-bold text-lg leading-tight">{item.value}</span>
+                                )}
+                            </div>
                         </motion.div>
                     ))}
                 </div>

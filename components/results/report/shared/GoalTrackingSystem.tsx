@@ -95,7 +95,7 @@ export const GoalTrackingSystem: React.FC<GoalTrackingSystemProps> = () => {
                 <div className="space-y-3">
                     {loading && <div className="text-center py-4"><Loader2 className="animate-spin mx-auto" /></div>}
                     {!loading && goals.length === 0 && (
-                        <div className="text-center py-8 text-muted-foreground italic">
+                        <div className="text-center py-8 text-muted-foreground">
                             No goals added yet. Start by adding one above!
                         </div>
                     )}
