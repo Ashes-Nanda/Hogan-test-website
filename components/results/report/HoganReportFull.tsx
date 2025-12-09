@@ -27,6 +27,7 @@ import { IdentitySummary } from "./sections/engaging/IdentitySummary";
 import { WorkStyleAndEnvironment } from "./sections/engaging/WorkStyleAndEnvironment";
 import { ReflectionsAndHabits } from "./sections/engaging/ReflectionsAndHabits";
 import { HoganNarrativeSection } from "./sections/HoganNarrativeSection";
+import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
 
 import { generateExecutiveSummary } from "@/lib/generate-executive-summary";
 import { calculateConfidenceScore } from "@/lib/calculate-confidence";
@@ -50,13 +51,16 @@ interface HoganReportFullProps {
 export default function HoganReportFull({ resultData, isPaidUser = false, userEmail, userId }: HoganReportFullProps) {
   // State for AI Content
   const [aiContent, setAiContent] = React.useState<any>(null);
-  const [isGenerating, setIsGenerating] = React.useState(false);
+  const [isGenerating, setIsGenerating] = React.useState(true); // Start as true
 
   // Trigger AI generation on mount
   React.useEffect(() => {
     async function fetchAI() {
       // Avoid re-fetching if already present (or check if cached)
-      if (aiContent) return;
+      if (aiContent) {
+        setIsGenerating(false);
+        return;
+      }
 
       setIsGenerating(true);
       // Dynamically import generator to avoid server-side issues if any
@@ -75,6 +79,8 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
 
     fetchAI();
   }, [resultData]);
+
+  // Show full page loader until generation is complete
 
   // Convert Hogan scores to MBTI-like format for shared components
   const convertedScores = React.useMemo(() => {
@@ -178,6 +184,10 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
       career: careerData
     });
   };
+
+  if (isGenerating) {
+    return <LoadingOverlay />;
+  }
 
   return (
     <main className="flex-1 mx-auto transition-all duration-300 print:w-full print:max-w-none print:mx-0 print:p-0">

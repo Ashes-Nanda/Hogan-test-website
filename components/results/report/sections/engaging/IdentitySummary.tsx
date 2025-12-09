@@ -3,15 +3,21 @@ import { motion } from 'framer-motion';
 import { Star, Eye, Zap, Sparkles, User, AlertCircle, Quote } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 
+interface TakeawayData {
+    name: string;
+    descriptor: string;
+    insight: string;
+}
+
 interface IdentitySummaryProps {
     id: string;
     sectionNumber: number;
     topTakeaways?: {
-        highestHPI: string;
-        lowestHPI: string;
-        highestRisk: string;
-        highestValue: string;
-        reasoningStyle: string;
+        highestHPI: TakeawayData | string;
+        lowestHPI: TakeawayData | string;
+        highestRisk: TakeawayData | string;
+        highestValue: TakeawayData | string;
+        reasoningStyle: TakeawayData | string;
     };
     personalityWords?: string[]; // 5 words
     socialExperience?: {
@@ -28,12 +34,27 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
 }) => {
 
     // Default placeholders
-    const takeaways = topTakeaways || {
-        highestHPI: "Ambition - Natural leader",
-        lowestHPI: "Prudence - Flexible thinker",
-        highestRisk: "Excitable - Passionate intensity",
-        highestValue: "Power - Influence driven",
-        reasoningStyle: "Strategic - Big picture thinker"
+    const defaultTakeaways = {
+        highestHPI: { name: "Ambition", descriptor: "Natural leader", insight: "You possess a natural drive to lead and influence others toward shared goals." },
+        lowestHPI: { name: "Prudence", descriptor: "Flexible thinker", insight: "You tend to be adaptable and open to changing course when necessary." },
+        highestRisk: { name: "Excitable", descriptor: "Passionate intensity", insight: "Your passion can sometimes be intense, requiring mindful regulation." },
+        highestValue: { name: "Power", descriptor: "Influence driven", insight: "You are motivated by opportunities to exercise authority and make an impact." },
+        reasoningStyle: { name: "Strategic", descriptor: "Big picture thinker", insight: "You excel at seeing the long-term vision and connecting complex dots." }
+    };
+
+    const takeaways = topTakeaways || defaultTakeaways;
+
+    const normalizeTakeaway = (data: TakeawayData | string | undefined): TakeawayData => {
+        if (!data) return { name: "", descriptor: "", insight: "" };
+        if (typeof data === 'string') {
+            const parts = data.split(' - ');
+            return {
+                name: parts[0] || "",
+                descriptor: parts[1] || "",
+                insight: ""
+            };
+        }
+        return data;
     };
 
     const words = personalityWords || ["Driven", "Strategic", "Direct", "Flexible", "Influential"];
@@ -51,34 +72,33 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
                 <SectionHeader title="Your Top 5 Takeaways" subtitle="The most defining insights from your profile." icon={Star} />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-8">
                     {[
-                        { label: "Top Strength", value: takeaways.highestHPI, color: "bg-blue-100 text-blue-700 border-blue-200" },
-                        { label: "Growth Edge", value: takeaways.lowestHPI, color: "bg-indigo-100 text-indigo-700 border-indigo-200" },
-                        { label: "Key Risk", value: takeaways.highestRisk, color: "bg-orange-100 text-orange-700 border-orange-200" },
-                        { label: "Core Value", value: takeaways.highestValue, color: "bg-green-100 text-green-700 border-green-200" },
-                        { label: "Thinking Style", value: takeaways.reasoningStyle, color: "bg-purple-100 text-purple-700 border-purple-200" },
+                        { label: "Top Strength", data: normalizeTakeaway(takeaways.highestHPI), color: "bg-blue-100 text-blue-700 border-blue-200" },
+                        { label: "Growth Edge", data: normalizeTakeaway(takeaways.lowestHPI), color: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+                        { label: "Key Risk", data: normalizeTakeaway(takeaways.highestRisk), color: "bg-orange-100 text-orange-700 border-orange-200" },
+                        { label: "Core Value", data: normalizeTakeaway(takeaways.highestValue), color: "bg-green-100 text-green-700 border-green-200" },
+                        { label: "Thinking Style", data: normalizeTakeaway(takeaways.reasoningStyle), color: "bg-purple-100 text-purple-700 border-purple-200" },
                     ].map((item, i) => (
                         <motion.div
                             key={i}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.1 }}
-                            className={`p-6 rounded-xl border ${item.color} flex flex-col justify-between h-32 hover:shadow-md transition-shadow`}
+                            className={`p-6 rounded-xl border ${item.color} flex flex-col gap-4 hover:shadow-md transition-shadow`}
                         >
                             <span className="text-xs font-bold uppercase tracking-wider opacity-70">{item.label}</span>
                             <div className="flex flex-col">
-                                {item.value.includes(' - ') ? (
-                                    <>
-                                        <span className="font-oswald font-bold text-xl leading-tight mb-1">
-                                            {item.value.split(' - ')[0]}
-                                        </span>
-                                        <span className="font-montserrat font-medium text-sm opacity-90 leading-tight">
-                                            {item.value.split(' - ')[1]}
-                                        </span>
-                                    </>
-                                ) : (
-                                    <span className="font-oswald font-bold text-lg leading-tight">{item.value}</span>
-                                )}
+                                <span className="font-oswald font-bold text-xl leading-tight mb-1">
+                                    {item.data.name}
+                                </span>
+                                <span className="font-montserrat font-medium text-sm opacity-90 leading-tight">
+                                    {item.data.descriptor}
+                                </span>
                             </div>
+                            {item.data.insight && (
+                                <p className="text-xs leading-relaxed opacity-80 border-t border-current pt-3 mt-auto">
+                                    {item.data.insight}
+                                </p>
+                            )}
                         </motion.div>
                     ))}
                 </div>

@@ -142,7 +142,7 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
                                         <img
                                             src={famousPeopleImages[person]}
                                             alt={person}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover object-top"
                                             onError={(e) => {
                                                 e.currentTarget.style.display = 'none';
                                                 e.currentTarget.parentElement?.classList.add('fallback-initials');

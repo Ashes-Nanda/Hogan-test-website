@@ -90,7 +90,10 @@ export const PersonalExamplesSchema = z.object({
 // 5. CORE VALUES SUMMARY
 export const ValuesSummarySchema = z.object({
     summaryParagraph: z.string().describe("1-2 sentences summarizing top values."),
-    motivatorTags: z.array(z.string()).describe("2-3 chips (e.g. 'Driven by Results').")
+    motivatorTags: z.array(z.object({
+        tag: z.string().describe("Short motivator title (e.g. 'Driven by Results')."),
+        description: z.string().describe("1 sentence explanation of why this motivates the user.")
+    })).describe("2-3 key motivator chips with context.")
 });
 
 // 6. CAREER
@@ -165,12 +168,33 @@ export const EnergySchema = z.object({
 
 
 // 15. TOP TAKEAWAYS (Identity Summary)
+// 15. TOP TAKEAWAYS (Identity Summary)
 export const TopTakeawaysSchema = z.object({
-    highestHPI: z.string().describe("Format: '[Trait Name] - [Short Strength Descriptor]' (e.g., 'Ambition - Natural Leader')"),
-    lowestHPI: z.string().describe("Format: '[Trait Name] - [Short Positive Descriptor]' (e.g., 'Prudence - Flexible Thinker')"),
-    highestRisk: z.string().describe("Format: '[Trait Name] - [Risk Descriptor]' (e.g., 'Excitable - Passionate Intensity')"),
-    highestValue: z.string().describe("Format: '[Value Name] - [Driver Descriptor]' (e.g., 'Power - Driven by Influence')"),
-    reasoningStyle: z.string().describe("Format: '[Style Name] - [Thinking Descriptor]' (e.g., 'Strategic - Big Picture Thinker')")
+    highestHPI: z.object({
+        name: z.string().describe("Trait Name (e.g. 'Ambition')"),
+        descriptor: z.string().describe("Short Strength Descriptor (e.g. 'Natural Leader')"),
+        insight: z.string().describe("1-2 sentences explaining this key strength.")
+    }),
+    lowestHPI: z.object({
+        name: z.string().describe("Trait Name (e.g. 'Prudence')"),
+        descriptor: z.string().describe("Short Positive Descriptor (e.g. 'Flexible Thinker')"),
+        insight: z.string().describe("1-2 sentences explaining this growth edge.")
+    }),
+    highestRisk: z.object({
+        name: z.string().describe("Trait Name (e.g. 'Excitable')"),
+        descriptor: z.string().describe("Risk Descriptor (e.g. 'Passionate Intensity')"),
+        insight: z.string().describe("1-2 sentences explaining this risk.")
+    }),
+    highestValue: z.object({
+        name: z.string().describe("Value Name (e.g. 'Power')"),
+        descriptor: z.string().describe("Driver Descriptor (e.g. 'Driven by Influence')"),
+        insight: z.string().describe("1-2 sentences explaining this core value.")
+    }),
+    reasoningStyle: z.object({
+        name: z.string().describe("Style Name (e.g. 'Strategic')"),
+        descriptor: z.string().describe("Thinking Descriptor (e.g. 'Big Picture Thinker')"),
+        insight: z.string().describe("1-2 sentences explaining this reasoning style.")
+    })
 });
 
 // === FULL REPORT SCHEMA ===
