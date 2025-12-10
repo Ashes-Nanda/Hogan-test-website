@@ -92,7 +92,7 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
                                 transition={{ delay: i * 0.1 }}
                                 className={`p-6 rounded-xl border ${item.color} flex flex-col gap-4 hover:shadow-md transition-shadow`}
                             >
-                                <span className="text-xs font-bold uppercase tracking-wider opacity-70">{item.label}</span>
+                                <span className="text-xs font-medium uppercase tracking-wider opacity-70">{item.label}</span>
                                 <div className="flex flex-col">
                                     <span className="font-heading text-xl leading-tight mb-1">
                                         {item.data.name}
@@ -139,7 +139,7 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
                                     transition={{ delay: i * 0.1, type: "spring", stiffness: 200 }}
                                     className={`px-8 py-4 rounded-xl border bg-gradient-to-br ${colorClass} shadow-sm hover:shadow-md transition-all cursor-default select-none`}
                                 >
-                                    <span className="text-xl md:text-2xl font-bold font-heading">
+                                    <span className="text-xl md:text-2xl font-normal font-heading">
                                         {word}
                                     </span>
                                 </motion.div>

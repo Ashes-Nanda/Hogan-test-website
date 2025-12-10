@@ -6,6 +6,7 @@ import { AssessmentFlow } from './components/AssessmentFlow';
 import { AuthPage } from './components/auth/AuthPage';
 import { AssessmentLandingPage } from './components/AssessmentLandingPage';
 import { AccessRestricted } from './components/auth/AccessRestricted';
+import { Footer } from './components/ui/Footer';
 
 const App: React.FC = () => {
     const { user, loading, logout, isAdminAuthenticated } = useAuth();
@@ -15,38 +16,43 @@ const App: React.FC = () => {
     }
 
     return (
-        <Routes>
-            {/* Auth Route */}
-            <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to="/" replace />} />
+        <div className="flex flex-col min-h-screen">
+            <div className="flex-1">
+                <Routes>
+                    {/* Auth Route */}
+                    <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to="/" replace />} />
 
-            {/* Access Restricted Route */}
-            <Route path="/access-restricted" element={<AccessRestricted />} />
+                    {/* Access Restricted Route */}
+                    <Route path="/access-restricted" element={<AccessRestricted />} />
 
-            {/* Protected Admin Route - Dashboard handles its own auth check now */}
-            <Route
-                path="/admin"
-                element={<AdminDashboard onLogout={logout} />}
-            />
+                    {/* Protected Admin Route - Dashboard handles its own auth check now */}
+                    <Route
+                        path="/admin"
+                        element={<AdminDashboard onLogout={logout} />}
+                    />
 
-            {/* Assessment Flow (Test & Results) */}
-            <Route
-                path="/assessment"
-                element={
-                    user ? <AssessmentFlow /> : <Navigate to="/auth" replace />
-                }
-            />
+                    {/* Assessment Flow (Test & Results) */}
+                    <Route
+                        path="/assessment"
+                        element={
+                            user ? <AssessmentFlow /> : <Navigate to="/auth" replace />
+                        }
+                    />
 
-            {/* Landing Page (Home) */}
-            <Route
-                path="/"
-                element={
-                    user ? <AssessmentLandingPage /> : <Navigate to="/auth" replace />
-                }
-            />
+                    {/* Landing Page (Home) */}
+                    <Route
+                        path="/"
+                        element={
+                            user ? <AssessmentLandingPage /> : <Navigate to="/auth" replace />
+                        }
+                    />
 
-            {/* Catch-all */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+                    {/* Catch-all */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+            </div>
+            <Footer />
+        </div>
     );
 };
 

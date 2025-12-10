@@ -32,9 +32,9 @@ interface ValuesMotivatorSectionProps {
     testType: string;
 }
 
-export const ValuesMotivatorSection: React.FC<ValuesMotivatorSectionProps> = ({ valuesAndMotivators, valuesData }) => {
+export const ValuesMotivatorSection: React.FC<ValuesMotivatorSectionProps> = ({ valuesAndMotivators, valuesData, id }) => {
     return (
-        <section className="container py-16">
+        <section id={id} className="container py-16">
 
             {valuesData && valuesData.summary.summaryParagraph && (
                 <div className="mb-12 max-w-4xl mx-auto text-center">

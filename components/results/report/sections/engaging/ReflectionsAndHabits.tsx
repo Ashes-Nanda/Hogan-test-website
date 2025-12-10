@@ -38,7 +38,7 @@ export const ReflectionsAndHabits: React.FC<ReflectionsProps> = ({
 
                 <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                     {/* Left Column: Scrollable Interactive List */}
-                    <div className="bg-white rounded-3xl p-1 border border-slate-200 shadow-sm h-[500px] flex flex-col relative overflow-hidden group/container">
+                    <div className="bg-white rounded-3xl p-1 border border-slate-200 shadow-sm h-[400px] lg:h-[500px] flex flex-col relative overflow-hidden group/container">
                         <div className="absolute top-0 left-0 w-full h-full bg-white/50 z-0 pointer-events-none" />
 
                         <div className="p-6 pb-0 relative z-10 bg-white">
@@ -70,7 +70,7 @@ export const ReflectionsAndHabits: React.FC<ReflectionsProps> = ({
                     </div>
 
                     {/* Right Column: Mesh Gradient Blob Visual */}
-                    <div className="bg-white border border-slate-200 rounded-3xl h-[500px] flex items-center justify-center relative overflow-hidden group">
+                    <div className="bg-white border border-slate-200 rounded-3xl h-[400px] lg:h-[500px] flex items-center justify-center relative overflow-hidden group">
 
                         {/* Animated Gradient Blobs (Pastel Palette from IdentitySummary) */}
                         <div className="absolute inset-0 bg-slate-50/50" />

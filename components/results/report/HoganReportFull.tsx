@@ -1,5 +1,7 @@
 "use client";
 
+import { Menu } from "lucide-react";
+
 import React from "react";
 import { HoganResultData } from "@/types/tests/hogan/results";
 import { HoganHeroSection } from "./HoganHeroSection";
@@ -16,7 +18,6 @@ import ValuesMotivatorSection from "@/components/results/report/shared/sections/
 import ActionPlanSection from "./sections/ActionPlanSection";
 import { ReflectionPrompt } from "@/components/results/report/shared/ReflectionPrompt";
 import { LazySection } from "@/components/results/report/shared/LazySection";
-import { MobileBottomNav } from "@/components/results/report/shared/MobileBottomNav";
 import { VideoContentSection } from "@/components/results/report/mbti/VideoContentSection";
 import { RelatedResourcesSection } from "@/components/results/report/mbti/RelatedResourcesSection";
 import { TestimonialsCarousel } from "@/components/results/report/shared/SocialProof";
@@ -24,10 +25,12 @@ import { GoalTrackingSystem } from "@/components/results/report/shared/GoalTrack
 
 // NEW COMPONENTS
 import { IdentitySummary } from "./sections/engaging/IdentitySummary";
+import { HoganNarrativeSection } from "./sections/HoganNarrativeSection";
 import { WorkStyleAndEnvironment } from "./sections/engaging/WorkStyleAndEnvironment";
 import { ReflectionsAndHabits } from "./sections/engaging/ReflectionsAndHabits";
-import { HoganNarrativeSection } from "./sections/HoganNarrativeSection";
 import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
+import { ReportSidebar } from "@/components/results/report/shared/ReportSidebar";
+import { StickyReportHeader } from "@/components/results/report/shared/StickyReportHeader";
 
 import { generateExecutiveSummary } from "@/lib/generate-executive-summary";
 import { calculateConfidenceScore } from "@/lib/calculate-confidence";
@@ -51,7 +54,9 @@ interface HoganReportFullProps {
 export default function HoganReportFull({ resultData, isPaidUser = false, userEmail, userId }: HoganReportFullProps) {
   // State for AI Content
   const [aiContent, setAiContent] = React.useState<any>(null);
-  const [isGenerating, setIsGenerating] = React.useState(true); // Start as true
+  const [isGenerating, setIsGenerating] = React.useState(true);
+  const [isSidebarExpanded, setIsSidebarExpanded] = React.useState(true);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
 
   // Trigger AI generation on mount
   React.useEffect(() => {
@@ -190,7 +195,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
   }
 
   return (
-    <main className="flex-1 mx-auto transition-all duration-300 print:w-full print:max-w-none print:mx-0 print:p-0">
+    <div className="flex flex-row min-h-screen bg-slate-50">
       <style type="text/css" media="print">
         {`
           @page { size: auto; margin: 10mm; }
@@ -201,248 +206,268 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
         `}
       </style>
 
-      {/* 0. COVER / HEADER SECTION */}
-      {resultData.hpiScores && (
-        <div className="print-break-inside-avoid">
-          <HoganHeroSection
-            hpiScores={resultData.hpiScores}
-            hoganProfile={resultData.hoganProfile}
-            leadershipPotential={resultData.leadershipPotential}
-            firstname={resultData?.firstname ?? undefined}
-            completionDate={resultData.takenAt}
-            onDownload={handleDownload}
-            heroData={aiContent?.hero}
-          />
-        </div>
-      )}
+      <StickyReportHeader
+        title={aiContent?.hero?.identityTitle || resultData.hoganProfile}
+        firstname={resultData.firstname || undefined}
+        onDownload={handleDownload}
+        isSidebarExpanded={isSidebarExpanded}
+      />
 
-      <div className="p-4 mt-8 mbti-content-container-full print:p-0 print:mt-4">
 
-        {/* Narrative Section (Moved from Hero) */}
-        {aiContent?.hero?.heroNarrative && (
-          <HoganNarrativeSection
-            narrative={aiContent.hero.heroNarrative}
-            userName={resultData.firstname}
-          />
-        )}
 
-        {/* IDENTITY SUMMARY (5 TAKEAWAYS) - Moved here */}
-        <div className="mbti-section-spacing">
-          <LazySection>
-            <IdentitySummary
-              id="identity-summary-takeaways"
-              sectionNumber={0}
-              topTakeaways={aiContent?.topTakeaways}
-              showTakeaways={true}
-              showWords={false}
-              showSocial={false}
-            />
-          </LazySection>
-        </div>
+      {/* SIDEBAR COLUMN */}
+      {/* Sidebar handles its own width and sticky positioning */}
+      <ReportSidebar
+        isExpanded={isSidebarExpanded}
+        onToggle={() => setIsSidebarExpanded(!isSidebarExpanded)}
+        isOpenMobile={isMobileSidebarOpen}
+        onCloseMobile={() => setIsMobileSidebarOpen(false)}
+      />
 
-        {/* 1. TRAIT SUMMARY TABLES */}
+      {/* MAIN CONTENT COLUMN */}
+      <main className="flex-1 min-w-0 transition-all duration-300 print:w-full print:max-w-none print:mx-0 print:p-0 relative">
+
+        {/* Mobile Sidebar Trigger */}
+        <button
+          onClick={() => setIsMobileSidebarOpen(true)}
+          className="md:hidden fixed top-4 left-4 z-40 bg-white/90 backdrop-blur shadow-md border border-gray-200 p-2 rounded-lg text-gray-600 hover:text-gray-900 transition-colors print:hidden"
+        >
+          <Menu size={24} />
+        </button>
+
+        {/* 0. COVER / HEADER SECTION */}
         {resultData.hpiScores && (
-          <div className="mbti-section-spacing print-break-inside-avoid">
-            <HoganIntroductionSection
+          <div className="print-break-inside-avoid" id="hero">
+            <HoganHeroSection
+              hpiScores={resultData.hpiScores}
               hoganProfile={resultData.hoganProfile}
-              hpiScores={Object.fromEntries(
-                Object.entries(resultData.hpiScores).map(([key, value]) => [key, (value as any).percentage])
-              )}
-              hdsScores={resultData.hdsScores ? Object.fromEntries(
-                Object.entries(resultData.hdsScores).map(([key, value]) => [key, (value as any).percentage])
-              ) : undefined}
-              mvpiScores={resultData.mvpiScores ? Object.fromEntries(
-                Object.entries(resultData.mvpiScores).map(([key, value]) => [key, (value as any).percentage])
-              ) : undefined}
-              hbriScores={resultData.hbriScores ? Object.fromEntries(
-                Object.entries(resultData.hbriScores).map(([key, value]) => [key, (value as any).percentage])
-              ) : undefined}
               leadershipPotential={resultData.leadershipPotential}
               firstname={resultData?.firstname ?? undefined}
-              isPaidUser={isPaidUser}
-              userEmail={userEmail}
-              traitSummary={aiContent?.traitSummary}
+              completionDate={resultData.takenAt}
+              onDownload={handleDownload}
+              heroData={aiContent?.hero}
             />
           </div>
         )}
 
-        {/* Confidence Data */}
-        <div className="mb-16 print-break-inside-avoid">
-          {confidenceScore !== null && (
-            <ConfidenceAndFamousSection
-              confidenceScore={confidenceScore.score}
-              reason={confidenceScore.reason}
-              personalityType={resultData.hoganProfile}
+        <div className="p-4 mt-8 mbti-content-container-full print:p-0 print:mt-4 mx-auto max-w-7xl">
+          {/* ... content ... */}
+
+          {/* ... ENGAGING MODULES (Sections 8-14) ... */}
+          {/* ... (Keep existing content inside this div but I'm replacing the end of the file so need to be careful) ... */}
+
+          {/* 
+             Wait, I shouldn't replace the ENTIRE main content block because it's huge. 
+             I should target specific blocks.
+             I will target the top to add the button, and the bottom to hide the nav.
+             Or I can try to replace the return block if I'm confident.
+             Ah, replace_file_content allows replacing a range.
+          */}
+
+          {/* Narrative Section (Moved from Hero) */}
+          {aiContent?.hero?.heroNarrative && (
+            <HoganNarrativeSection
+              narrative={aiContent.hero.heroNarrative}
+              userName={resultData.firstname}
             />
           )}
-        </div>
 
-        {/* 2. DETAILED TRAIT ANALYSIS (2A-2D) */}
-        <div className="mbti-section-spacing print-break-before">
-          <HoganTraitsSection
-            hpiScores={resultData.hpiScores}
-            hdsScores={resultData.hdsScores}
-            mvpiScores={resultData.mvpiScores}
-            hbriScores={resultData.hbriScores}
-            hpiAnalysis={aiContent?.hpiAnalysis}
-            hdsAnalysis={aiContent?.hdsAnalysis}
-            mvpiAnalysis={aiContent?.mvpiAnalysis}
-            hbriAnalysis={aiContent?.hbriAnalysis}
-            hpiProfile={resultData.hpiProfile}
-            hdsRiskAreas={resultData.hdsRiskAreas}
-            mvpiTopValues={resultData.mvpiTopValues}
-            sectionNumber={1}
-            firstname={resultData?.firstname ?? undefined}
-            id="explore-traits"
-            isPaidUser={isPaidUser}
-            testType="hogan"
-          />
-        </div>
+          {/* IDENTITY SUMMARY (5 TAKEAWAYS) - Moved here */}
+          <div className="mbti-section-spacing">
+            <LazySection>
+              <IdentitySummary
+                id="identity-summary-takeaways"
+                sectionNumber={0}
+                topTakeaways={aiContent?.topTakeaways}
+                showTakeaways={true}
+                showWords={false}
+                showSocial={false}
+              />
+            </LazySection>
+          </div>
 
-        {/* 3. PERSONAL EXAMPLES (Superpowers & Blind Spots) */}
-        {convertedScores && (
-          <div className="print-break-inside-avoid print-break-before">
-            <PersonalExamplesSection
-              traitScores={convertedScores}
-              personalityType={resultData.hoganProfile}
+          {/* 1. TRAIT SUMMARY TABLES */}
+          {resultData.hpiScores && (
+            <div className="mbti-section-spacing print-break-inside-avoid" id="trait-summary">
+              <HoganIntroductionSection
+                hoganProfile={resultData.hoganProfile}
+                hpiScores={Object.fromEntries(
+                  Object.entries(resultData.hpiScores).map(([key, value]) => [key, (value as any).percentage])
+                )}
+                hdsScores={resultData.hdsScores ? Object.fromEntries(
+                  Object.entries(resultData.hdsScores).map(([key, value]) => [key, (value as any).percentage])
+                ) : undefined}
+                mvpiScores={resultData.mvpiScores ? Object.fromEntries(
+                  Object.entries(resultData.mvpiScores).map(([key, value]) => [key, (value as any).percentage])
+                ) : undefined}
+                hbriScores={resultData.hbriScores ? Object.fromEntries(
+                  Object.entries(resultData.hbriScores).map(([key, value]) => [key, (value as any).percentage])
+                ) : undefined}
+                leadershipPotential={resultData.leadershipPotential}
+                firstname={resultData?.firstname ?? undefined}
+                isPaidUser={isPaidUser}
+                userEmail={userEmail}
+                traitSummary={aiContent?.traitSummary}
+              />
+            </div>
+          )}
+
+          {/* Confidence Data */}
+          <div className="mb-16 print-break-inside-avoid" id="confidence">
+            {confidenceScore !== null && (
+              <ConfidenceAndFamousSection
+                confidenceScore={confidenceScore.score}
+                reason={confidenceScore.reason}
+                personalityType={resultData.hoganProfile}
+              />
+            )}
+          </div>
+
+          {/* 2. DETAILED TRAIT ANALYSIS (2A-2D) */}
+          <div className="mbti-section-spacing print-break-before">
+            <HoganTraitsSection
+              hpiScores={resultData.hpiScores}
+              hdsScores={resultData.hdsScores}
+              mvpiScores={resultData.mvpiScores}
+              hbriScores={resultData.hbriScores}
+              hpiAnalysis={aiContent?.hpiAnalysis}
+              hdsAnalysis={aiContent?.hdsAnalysis}
+              mvpiAnalysis={aiContent?.mvpiAnalysis}
+              hbriAnalysis={aiContent?.hbriAnalysis}
+              hpiProfile={resultData.hpiProfile}
+              hdsRiskAreas={resultData.hdsRiskAreas}
+              mvpiTopValues={resultData.mvpiTopValues}
+              sectionNumber={1}
               firstname={resultData?.firstname ?? undefined}
-              personalExamples={aiContent?.personalExamples}
+              id="explore-traits"
+              isPaidUser={isPaidUser}
+              testType="hogan"
             />
           </div>
-        )}
 
-        {/* 4. CORE VALUES & MOTIVATORS */}
-        <div className="mbti-section-spacing print-break-before">
-          <ValuesMotivatorSection
-            firstname={resultData?.firstname || null}
-            valuesAndMotivators={valuesAndMotivators}
-            personalityType={resultData.hoganProfile}
-            sectionNumber={3}
-            id="values-motivators"
-            isPaidUser={isPaidUser}
-            testType="hogan"
-            valuesData={aiContent?.valuesSummary && aiContent?.mvpiAnalysis ? {
-              summary: aiContent.valuesSummary,
-              analysis: aiContent.mvpiAnalysis
-            } : undefined}
-          />
-        </div>
+          {/* 3. PERSONAL EXAMPLES (Superpowers & Blind Spots) */}
+          {convertedScores && (
+            <div className="print-break-inside-avoid print-break-before" id="personal-examples">
+              <PersonalExamplesSection
+                traitScores={convertedScores}
+                personalityType={resultData.hoganProfile}
+                firstname={resultData?.firstname ?? undefined}
+                personalExamples={aiContent?.personalExamples}
+              />
+            </div>
+          )}
 
-        {/* 5. CAREER & RELATIONSHIPS */}
-        <div className="mbti-section-spacing print-break-before">
-          <LazySection>
-            <CareerPathSection
+          {/* 4. CORE VALUES & MOTIVATORS */}
+          <div className="mbti-section-spacing print-break-before">
+            <ValuesMotivatorSection
               firstname={resultData?.firstname || null}
-              career={careerData}
+              valuesAndMotivators={valuesAndMotivators}
               personalityType={resultData.hoganProfile}
-              testType="hogan"
-              sectionNumber={4}
-              id="career-path"
-              isPaidUser={isPaidUser}
-              careerData={aiContent?.career}
-            />
-          </LazySection>
-        </div>
-
-        {/* 6. Relationship Insights (Part of Section 5) */}
-        <div className="mbti-section-spacing print-break-before">
-          <LazySection>
-            <RelationshipSection
-              firstname={resultData?.firstname || null}
-              relationships={aiContent?.relationships || generateRelationshipInsights(resultData)}
-              sectionNumber={5}
-              id="relationships"
+              sectionNumber={3}
+              id="values-motivators"
               isPaidUser={isPaidUser}
               testType="hogan"
+              valuesData={aiContent?.valuesSummary && aiContent?.mvpiAnalysis ? {
+                summary: aiContent.valuesSummary,
+                analysis: aiContent.mvpiAnalysis
+              } : undefined}
             />
-          </LazySection>
+          </div>
+
+          {/* 5. CAREER & RELATIONSHIPS */}
+          <div className="mbti-section-spacing print-break-before">
+            <LazySection id="career-path">
+              <CareerPathSection
+                firstname={resultData?.firstname || null}
+                career={careerData}
+                personalityType={resultData.hoganProfile}
+                testType="hogan"
+                sectionNumber={4}
+                id="career-path-inner"
+                isPaidUser={isPaidUser}
+                careerData={aiContent?.career}
+              />
+            </LazySection>
+          </div>
+
+          {/* 6. Relationship Insights (Part of Section 5) */}
+          <div className="mbti-section-spacing print-break-before">
+            <LazySection id="relationships">
+              <RelationshipSection
+                firstname={resultData?.firstname || null}
+                relationships={aiContent?.relationships || generateRelationshipInsights(resultData)}
+                sectionNumber={5}
+                id="relationships-inner"
+                isPaidUser={isPaidUser}
+                testType="hogan"
+              />
+            </LazySection>
+          </div>
+
+          {/* 6. YOUR GROWTH JOURNEY */}
+          <div className="mbti-section-spacing print-break-before">
+            <LazySection id="growth-journey">
+              <GrowthSection
+                firstname={resultData?.firstname || null}
+                growth={generateGrowthJourney(resultData)}
+                sectionNumber={6}
+                id="growth-journey-inner"
+                isPaidUser={isPaidUser}
+                testType="hogan"
+                personalityType={resultData.hoganProfile}
+                growthData={aiContent?.growthJourney}
+              />
+            </LazySection>
+          </div>
+
+          {/* --- ENGAGING MODULES (Sections 8-14) --- */}
+
+          {/* IDENTITY SUMMARY PART 2 (Wings/Social) - Moved Back */}
+          <div className="mbti-section-spacing print-break-before">
+            <LazySection id="identity-summary-reputation">
+              <IdentitySummary
+                id="identity-summary-reputation-inner"
+                sectionNumber={9}
+                showTakeaways={false}
+                showWords={true}
+                showSocial={true}
+                personalityWords={aiContent?.personalityWords}
+                socialExperience={aiContent?.socialExperience}
+              />
+            </LazySection>
+          </div>
+
+          {/* 10, 12: Work Style & Energy */}
+          <div className="mbti-section-spacing print-break-before">
+            <LazySection id="work-style">
+              <WorkStyleAndEnvironment
+                id="work-style-inner"
+                sectionNumber={10}
+                workStyle={aiContent?.workStyle}
+                energy={aiContent?.energy}
+              />
+            </LazySection>
+          </div>
+
+          {/* 13, 14: Habits & Reflections */}
+          <div className="mbti-section-spacing print-break-before">
+            <LazySection id="reflections-habits">
+              <ReflectionsAndHabits
+                id="reflections-habits-inner"
+                sectionNumber={13}
+                microHabits={[
+                  ...(aiContent?.hpiAnalysis || []),
+                  ...(aiContent?.hdsAnalysis || []),
+                  ...(aiContent?.mvpiAnalysis || []),
+                  ...(aiContent?.hbriAnalysis || [])
+                ].map((t: any) => t.microAction).filter(Boolean)}
+                coachQuestions={aiContent?.coachQuestions}
+              />
+            </LazySection>
+          </div>
+
         </div>
-
-        {/* 6. YOUR GROWTH JOURNEY */}
-        <div className="mbti-section-spacing print-break-before">
-          <LazySection>
-            <GrowthSection
-              firstname={resultData?.firstname || null}
-              growth={generateGrowthJourney(resultData)}
-              sectionNumber={6}
-              id="growth-journey"
-              isPaidUser={isPaidUser}
-              testType="hogan"
-              personalityType={resultData.hoganProfile}
-              growthData={aiContent?.growthJourney}
-            />
-          </LazySection>
-        </div>
-
-        {/* 7. ACTION PLAN (Commented out per user request) */}
-        {/* <div className="mbti-section-spacing print-break-before">
-          <LazySection>
-            <ActionPlanSection
-              username={null}
-              firstname={resultData?.firstname || null}
-              resultData={resultData}
-              hoganProfile={resultData.hoganProfile}
-              actionItems={aiContent?.actionPlan?.actionItems}
-              sectionNumber={7}
-              id="action-plan"
-            />
-          </LazySection>
-        </div> */}
-
-        {/* --- ENGAGING MODULES (Sections 8-14) --- */}
-
-
-
-        {/* IDENTITY SUMMARY PART 2 (Wings/Social) - Moved Back */}
-        <div className="mbti-section-spacing print-break-before">
-          <LazySection>
-            <IdentitySummary
-              id="identity-summary-reputation"
-              sectionNumber={9}
-              showTakeaways={false}
-              showWords={true}
-              showSocial={true}
-              personalityWords={aiContent?.personalityWords}
-              socialExperience={aiContent?.socialExperience}
-            />
-          </LazySection>
-        </div>
-
-        {/* 10, 12: Work Style & Energy */}
-        <div className="mbti-section-spacing print-break-before">
-          <LazySection>
-            <WorkStyleAndEnvironment
-              id="work-style"
-              sectionNumber={10}
-              workStyle={aiContent?.workStyle}
-              energy={aiContent?.energy}
-            />
-          </LazySection>
-        </div>
-
-        {/* 13, 14: Habits & Reflections */}
-        <div className="mbti-section-spacing print-break-before">
-          <LazySection>
-            <ReflectionsAndHabits
-              id="reflections-habits"
-              sectionNumber={13}
-              microHabits={[
-                ...(aiContent?.hpiAnalysis || []),
-                ...(aiContent?.hdsAnalysis || []),
-                ...(aiContent?.mvpiAnalysis || []),
-                ...(aiContent?.hbriAnalysis || [])
-              ].map((t: any) => t.microAction).filter(Boolean)}
-              coachQuestions={aiContent?.coachQuestions}
-            />
-          </LazySection>
-        </div>
-
-      </div>
-
-      {/* Mobile navigation */}
-      <div className="no-print">
-        <MobileBottomNav />
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
