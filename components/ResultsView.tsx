@@ -30,7 +30,7 @@ export const ResultsView: React.FC<Props> = ({ user, activeAttempt, onRetake }) 
         hdsRiskAreas: result.riskAnalysis,
         mvpiTopValues: Object.entries(result.mvpi)
             .sort(([, a], [, b]) => b.percentage - a.percentage)
-            .slice(0, 3)
+            .slice(0, 4)
             .map(([k]) => k)
     };
 

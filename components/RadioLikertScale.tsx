@@ -10,10 +10,10 @@ interface Props {
 // Keeping the specific colors for visual feedback (red to green spectrum) 
 // but ensuring container/focus states use design tokens
 const scaleOptions = [
-  { val: 1, color: 'bg-primary', ring: 'ring-primary', size: 'w-8 h-8 sm:w-[60px] sm:h-[60px]', dot: 'w-2 h-2 sm:w-4 sm:h-4', label: 'Strongly Disagree' },
-  { val: 2, color: 'bg-primary', ring: 'ring-primary', size: 'w-6 h-6 sm:w-[45px] sm:h-[45px]', dot: 'w-1.5 h-1.5 sm:w-3 sm:h-3', label: 'Disagree' },
-  { val: 3, color: 'bg-primary', ring: 'ring-primary', size: 'w-6 h-6 sm:w-[45px] sm:h-[45px]', dot: 'w-1.5 h-1.5 sm:w-3 sm:h-3', label: 'Agree' },
-  { val: 4, color: 'bg-primary', ring: 'ring-primary', size: 'w-8 h-8 sm:w-[60px] sm:h-[60px]', dot: 'w-2 h-2 sm:w-4 sm:h-4', label: 'Strongly Agree' },
+  { val: 1, color: 'bg-primary', ring: 'ring-primary', size: 'w-10 h-10 sm:w-[60px] sm:h-[60px]', dot: 'w-2 h-2 sm:w-4 sm:h-4', label: 'Strongly Disagree' },
+  { val: 2, color: 'bg-primary', ring: 'ring-primary', size: 'w-8 h-8 sm:w-[45px] sm:h-[45px]', dot: 'w-1.5 h-1.5 sm:w-3 sm:h-3', label: 'Disagree' },
+  { val: 3, color: 'bg-primary', ring: 'ring-primary', size: 'w-8 h-8 sm:w-[45px] sm:h-[45px]', dot: 'w-1.5 h-1.5 sm:w-3 sm:h-3', label: 'Agree' },
+  { val: 4, color: 'bg-primary', ring: 'ring-primary', size: 'w-10 h-10 sm:w-[60px] sm:h-[60px]', dot: 'w-2 h-2 sm:w-4 sm:h-4', label: 'Strongly Agree' },
 ];
 
 export const RadioLikertScale: React.FC<Props> = ({ value, onChange }) => {

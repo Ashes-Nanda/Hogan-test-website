@@ -66,7 +66,7 @@ export async function generateHoganReportAI(
             model: "gpt-4o-2024-08-06",
             messages: [
                 { role: "system", content: HOGAN_SYSTEM_PROMPT },
-                { role: "user", content: `${userContext}\n\nTASK: Generate PART 2 - Deep Analysis (HPI, HDS, MVPI, HBRI). Focus on detailed interpretations.` }
+                { role: "user", content: `${userContext}\n\nTASK: Generate PART 2 - Deep Analysis (HPI, HDS, MVPI, HBRI). Focus on detailed interpretations.\nIMPORTANT: For MVPI, analyze the TOP 4 highest scoring values.` }
             ],
             response_format: zodResponseFormat(Part2_AnalysisSchema, "part2_analysis"),
         }).then(res => {

@@ -19,7 +19,8 @@ export const TraitAnalysisSchema = z.object({
     traitName: z.string(),
     score: z.number().nullable(),
     traitLabel: z.string().describe("1-2 word personal descriptor."),
-    interpretation: z.string().describe("1 sentence explanation based on score band."),
+    traitQuote: z.string().describe("What they might say (e.g. 'My way or highway'). varies by score."),
+    interpretation: z.string().describe("2-3 sentence insight based on score band."),
     innerExperience: z.string().describe("1-2 sentences describing internal state."),
     atWork: z.string().describe("2 sentences describing observable behaviour."),
     underPressure: z.string().describe("1 sentence modified by HDS traits."),
@@ -34,7 +35,8 @@ export const TraitAnalysisSchema = z.object({
 export const RiskFactorSchema = z.object({
     traitName: z.string(),
     score: z.number().nullable(),
-    interpretation: z.string().describe("Interpretation based on score band."),
+    traitQuote: z.string().describe("What they might say. varies by score."),
+    interpretation: z.string().describe("2-3 sentence interpretation based on score band."),
     triggerConditions: z.string().describe("2 triggers (e.g. 'sudden change or unmet expectations')."),
     behaviourUnderStress: z.string().describe("How this looks under stress."),
     socialImpact: z.string().describe("How others might read this behavior."),
@@ -49,7 +51,8 @@ export const RiskFactorSchema = z.object({
 export const ValueSchema = z.object({
     valueName: z.string(),
     score: z.number().nullable(),
-    interpretation: z.string().describe("Influence level based on score."),
+    traitQuote: z.string().describe("What they might say. varies by score."),
+    interpretation: z.string().describe("2-3 sentence influence level based on score."),
     drivers: z.string().describe("What drives you (e.g. 'desire to influence')."),
     workBehaviour: z.string().describe("How this shows up at work."),
     strengthSituations: z.array(z.string()).describe("2 situations where this helps."),
@@ -63,7 +66,8 @@ export const ValueSchema = z.object({
 export const ReasoningSchema = z.object({
     styleName: z.string().describe("'Tactical' or 'Strategic'"),
     score: z.number().nullable(),
-    interpretation: z.string(),
+    traitQuote: z.string().describe("What they might say. varies by score."),
+    interpretation: z.string().describe("2-3 sentence interpretation of their reasoning style."),
     coreThinkingStyle: z.string().describe("Descriptors of thinking style."),
     problemSolving: z.string().describe("How you solve problems."),
     strengthSituations: z.array(z.string()).describe("2 situations where this helps."),
@@ -204,7 +208,7 @@ export const HoganReportContentSchema = z.object({
 
     hpiAnalysis: z.array(TraitAnalysisSchema),
     hdsAnalysis: z.array(RiskFactorSchema),
-    mvpiAnalysis: z.array(ValueSchema),
+    mvpiAnalysis: z.array(ValueSchema).length(4),
     hbriAnalysis: z.array(ReasoningSchema),
 
     personalExamples: PersonalExamplesSchema,
@@ -238,7 +242,7 @@ export const Part1_CoreSchema = z.object({
 export const Part2_AnalysisSchema = z.object({
     hpiAnalysis: z.array(TraitAnalysisSchema),
     hdsAnalysis: z.array(RiskFactorSchema),
-    mvpiAnalysis: z.array(ValueSchema),
+    mvpiAnalysis: z.array(ValueSchema).length(4),
     hbriAnalysis: z.array(ReasoningSchema),
 });
 

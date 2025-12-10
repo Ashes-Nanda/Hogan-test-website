@@ -27,7 +27,7 @@ export const ActionPlanSection: React.FC<ActionPlanSectionProps> = ({ id, action
                 <SectionHeader title="Action Plan" subtitle="Turn insights into results." icon={Target} />
 
                 <div className="space-y-6 max-w-4xl mx-auto mt-12">
-                    <h3 className="text-xl font-bold font-oswald mb-4">Strategic Steps</h3>
+                    <h3 className="text-xl font-heading mb-4">Strategic Steps</h3>
                     {stepsToDisplay.map((step, i) => (
                         <div key={i} className="flex gap-5 p-5 bg-white rounded-xl border-l-4 border-primary shadow-sm hover:shadow-md transition-all">
                             <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-lg">

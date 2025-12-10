@@ -78,7 +78,8 @@ export const ParticipantsTable: React.FC<ParticipantsTableProps> = ({
                 </div>
             )}
 
-            <div className="overflow-x-auto">
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full divide-y divide-border table-fixed">
                     <thead className="bg-muted/40">
                         <tr>
@@ -185,6 +186,75 @@ export const ParticipantsTable: React.FC<ParticipantsTableProps> = ({
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden flex flex-col divide-y divide-border">
+                {loading ? (
+                    <div className="p-8 text-center text-muted-foreground">Loading participants...</div>
+                ) : users.length === 0 ? (
+                    <div className="p-8 text-center text-muted-foreground">No participants found.</div>
+                ) : sortedUsers.map((user) => (
+                    <div key={user.id} className="p-4 bg-card hover:bg-muted/10 transition-colors">
+                        <div className="flex justify-between items-start mb-3">
+                            <div className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    className="mr-3 rounded border-input text-primary focus:ring-primary cursor-pointer w-5 h-5"
+                                    checked={selectedIds.includes(user.id)}
+                                    onChange={() => toggleSelect(user.id)}
+                                />
+                                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm border border-primary/20 mr-3">
+                                    {user.name.charAt(0)}
+                                </div>
+                                <div>
+                                    <div className="font-semibold text-foreground">{user.name}</div>
+                                    <div className="text-xs text-muted-foreground">{user.email}</div>
+                                </div>
+                            </div>
+                            <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded-full border 
+                                ${user.status === 'COMPLETED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                                    user.status === 'IN_PROGRESS' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                                        'bg-slate-50 text-slate-600 border-slate-200'}`}>
+                                {user.status.replace('_', ' ')}
+                            </span>
+                        </div>
+
+                        <div className="flex justify-between items-center text-xs text-muted-foreground mb-4 pl-8">
+                            <div>
+                                <span className="font-medium">Attempts:</span> {user.attempts.length}
+                            </div>
+                            <div>
+                                <span className="font-medium">Last:</span> {user.attempts.length > 0
+                                    ? new Date(user.attempts[user.attempts.length - 1].completedAt).toLocaleDateString()
+                                    : 'Never'}
+                            </div>
+                        </div>
+
+                        <div className="flex gap-2 pl-8">
+                            {user.attempts.length > 0 ? (
+                                <>
+                                    <button
+                                        onClick={() => onViewDetails(user)}
+                                        className="flex-1 text-primary bg-primary/5 px-3 py-2 rounded-md border border-primary/10 font-bold text-xs flex justify-center items-center gap-2"
+                                    >
+                                        <Eye size={14} /> View Details
+                                    </button>
+                                    <button
+                                        onClick={() => onDownloadPDF(user)}
+                                        className="flex-1 text-muted-foreground bg-muted/50 px-3 py-2 rounded-md border border-border font-medium text-xs flex justify-center items-center gap-2"
+                                    >
+                                        <FileText size={14} /> PDF
+                                    </button>
+                                </>
+                            ) : (
+                                <button className="flex-1 text-muted-foreground hover:text-foreground bg-muted/30 px-3 py-2 rounded-md border border-border font-medium text-xs flex justify-center items-center gap-2">
+                                    <Mail size={14} /> Send Reminder
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                ))}
             </div>
 
             {/* Pagination Info */}

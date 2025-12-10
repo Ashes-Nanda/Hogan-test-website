@@ -60,7 +60,7 @@ export const AssessmentFlow: React.FC = () => {
                 <header className="bg-card shadow-sm py-4 px-6 flex justify-between items-center z-10 border-b border-border">
                     <div className="flex items-center gap-2">
                         <div className="bg-primary p-1.5 rounded-md"><BrainCircuit size={18} className="text-primary-foreground" /></div>
-                        <div className="font-oswald font-bold text-xl tracking-tight">CEREBRAL<span className="text-primary">Q</span></div>
+                        <div className="font-heading text-xl tracking-tight">CEREBRAL<span className="text-primary">Q</span></div>
                     </div>
                     <div className="flex items-center gap-4">
                         <span className="hidden sm:inline text-sm text-muted-foreground">Logged in as <b>{user.name}</b></span>

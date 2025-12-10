@@ -44,7 +44,7 @@ export const HoganHeroSection: React.FC<HoganHeroSectionProps> = ({ hpiScores, h
                     <span>Comprehensive Leadership Profile</span>
                 </div>
 
-                <h1 className="text-4xl md:text-7xl font-oswald font-black mb-6 leading-none tracking-tight text-white drop-shadow-md">
+                <h1 className="text-4xl md:text-7xl font-heading mb-6 leading-none tracking-tight text-white drop-shadow-md">
                     {heroData?.identityTitle || hoganProfile}
                 </h1>
 
@@ -78,7 +78,7 @@ export const HoganHeroSection: React.FC<HoganHeroSectionProps> = ({ hpiScores, h
                                         trackColor="rgba(255,255,255,0.15)"
                                     >
                                         <div className="flex flex-col items-center justify-center">
-                                            <span className="text-xl font-oswald font-bold text-white leading-none">
+                                            <span className="text-xl font-heading text-white leading-none">
                                                 {score.percentage}<span className="text-xs align-top">%</span>
                                             </span>
                                         </div>

@@ -36,7 +36,7 @@ export const PersonalExamplesSection: React.FC<PersonalExamplesSectionProps> = (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Superpowers */}
                     <div className="space-y-6">
-                        <h3 className="text-xl font-oswald font-bold text-emerald-800 flex items-center gap-2">
+                        <h3 className="text-xl font-heading text-emerald-800 flex items-center gap-2">
                             <Zap className="text-emerald-500 fill-emerald-100" /> Superpowers
                         </h3>
 
@@ -77,7 +77,7 @@ export const PersonalExamplesSection: React.FC<PersonalExamplesSectionProps> = (
 
                     {/* Blind Spots */}
                     <div className="space-y-6">
-                        <h3 className="text-xl font-oswald font-bold text-orange-800 flex items-center gap-2">
+                        <h3 className="text-xl font-heading text-orange-800 flex items-center gap-2">
                             <AlertTriangle className="text-orange-500 fill-orange-100" /> Blind Spots
                         </h3>
 

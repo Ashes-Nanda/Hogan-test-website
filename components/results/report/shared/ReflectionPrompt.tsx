@@ -74,7 +74,7 @@ export const ReflectionPrompt: React.FC<ReflectionPromptProps> = ({ question, pl
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm my-8">
             <div className="flex items-center gap-3 mb-4">
                 <MessageSquare className="text-primary" size={24} />
-                <h3 className="text-xl font-oswald font-bold text-foreground">Reflection</h3>
+                <h3 className="text-xl font-heading text-foreground">Reflection</h3>
             </div>
             <p className="text-muted-foreground mb-4">{question}</p>
             <textarea

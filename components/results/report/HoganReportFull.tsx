@@ -121,7 +121,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
   // Prepare data for sections and PDF
   const valuesAndMotivators = React.useMemo(() => ({
     summary: "Your Hogan values profile reveals what truly motivates and drives you in professional settings.",
-    coreValues: resultData.mvpiTopValues ? resultData.mvpiTopValues.slice(0, 3).map(value => ({
+    coreValues: resultData.mvpiTopValues ? resultData.mvpiTopValues.slice(0, 4).map(value => ({
       title: value.split(' (')[0],
       description: `This value represents ${value.split(' (')[0].toLowerCase()} in your professional life.`
     })) : [],
@@ -220,8 +220,25 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
 
         {/* Narrative Section (Moved from Hero) */}
         {aiContent?.hero?.heroNarrative && (
-          <HoganNarrativeSection narrative={aiContent.hero.heroNarrative} />
+          <HoganNarrativeSection
+            narrative={aiContent.hero.heroNarrative}
+            userName={resultData.firstname}
+          />
         )}
+
+        {/* IDENTITY SUMMARY (5 TAKEAWAYS) - Moved here */}
+        <div className="mbti-section-spacing">
+          <LazySection>
+            <IdentitySummary
+              id="identity-summary-takeaways"
+              sectionNumber={0}
+              topTakeaways={aiContent?.topTakeaways}
+              showTakeaways={true}
+              showWords={false}
+              showSocial={false}
+            />
+          </LazySection>
+        </div>
 
         {/* 1. TRAIT SUMMARY TABLES */}
         {resultData.hpiScores && (
@@ -357,8 +374,8 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
           </LazySection>
         </div>
 
-        {/* 7. ACTION PLAN */}
-        <div className="mbti-section-spacing print-break-before">
+        {/* 7. ACTION PLAN (Commented out per user request) */}
+        {/* <div className="mbti-section-spacing print-break-before">
           <LazySection>
             <ActionPlanSection
               username={null}
@@ -370,17 +387,21 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               id="action-plan"
             />
           </LazySection>
-        </div>
+        </div> */}
 
         {/* --- ENGAGING MODULES (Sections 8-14) --- */}
 
-        {/* 8, 9, 11: Identity Summary, 5 Words, Social Experience */}
+
+
+        {/* IDENTITY SUMMARY PART 2 (Wings/Social) - Moved Back */}
         <div className="mbti-section-spacing print-break-before">
           <LazySection>
             <IdentitySummary
-              id="identity-summary"
-              sectionNumber={8}
-              topTakeaways={aiContent?.topTakeaways}
+              id="identity-summary-reputation"
+              sectionNumber={9}
+              showTakeaways={false}
+              showWords={true}
+              showSocial={true}
               personalityWords={aiContent?.personalityWords}
               socialExperience={aiContent?.socialExperience}
             />
@@ -405,7 +426,12 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
             <ReflectionsAndHabits
               id="reflections-habits"
               sectionNumber={13}
-              microHabits={aiContent?.hpiAnalysis?.map((t: any) => t.microAction).filter(Boolean).slice(0, 3)}
+              microHabits={[
+                ...(aiContent?.hpiAnalysis || []),
+                ...(aiContent?.hdsAnalysis || []),
+                ...(aiContent?.mvpiAnalysis || []),
+                ...(aiContent?.hbriAnalysis || [])
+              ].map((t: any) => t.microAction).filter(Boolean)}
               coachQuestions={aiContent?.coachQuestions}
             />
           </LazySection>

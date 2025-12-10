@@ -38,7 +38,7 @@ export const RelationshipSection: React.FC<RelationshipSectionProps> = ({ id, re
                 <div className="p-6 border border-border rounded-xl bg-white shadow-sm">
                     <div className="flex items-center gap-3 mb-6">
                         <Users size={24} className="text-blue-600" />
-                        <h3 className="text-xl font-bold font-oswald">Professional Relationships</h3>
+                        <h3 className="text-xl font-heading">Professional Relationships</h3>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
@@ -68,7 +68,7 @@ export const RelationshipSection: React.FC<RelationshipSectionProps> = ({ id, re
                 <div className="p-6 border border-border rounded-xl bg-white shadow-sm">
                     <div className="flex items-center gap-3 mb-6">
                         <Heart size={24} className="text-pink-600" />
-                        <h3 className="text-xl font-bold font-oswald">Personal Dynamics</h3>
+                        <h3 className="text-xl font-heading">Personal Dynamics</h3>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>

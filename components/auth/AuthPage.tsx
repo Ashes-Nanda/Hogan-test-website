@@ -117,7 +117,7 @@ export const AuthPage: React.FC = () => {
                         <span className="text-xs font-medium text-indigo-100 tracking-wide uppercase">Private Access: Invited Employees Only</span>
                     </div>
 
-                    <h1 className="text-5xl font-oswald font-bold mb-6 leading-none tracking-tight">Unlock Your <br /> Professional Edge.</h1>
+                    <h1 className="text-5xl font-heading mb-6 leading-none tracking-tight">Unlock Your <br /> Professional Edge.</h1>
 
                     <h2 className="text-lg font-montserrat font-medium text-slate-200 mb-2 leading-relaxed max-w-md">
                         A private, organisation-only assessment that helps you understand how you work, lead, and grow.
@@ -158,7 +158,7 @@ export const AuthPage: React.FC = () => {
             </div>
 
             {/* Right Side - Form */}
-            <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-4 lg:p-8 bg-background h-full">
+            <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-4 lg:p-8 bg-background h-full overflow-y-auto">
                 <div className="w-full max-w-md bg-card p-6 rounded-lg shadow-sm border border-border">
                     {successMessage ? (
                         <div className="text-center py-12 animate-fade-in">
@@ -174,7 +174,7 @@ export const AuthPage: React.FC = () => {
                     ) : (
                         <>
                             <div className="text-center mb-6">
-                                <h2 className="text-2xl font-oswald font-bold text-foreground mb-1">{authMode === 'login' ? 'Welcome Back' : 'Access Your Assessment'}</h2>
+                                <h2 className="text-2xl font-heading text-foreground mb-1">{authMode === 'login' ? 'Welcome Back' : 'Access Your Assessment'}</h2>
                                 <p className="text-muted-foreground font-montserrat font-medium text-xs">
                                     {authMode === 'login'
                                         ? 'Enter your credentials to access your dashboard.'

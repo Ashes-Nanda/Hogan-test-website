@@ -54,7 +54,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         console.log('fetchUserData started', userId);
 
         const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Data fetch timed out')), 5000)
+            setTimeout(() => reject(new Error('Data fetch timed out')), 15000)
         );
 
         try {
@@ -131,13 +131,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     useEffect(() => {
         let mounted = true;
 
-        // Safety timeout: Force loading to false after 3 seconds to prevent infinite load
+        // Safety timeout: Force loading to false after 10 seconds to prevent infinite load
         const safetyTimeout = setTimeout(() => {
             if (mounted) {
                 console.warn("Auth loading timed out, forcing render.");
                 setLoading(false);
             }
-        }, 3000);
+        }, 10000);
 
         const initSession = async () => {
             try {

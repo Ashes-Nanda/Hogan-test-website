@@ -37,7 +37,7 @@ export const ConfidenceScore: React.FC<ConfidenceScoreProps> = ({ confidenceScor
                         initial={{ opacity: 0, scale: 0.5 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.5, duration: 0.5 }}
-                        className="text-4xl font-oswald font-black text-foreground"
+                        className="text-4xl font-heading text-foreground"
                     >
                         {confidenceScore}%
                     </motion.span>

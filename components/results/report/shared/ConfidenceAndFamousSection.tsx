@@ -59,6 +59,31 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
 
     const people = getRandomPeople(matchedList || defaultPool, 3);
 
+    const [imagesLoaded, setImagesLoaded] = React.useState(false);
+
+    React.useEffect(() => {
+        const preloadImages = async () => {
+            const promises = people.slice(0, 3).map(person => {
+                return new Promise<void>((resolve) => {
+                    const src = famousPeopleImages[person];
+                    if (!src) {
+                        resolve();
+                        return;
+                    }
+                    const img = new Image();
+                    img.src = src;
+                    img.onload = () => resolve();
+                    img.onerror = () => resolve(); // Resolve even on error to not block
+                });
+            });
+
+            await Promise.all(promises);
+            setImagesLoaded(true);
+        };
+
+        preloadImages();
+    }, [people.map(p => p).join(',')]); // Stable dependency
+
     return (
         <section className="container mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -100,7 +125,7 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.5, duration: 0.5 }}
-                                className="text-5xl font-oswald font-black text-slate-900 dark:text-white"
+                                className="text-5xl font-heading text-slate-900 dark:text-white"
                             >
                                 {confidenceScore}%
                             </motion.span>
@@ -128,36 +153,45 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
                     </div>
 
                     <div className="flex justify-center gap-4 md:gap-6 flex-wrap mb-8">
-                        {people.slice(0, 3).map((person, index) => (
-                            <motion.div
-                                key={person}
-                                initial={{ opacity: 0, y: 10 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.4 + (index * 0.1) }}
-                                className="flex flex-col items-center gap-3 group"
-                            >
-                                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-xl md:text-2xl font-bold text-slate-400 dark:text-slate-500 border-2 border-slate-100 dark:border-slate-700 shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300 group-hover:border-indigo-100 dark:group-hover:border-indigo-900 overflow-hidden relative">
-                                    {famousPeopleImages[person] ? (
-                                        <img
-                                            src={famousPeopleImages[person]}
-                                            alt={person}
-                                            className="w-full h-full object-cover object-top"
-                                            onError={(e) => {
-                                                e.currentTarget.style.display = 'none';
-                                                e.currentTarget.parentElement?.classList.add('fallback-initials');
-                                            }}
-                                        />
-                                    ) : null}
-                                    <span className={`absolute inset-0 flex items-center justify-center ${famousPeopleImages[person] ? 'opacity-0' : 'opacity-100'} fallback-text`}>
-                                        {person.charAt(0)}
+                        {imagesLoaded ? (
+                            people.slice(0, 3).map((person, index) => (
+                                <motion.div
+                                    key={person}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                    className="flex flex-col items-center gap-3 group"
+                                >
+                                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-xl md:text-2xl font-bold text-slate-400 dark:text-slate-500 border-2 border-slate-100 dark:border-slate-700 shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300 group-hover:border-indigo-100 dark:group-hover:border-indigo-900 overflow-hidden relative">
+                                        {famousPeopleImages[person] ? (
+                                            <img
+                                                src={famousPeopleImages[person]}
+                                                alt={person}
+                                                className="w-full h-full object-cover object-top"
+                                                onError={(e) => {
+                                                    e.currentTarget.style.display = 'none';
+                                                    e.currentTarget.parentElement?.classList.add('fallback-initials');
+                                                }}
+                                            />
+                                        ) : null}
+                                        <span className={`absolute inset-0 flex items-center justify-center ${famousPeopleImages[person] ? 'opacity-0' : 'opacity-100'} fallback-text`}>
+                                            {person.charAt(0)}
+                                        </span>
+                                    </div>
+                                    <span className="font-medium text-slate-700 dark:text-slate-300 text-xs md:text-sm text-center max-w-[100px] leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                        {person}
                                     </span>
+                                </motion.div>
+                            ))
+                        ) : (
+                            // Loading Skeletons
+                            Array(3).fill(0).map((_, i) => (
+                                <div key={i} className="flex flex-col items-center gap-3">
+                                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                                    <div className="h-4 w-20 bg-slate-100 dark:bg-slate-800 rounded animate-pulse" />
                                 </div>
-                                <span className="font-medium text-slate-700 dark:text-slate-300 text-xs md:text-sm text-center max-w-[100px] leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                                    {person}
-                                </span>
-                            </motion.div>
-                        ))}
+                            ))
+                        )}
                     </div>
 
                     <div className="px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-full">

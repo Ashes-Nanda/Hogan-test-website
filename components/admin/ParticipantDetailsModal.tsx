@@ -18,7 +18,7 @@ export const ParticipantDetailsModal: React.FC<ParticipantDetailsModalProps> = (
                             {user.name.charAt(0)}
                         </div>
                         <div>
-                            <h3 className="text-2xl font-oswald font-bold text-foreground">{user.name}</h3>
+                            <h3 className="text-2xl font-heading text-foreground">{user.name}</h3>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Mail size={14} /> {user.email}
                                 <span className="text-border mx-1">|</span>
@@ -50,7 +50,7 @@ export const ParticipantDetailsModal: React.FC<ParticipantDetailsModalProps> = (
                                     <div key={att.id} className="bg-card border border-border rounded-lg overflow-hidden shadow-sm group hover:shadow-md transition-all">
                                         <div className="bg-card px-6 py-4 border-b border-border flex justify-between items-center">
                                             <div className="flex items-center gap-3">
-                                                <span className="font-oswald font-bold text-lg text-foreground">Attempt #{att.number}</span>
+                                                <span className="font-heading text-lg text-foreground">Attempt #{att.number}</span>
                                                 {att.number === 1 && <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-sm border border-primary/20 uppercase tracking-wide">Official Record</span>}
                                             </div>
                                             <div className="flex items-center gap-4">
@@ -66,18 +66,18 @@ export const ParticipantDetailsModal: React.FC<ParticipantDetailsModalProps> = (
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                                                 <div className="bg-muted/30 p-4 rounded-lg border border-border/50">
                                                     <p className="text-[10px] text-muted-foreground uppercase font-bold mb-1">Archetype</p>
-                                                    <p className="font-oswald font-bold text-lg text-foreground">{att.result.profileTitle}</p>
+                                                    <p className="font-heading text-lg text-foreground">{att.result.profileTitle}</p>
                                                 </div>
                                                 <div className="bg-muted/30 p-4 rounded-lg border border-border/50">
                                                     <p className="text-[10px] text-muted-foreground uppercase font-bold mb-1">Leadership Potential</p>
                                                     <div className="flex items-end gap-2">
-                                                        <p className="font-oswald font-bold text-2xl text-foreground leading-none">{att.result.leadershipPotentialScore}</p>
+                                                        <p className="font-heading text-2xl text-foreground leading-none">{att.result.leadershipPotentialScore}</p>
                                                         <span className="text-xs text-muted-foreground mb-1">/ 100</span>
                                                     </div>
                                                 </div>
                                                 <div className="bg-muted/30 p-4 rounded-lg border border-border/50">
                                                     <p className="text-[10px] text-muted-foreground uppercase font-bold mb-1">Identified Risks</p>
-                                                    <p className="font-oswald font-bold text-lg text-foreground">{att.result.riskAnalysis.length > 0 ? `${att.result.riskAnalysis.length} Factors` : 'None'}</p>
+                                                    <p className="font-heading text-lg text-foreground">{att.result.riskAnalysis.length > 0 ? `${att.result.riskAnalysis.length} Factors` : 'None'}</p>
                                                 </div>
                                             </div>
 

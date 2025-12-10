@@ -46,7 +46,7 @@ export const AssessmentLandingPage: React.FC = () => {
                         <div className="bg-primary p-1.5 rounded-md">
                             <BrainCircuit size={24} className="text-primary-foreground" />
                         </div>
-                        <span className="font-oswald font-bold text-xl tracking-tight">CEREBRAL<span className="text-primary">Q</span></span>
+                        <span className="font-heading text-xl tracking-tight">CEREBRAL<span className="text-primary">Q</span></span>
                     </div>
                     <div className="text-sm font-medium text-muted-foreground">
                         Official Assessment Portal

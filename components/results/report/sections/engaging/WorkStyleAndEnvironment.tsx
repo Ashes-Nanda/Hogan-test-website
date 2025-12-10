@@ -70,23 +70,26 @@ export const WorkStyleAndEnvironment: React.FC<WorkStyleProps> = ({
             <div>
                 <SectionHeader title="Energisers & Drainers" subtitle="Managing your motivational battery." icon={Battery} />
 
-                <div className="mt-12 flex flex-col md:flex-row gap-8 items-stretch">
+                <div className="mt-12 flex flex-col md:flex-row gap-6 items-stretch">
                     {/* Energisers */}
                     <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        className="flex-1 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-3xl p-8 text-white shadow-xl"
+                        whileHover={{ y: -4 }}
+                        className="flex-1 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-8 shadow-sm hover:shadow-md transition-all"
                     >
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="p-3 bg-white/20 rounded-full backdrop-blur-md">
-                                <BatteryCharging size={32} className="text-white" />
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-3 bg-emerald-100 rounded-lg text-emerald-600">
+                                <BatteryCharging size={24} />
                             </div>
-                            <h3 className="text-2xl font-oswald font-bold">Energises You</h3>
+                            <div>
+                                <h3 className="text-xl font-heading text-emerald-800">Energises You</h3>
+                                <p className="text-xs font-bold uppercase tracking-wider text-emerald-600/70">Green Zone</p>
+                            </div>
                         </div>
                         <ul className="space-y-4">
                             {energyFlow.energisers.map((item, i) => (
-                                <li key={i} className="flex gap-3 items-center text-lg font-medium text-emerald-50">
-                                    <span className="w-2 h-2 rounded-full bg-white shrink-0" />
-                                    {item}
+                                <li key={i} className="flex gap-3 items-start text-emerald-900 font-medium">
+                                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                                    <span className="leading-relaxed">{item}</span>
                                 </li>
                             ))}
                         </ul>
@@ -94,20 +97,23 @@ export const WorkStyleAndEnvironment: React.FC<WorkStyleProps> = ({
 
                     {/* Drainers */}
                     <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        className="flex-1 bg-white border border-slate-200 rounded-3xl p-8 text-slate-800 shadow-xl"
+                        whileHover={{ y: -4 }}
+                        className="flex-1 rounded-xl border border-rose-200 bg-gradient-to-br from-rose-50 to-orange-50 p-8 shadow-sm hover:shadow-md transition-all"
                     >
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="p-3 bg-slate-100 rounded-full">
-                                <Battery size={32} className="text-slate-500" />
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-3 bg-rose-100 rounded-lg text-rose-600">
+                                <Battery size={24} />
                             </div>
-                            <h3 className="text-2xl font-oswald font-bold text-slate-700">Drains You</h3>
+                            <div>
+                                <h3 className="text-xl font-heading text-rose-800">Drains You</h3>
+                                <p className="text-xs font-bold uppercase tracking-wider text-rose-600/70">Red Zone</p>
+                            </div>
                         </div>
                         <ul className="space-y-4">
                             {energyFlow.drainers.map((item, i) => (
-                                <li key={i} className="flex gap-3 items-center text-lg font-medium text-slate-600">
-                                    <span className="w-2 h-2 rounded-full bg-slate-300 shrink-0" />
-                                    {item}
+                                <li key={i} className="flex gap-3 items-start text-rose-900 font-medium">
+                                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
+                                    <span className="leading-relaxed">{item}</span>
                                 </li>
                             ))}
                         </ul>
@@ -135,8 +141,8 @@ const WorkCard = ({ icon: Icon, title, text, color }: any) => {
             <div className={`w-12 h-12 rounded-xl ${colors.split(' ')[0]} ${colors.split(' ')[1]} flex items-center justify-center mb-4`}>
                 <Icon size={24} />
             </div>
-            <h4 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">{title}</h4>
-            <p className="font-oswald font-bold text-lg text-slate-800">{text}</p>
+            <h4 className="font-heading text-slate-800 text-lg mb-2">{title}</h4>
+            <p className="font-sans text-sm text-slate-600 leading-relaxed font-medium">{text}</p>
         </div>
     );
 };

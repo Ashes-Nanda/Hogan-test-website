@@ -68,7 +68,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                             <Briefcase size={24} />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-oswald font-bold text-slate-800">2A. Personality Traits (HPI)</h2>
+                            <h2 className="text-2xl font-heading text-slate-800">2A. Personality Traits (HPI)</h2>
                             <p className="text-slate-500">Your day-to-day behavioral tendencies in normal circumstances.</p>
                         </div>
                     </div>
@@ -83,6 +83,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                                     score={score.percentage}
                                     theme="blue"
                                     traitLabel={analysis?.traitLabel}
+                                    traitQuote={analysis?.traitQuote}
                                     interpretation={analysis?.interpretation || `Your score on ${name} suggests a specific behavioral pattern.`}
 
                                     // HPI Fields
@@ -109,7 +110,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                                 <AlertTriangle size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-oswald font-bold text-slate-800">2B. Risk Factors (HDS)</h2>
+                                <h2 className="text-2xl font-heading text-slate-800">2B. Risk Factors (HDS)</h2>
                                 <p className="text-slate-500">Behaviors that emerge under stress or pressure.</p>
                             </div>
                         </div>
@@ -123,6 +124,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                                         traitName={name}
                                         score={score.percentage}
                                         theme="orange"
+                                        traitQuote={analysis?.traitQuote}
                                         interpretation={analysis?.interpretation}
 
                                         // HDS Fields
@@ -151,7 +153,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                                 <Target size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-oswald font-bold text-slate-800">2C. Values & Drivers (MVPI)</h2>
+                                <h2 className="text-2xl font-heading text-slate-800">2C. Values & Drivers (MVPI)</h2>
                                 <p className="text-slate-500">The core values that drive your decisions and fit.</p>
                             </div>
                         </div>
@@ -165,10 +167,12 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                                         traitName={name}
                                         score={score.percentage}
                                         theme="green"
+                                        traitQuote={analysis?.traitQuote}
                                         interpretation={analysis?.interpretation}
 
                                         // MVPI Fields
-                                        drivers={analysis?.drivers}
+                                        // MVPI Fields
+                                        // drivers={analysis?.drivers} // Removed by user request
                                         workBehaviour={analysis?.workBehaviour}
                                         socialImpact={analysis?.socialImpact}
 
@@ -192,7 +196,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                                 <Brain size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-oswald font-bold text-slate-800">2D. Reasoning Style (HBRI)</h2>
+                                <h2 className="text-2xl font-heading text-slate-800">2D. Reasoning Style (HBRI)</h2>
                                 <p className="text-slate-500">How you process information and solve problems.</p>
                             </div>
                         </div>
@@ -206,6 +210,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                                         traitName={name}
                                         score={score.percentage}
                                         theme="purple"
+                                        traitQuote={analysis?.traitQuote}
                                         interpretation={analysis?.interpretation}
 
                                         // HBRI Fields

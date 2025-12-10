@@ -22,7 +22,7 @@ export const GrowthSection: React.FC<GrowthSectionProps> = ({ id, growthData }) 
 
             <div className="container relative z-10">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-4xl font-oswald font-bold mb-4">Your Growth Journey</h2>
+                    <h2 className="text-3xl md:text-4xl font-heading mb-4">Your Growth Journey</h2>
                     <p className="text-white/60 max-w-2xl mx-auto">A roadmap to unlocking your full leadership potential based on your unique profile.</p>
                 </div>
 

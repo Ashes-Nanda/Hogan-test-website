@@ -7,6 +7,7 @@ interface TraitAnalysisCardProps {
     score: number;
     theme: 'blue' | 'orange' | 'green' | 'purple';
     traitLabel?: string;
+    traitQuote?: string;
     definition?: string;
     interpretation?: string;
 
@@ -46,6 +47,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
     score,
     theme,
     traitLabel,
+    traitQuote,
     definition,
     interpretation = "Analysis pending...",
 
@@ -112,7 +114,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                     <div className="flex-1">
                         <div className="flex justify-between items-center mb-2">
                             <div className="flex items-center gap-2 flex-wrap">
-                                <h4 className="font-oswald font-bold text-lg text-slate-800">{traitName}</h4>
+                                <h4 className="font-heading text-lg text-slate-800">{traitName}</h4>
                                 {traitLabel && (
                                     <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
                                         {traitLabel}
@@ -120,6 +122,11 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                                 )}
                             </div>
                         </div>
+
+                        {/* Trait Quote */}
+                        {traitQuote && (
+                            <p className="text-sm text-slate-500 italic mb-3">"{traitQuote}"</p>
+                        )}
 
                         {/* Progress Bar & Score Row */}
                         <div className="flex items-center gap-3 md:gap-4">
@@ -155,6 +162,9 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                     >
                         <div className="p-4 md:p-5 border-t border-slate-100 space-y-6">
 
+                            {/* TRAIT QUOTE */}
+
+
                             {/* 1. CORE INTERPRETATION */}
                             <div className="flex gap-3">
                                 <Info className={`shrink-0 mt-1 ${themeConfig.icon}`} size={18} />
@@ -165,15 +175,13 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                             </div>
 
                             {/* 2. INNER / DRIVERS / THINKING */}
+                            {/* 2. INNER / DRIVERS / THINKING */}
                             {core && (
-                                <div className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex gap-3">
-                                    <core.icon className={`shrink-0 mt-1 ${theme === 'orange' ? 'text-orange-500' : 'text-slate-500'}`} size={18} />
-                                    <div>
-                                        <h5 className="text-sm font-bold uppercase tracking-wider mb-1 text-slate-700">
-                                            {core.label}
-                                        </h5>
-                                        <p className="text-sm text-slate-600">"{core.text}"</p>
-                                    </div>
+                                <div className="p-3 bg-slate-50 rounded-lg text-sm text-slate-700 flex gap-2 items-start">
+                                    <core.icon className={`shrink-0 mt-0.5 ${theme === 'orange' ? 'text-orange-500' : 'text-slate-500'}`} size={16} />
+                                    <span>
+                                        <strong>{core.label}:</strong> {core.text}
+                                    </span>
                                 </div>
                             )}
 
@@ -237,7 +245,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                                     <div className="p-3 bg-blue-50/50 rounded-lg text-sm text-slate-700 flex gap-2 items-start border border-blue-100">
                                         <Activity className="shrink-0 mt-0.5 text-blue-500" size={16} />
                                         <span>
-                                            <strong>{regulationStrategies ? "Regulation Strategy:" : "Trait Interaction:"}</strong> {traitInteractionInsight || regulationStrategies}
+                                            <strong>{regulationStrategies ? "Regulation Strategy:" : "How it affects you:"}</strong> {traitInteractionInsight || regulationStrategies}
                                         </span>
                                     </div>
                                 )}
@@ -247,7 +255,7 @@ export const TraitAnalysisCard: React.FC<TraitAnalysisCardProps> = ({
                                     <Zap className={`shrink-0 mt-0.5 ${themeConfig.icon}`} size={18} />
                                     <div>
                                         <h5 className={`text-sm font-bold uppercase tracking-wider mb-1 ${themeConfig.text}`}>Your next step</h5>
-                                        <p className="text-sm text-slate-700">"{microAction}"</p>
+                                        <p className="text-sm text-slate-700">{microAction}</p>
                                     </div>
                                 </div>
                             </div>

@@ -17,7 +17,7 @@ export const AccessRestricted: React.FC = () => {
 
                 {/* Content */}
                 <div className="space-y-4">
-                    <h1 className="text-2xl font-bold font-oswald tracking-tight">
+                    <h1 className="text-2xl font-heading tracking-tight">
                         There was an error signing in
                     </h1>
                     <p className="text-muted-foreground leading-relaxed">

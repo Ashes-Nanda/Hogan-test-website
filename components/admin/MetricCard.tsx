@@ -15,7 +15,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({ label, value, icon: Icon
             <div className="flex justify-between items-start z-10 relative">
                 <div>
                     <p className="text-xs font-montserrat font-semibold text-muted-foreground uppercase tracking-wider mb-2">{label}</p>
-                    <p className={`text-4xl font-oswald font-bold ${colorClass} tracking-tight`}>{value}</p>
+                    <p className={`text-4xl font-heading ${colorClass} tracking-tight`}>{value}</p>
                     {trend && <p className="text-[10px] text-muted-foreground mt-1">{trend}</p>}
                 </div>
                 <div className={`p-3 rounded-full bg-white/40 ${colorClass.replace('text-', 'bg-').replace('600', '100').replace('foreground', 'slate-200')} backdrop-blur-sm`}>

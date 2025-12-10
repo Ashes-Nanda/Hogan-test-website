@@ -21,7 +21,7 @@ export const DetailCard: React.FC<DetailCardProps> = ({ title, icon: Icon, theme
                 <div className={`p-2 bg-white rounded-lg shadow-sm ${themeColors.text}`}>
                     <Icon size={20} />
                 </div>
-                <h3 className={`font-oswald font-bold text-lg ${themeColors.text} uppercase`}>{title}</h3>
+                <h3 className={`font-heading text-lg ${themeColors.text} uppercase`}>{title}</h3>
             </div>
             <div className="p-5 flex-grow">
                 {children}

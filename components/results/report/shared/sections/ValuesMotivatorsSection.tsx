@@ -48,19 +48,19 @@ export const ValuesMotivatorSection: React.FC<ValuesMotivatorSectionProps> = ({ 
                 <div className="p-3 bg-pink-50 rounded-full text-pink-600">
                     <Heart size={28} />
                 </div>
-                <h2 className="text-3xl font-oswald font-bold text-foreground">Core Values & Drivers</h2>
+                <h2 className="text-3xl font-heading text-foreground">Core Values & Drivers</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
                 {valuesData ? (
-                    valuesData.analysis.slice(0, 3).map((val, idx) => (
+                    valuesData.analysis.slice(0, 4).map((val, idx) => (
                         <div key={idx} className="bg-white rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow group">
                             <div className="p-5 border-b border-border bg-gradient-to-r from-pink-50/50 to-rose-50/50">
                                 <div className="flex items-center gap-3 mb-2">
                                     <div className="w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center font-bold text-sm">
                                         {idx + 1}
                                     </div>
-                                    <h4 className="text-xl font-oswald font-bold text-slate-800">{val.valueName}</h4>
+                                    <h4 className="text-xl font-heading text-slate-800">{val.valueName}</h4>
                                 </div>
                                 <p className="text-sm font-medium text-pink-700">"{val.drivers}"</p>
                             </div>
@@ -121,31 +121,36 @@ export const ValuesMotivatorSection: React.FC<ValuesMotivatorSectionProps> = ({ 
                     <div className="p-3 bg-indigo-50 rounded-full text-indigo-600">
                         <TrendingUp size={28} />
                     </div>
-                    <h2 className="text-3xl font-oswald font-bold text-foreground">Key Motivators Summary</h2>
+                    <h2 className="text-3xl font-heading text-foreground">Key Motivators Summary</h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
                     {valuesData ? (
                         valuesData.summary.motivatorTags.map((motivator: any, idx) => {
                             const title = typeof motivator === 'string' ? motivator : motivator.tag;
                             const desc = typeof motivator === 'string' ? null : motivator.description;
 
                             return (
-                                <div key={idx} className="flex flex-col gap-2 p-4 bg-white rounded-xl shadow-sm border border-border hover:border-indigo-200 transition-colors">
-                                    <div className="flex items-center gap-3 mb-1">
-                                        <div className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold shrink-0">
+                                <div key={idx} className="flex flex-col gap-3 p-6 bg-gradient-to-br from-white to-indigo-50/30 rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all group">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-full bg-white border border-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold shadow-sm shrink-0 group-hover:scale-110 transition-transform">
                                             {idx + 1}
                                         </div>
-                                        <span className="font-bold text-indigo-700">{title}</span>
+                                        <span className="font-heading text-lg text-slate-800 tracking-wide">{title}</span>
                                     </div>
-                                    {desc && <p className="text-sm text-slate-600 pl-9">{desc}</p>}
+                                    {desc && <p className="text-sm text-slate-600 pl-11 leading-relaxed">{desc}</p>}
                                 </div>
                             );
                         })
                     ) : (
                         valuesAndMotivators.motivators.map((motivator, idx) => (
-                            <div key={idx} className="flex flex-col gap-2 p-4 bg-white rounded-xl shadow-sm border border-border">
-                                <span className="font-bold text-indigo-600">{motivator.title}</span>
-                                <span className="text-sm text-slate-600">{motivator.description}</span>
+                            <div key={idx} className="flex flex-col gap-3 p-6 bg-gradient-to-br from-white to-indigo-50/30 rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all group">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-white border border-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold shadow-sm shrink-0 group-hover:scale-110 transition-transform">
+                                        {idx + 1}
+                                    </div>
+                                    <span className="font-heading text-lg text-slate-800 tracking-wide">{motivator.title}</span>
+                                </div>
+                                <p className="text-sm text-slate-600 pl-11 leading-relaxed">{motivator.description}</p>
                             </div>
                         ))
                     )}

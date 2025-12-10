@@ -105,7 +105,7 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
                 <div className="bg-primary/10 p-1.5 rounded-md">
                   <BrainCircuit size={20} className="text-primary" />
                 </div>
-                <span className="font-oswald font-bold text-xl tracking-tight">CEREBRAL<span className="text-primary">Q</span></span>
+                <span className="font-heading text-xl tracking-tight">CEREBRAL<span className="text-primary">Q</span></span>
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-right hidden sm:block">
@@ -195,7 +195,7 @@ export const TestRunner: React.FC<Props> = ({ initialAnswers, onComplete }) => {
             className={`
               flex items-center gap-2 px-6 sm:px-8 py-2 rounded-md font-bold text-primary-foreground shadow-sm transition-all duration-200 transform
               ${!canProceed || isSubmitting
-                ? 'bg-muted text-muted-foreground cursor-not-allowed shadow-none'
+                ? 'bg-primary/50 cursor-not-allowed shadow-none'
                 : 'bg-primary hover:opacity-90 hover:-translate-y-1 active:translate-y-0'}
             `}
           >

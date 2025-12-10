@@ -254,7 +254,7 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
             <div className="bg-red-500/10 p-4 rounded-full mb-4">
               <Lock className="text-red-600" size={32} />
             </div>
-            <h1 className="text-2xl font-oswald font-bold text-foreground">Admin Access</h1>
+            <h1 className="text-2xl font-heading text-foreground">Admin Access</h1>
             <p className="text-muted-foreground text-sm mt-1">Authorized Personnel Only</p>
           </div>
 
@@ -314,7 +314,7 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <span className="text-2xl font-oswald font-bold text-primary tracking-tight">CEREBRAL<span className="text-foreground">Q</span></span>
+              <span className="text-2xl font-heading text-primary tracking-tight">CEREBRAL<span className="text-foreground">Q</span></span>
               <span className="ml-4 px-2 py-0.5 rounded-sm text-xs font-semibold bg-muted text-muted-foreground uppercase">Admin Console</span>
             </div>
             <div className="flex items-center gap-4">
@@ -341,7 +341,7 @@ export const AdminDashboard: React.FC<Props> = ({ onLogout }) => {
 
         {/* 2. Actions & Filters */}
         <div className="mb-6 flex justify-between items-end">
-          <h2 className="text-2xl font-oswald font-bold text-foreground">Participants <span className="text-muted-foreground font-normal text-lg ml-2">({totalCount})</span></h2>
+          <h2 className="text-2xl font-heading text-foreground">Participants <span className="text-muted-foreground font-normal text-lg ml-2">({totalCount})</span></h2>
 
           <button className="flex items-center gap-2 px-4 py-2 bg-foreground text-background rounded-md text-sm font-bold shadow-md hover:opacity-90 transition-all">
             <UserPlus size={16} /> Invite Employee

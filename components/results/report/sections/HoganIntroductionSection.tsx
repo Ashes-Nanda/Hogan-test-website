@@ -36,7 +36,7 @@ const SummaryCard = ({ title, icon: Icon, scores, theme, delay }: any) => {
                 <div className={`p-2 rounded-lg ${bgClass}`}>
                     <Icon size={20} />
                 </div>
-                <h3 className="font-oswald font-bold text-lg">{title}</h3>
+                <h3 className="font-heading text-lg">{title}</h3>
             </div>
 
             <div className="space-y-3">
@@ -157,7 +157,7 @@ export const HoganIntroductionSection: React.FC<HoganIntroductionSectionProps> =
                             className="w-full bg-gradient-to-r from-slate-50 to-white border border-slate-200 rounded-xl p-6 relative overflow-hidden"
                         >
                             <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500" />
-                            <h4 className="font-oswald font-bold text-slate-800 mb-2 flex items-center gap-2">
+                            <h4 className="font-heading text-slate-800 mb-2 flex items-center gap-2">
                                 <Target size={18} className="text-indigo-500" />
                                 What Stands Out Most
                             </h4>

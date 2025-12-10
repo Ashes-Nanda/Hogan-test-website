@@ -13,7 +13,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ summary, per
         <div className="bg-card rounded-2xl shadow-lg border border-border p-8 flex flex-col h-full">
             <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-primary/10 rounded-lg text-primary"><Briefcase size={24} /></div>
-                <h2 className="text-2xl font-oswald font-bold text-foreground uppercase">Executive Summary</h2>
+                <h2 className="text-2xl font-heading text-foreground uppercase">Executive Summary</h2>
             </div>
             <div className="prose prose-sm max-w-none text-muted-foreground leading-relaxed">
                 <p className="mb-4">

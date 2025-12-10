@@ -4,9 +4,10 @@ import { Quote, Sparkles } from 'lucide-react';
 
 interface HoganNarrativeSectionProps {
     narrative: string;
+    userName?: string;
 }
 
-export const HoganNarrativeSection: React.FC<HoganNarrativeSectionProps> = ({ narrative }) => {
+export const HoganNarrativeSection: React.FC<HoganNarrativeSectionProps> = ({ narrative, userName }) => {
     if (!narrative) return null;
 
     return (
@@ -22,7 +23,7 @@ export const HoganNarrativeSection: React.FC<HoganNarrativeSectionProps> = ({ na
                 {/* Decorative background blur (Glow effect) */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-indigo-500 to-violet-500 rounded-[2rem] opacity-20 group-hover:opacity-40 blur-xl transition-opacity duration-500" />
 
-                <div className="relative bg-white dark:bg-slate-900 rounded-[1.5rem] p-8 md:p-12 shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-800">
+                <div className="relative bg-white dark:bg-slate-900 rounded-[1.5rem] p-6 md:p-12 shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-800">
 
                     {/* Floating Decorative Elements */}
                     <motion.div
@@ -40,8 +41,8 @@ export const HoganNarrativeSection: React.FC<HoganNarrativeSectionProps> = ({ na
                             <div className="p-2.5 bg-purple-50 dark:bg-purple-900/30 rounded-xl text-purple-600 dark:text-purple-400">
                                 <Quote size={24} className="fill-current" />
                             </div>
-                            <h3 className="font-oswald font-bold text-lg text-slate-400 uppercase tracking-widest">
-                                Executive Profile
+                            <h3 className="font-heading text-lg text-slate-400 uppercase tracking-widest">
+                                {userName ? `${userName}'s ` : "Your "}Executive Profile
                             </h3>
                         </div>
 

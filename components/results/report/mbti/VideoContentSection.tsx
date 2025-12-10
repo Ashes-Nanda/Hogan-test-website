@@ -14,7 +14,7 @@ export const VideoContentSection: React.FC<{ personalityType: string }> = ({ per
                     </div>
                 </div>
                 <div className="flex flex-col justify-center">
-                    <h3 className="text-2xl font-bold font-oswald mb-4">Mastering Your Profile</h3>
+                    <h3 className="text-2xl font-heading mb-4">Mastering Your Profile</h3>
                     <p className="text-muted-foreground mb-6">Learn how to leverage your unique strengths and manage your risks in this deep-dive video analysis.</p>
                     <button className="self-start px-6 py-2 bg-primary text-primary-foreground rounded-lg font-bold">Watch Now</button>
                 </div>
