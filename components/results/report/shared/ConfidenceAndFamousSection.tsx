@@ -26,11 +26,11 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
         'Warren Buffett': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Warren_Buffett_KU_Visit.jpg/220px-Warren_Buffett_KU_Visit.jpg',
         'Barack Obama': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/220px-President_Barack_Obama.jpg',
         'Oprah Winfrey': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Oprah_in_2014.jpg/220px-Oprah_in_2014.jpg',
-        'Sheryl Sandberg': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Sheryl_Sandberg.jpg/220px-Sheryl_Sandberg.jpg',
-        'Satya Nadella': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/MS-Exec-Nadella-Satya-2017-08-31-22.jpg/220px-MS-Exec-Nadella-Satya-2017-08-31-22.jpg',
-        'Indra Nooyi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Indra_Nooyi_2018.jpg/220px-Indra_Nooyi_2018.jpg',
+        'Sheryl Sandberg': '/SherylSandberg.jpg',
+        'Satya Nadella': '/SatyaNadella.jpg',
+        'Indra Nooyi': '/IndraNooyi.jpg',
         'Napoleon Bonaparte': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg/220px-Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg',
-        'Angela Merkel': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Besuch_Bundeskanzlerin_Angela_Merkel_im_Landtag_Nordrhein-Westfalen-1658.jpg/220px-Besuch_Bundeskanzlerin_Angela_Merkel_im_Landtag_Nordrhein-Westfalen-1658.jpg',
+        'Angela Merkel': '/AngelaMerkel.jpg',
         'Tim Cook': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Tim_Cook_2009_cropped.jpg/220px-Tim_Cook_2009_cropped.jpg',
         'Queen Elizabeth II': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/220px-Queen_Elizabeth_II_in_March_2015.jpg',
         'Mahatma Gandhi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Mahatma-Gandhi-studio-1931.jpg/220px-Mahatma-Gandhi-studio-1931.jpg',
@@ -39,7 +39,9 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
         'Nelson Mandela': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Nelson_Mandela_1994.jpg/220px-Nelson_Mandela_1994.jpg',
         'Abraham Lincoln': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Abraham_Lincoln_O-77_matte_collodion_print.jpg/220px-Abraham_Lincoln_O-77_matte_collodion_print.jpg',
         'Margaret Thatcher': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Margaret_Thatcher.png/220px-Margaret_Thatcher.png',
-        'Richard Branson': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Richard_Branson_March_2015_%28cropped%29.jpg/220px-Richard_Branson_March_2015_%28cropped%29.jpg'
+        'Richard Branson': '/RichardBranson.jpg',
+        'Captain Sully': '/CaptainSully.jpg',
+        'Marie Curie': '/MarieCurie.jpg'
     };
 
     const getRandomPeople = (list: string[], count: number) => {

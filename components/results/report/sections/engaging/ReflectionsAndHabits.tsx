@@ -69,18 +69,65 @@ export const ReflectionsAndHabits: React.FC<ReflectionsProps> = ({
                         <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-20" />
                     </div>
 
-                    {/* Right Column: Abstract Visual Placeholder */}
-                    <div className="bg-slate-50 border border-slate-100 rounded-3xl h-[500px] flex items-center justify-center relative overflow-hidden">
-                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500 via-transparent to-transparent" />
+                    {/* Right Column: Mesh Gradient Blob Visual */}
+                    <div className="bg-white border border-slate-200 rounded-3xl h-[500px] flex items-center justify-center relative overflow-hidden group">
 
-                        {/* CSS Art: Growth Circles */}
-                        <div className="relative">
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border border-indigo-200 rounded-full opacity-20 animate-[spin_10s_linear_infinite]" />
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-indigo-300 rounded-full opacity-30 animate-[spin_15s_linear_infinite_reverse]" />
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-indigo-400 rounded-full opacity-40 animate-[spin_20s_linear_infinite]" />
+                        {/* Animated Gradient Blobs (Pastel Palette from IdentitySummary) */}
+                        <div className="absolute inset-0 bg-slate-50/50" />
+
+                        {/* Blue Blob (Matches 'Top Strength') */}
+                        <motion.div
+                            animate={{
+                                scale: [1, 1.2, 1],
+                                x: [0, 50, 0],
+                                y: [0, 30, 0]
+                            }}
+                            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-300/30 rounded-full blur-[100px]"
+                        />
+
+                        {/* Rose Blob (Matches 'Personality Word') */}
+                        <motion.div
+                            animate={{
+                                scale: [1, 1.1, 1],
+                                x: [0, -30, 0],
+                                y: [0, 50, 0]
+                            }}
+                            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                            className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-rose-300/20 rounded-full blur-[120px]"
+                        />
+
+                        {/* Amber Blob (Matches 'Core Value') */}
+                        <motion.div
+                            animate={{
+                                scale: [1, 1.3, 1],
+                                rotate: [0, 90, 0]
+                            }}
+                            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-amber-300/20 rounded-full blur-[80px]"
+                        />
+
+                        {/* Glassmorphism Card Content */}
+                        <div className="relative z-10 p-10 flex flex-col items-center text-center">
+                            <div className="w-20 h-20 rounded-2xl bg-white/40 backdrop-blur-md border border-white/50 shadow-lg flex items-center justify-center mb-6">
+                                <Repeat className="text-indigo-600" size={32} />
+                            </div>
+
+                            <h3 className="text-2xl font-serif text-slate-800 mb-2">Habit Flow</h3>
+                            <p className="text-slate-500 text-sm max-w-[250px] leading-relaxed">
+                                Consistently stacking small actions creates a powerful momentum in your life.
+                            </p>
+
+                            {/* Decorative Elements */}
+                            <div className="flex gap-2 mt-8">
+                                <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                                <span className="w-2 h-2 rounded-full bg-indigo-300" />
+                                <span className="w-2 h-2 rounded-full bg-indigo-200" />
+                            </div>
                         </div>
 
-                        <span className="text-slate-400 font-medium text-sm relative z-10">[Visualizing Growth]</span>
+                        {/* Overlay Texture */}
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 pointer-events-none mix-blend-overlay" />
                     </div>
                 </div>
             </div>
