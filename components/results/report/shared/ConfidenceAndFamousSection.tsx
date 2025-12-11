@@ -1,95 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 
-interface ConfidenceAndFamousSectionProps {
+interface ConfidenceAndWordsSectionProps {
     confidenceScore: number;
     reason?: string;
-    personalityType: string;
+    personalityWords?: string[];
 }
 
-export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProps> = ({ confidenceScore, reason, personalityType }) => {
-    const famousPeopleMapping: Record<string, string[]> = {
-        'Ambition': ['Napoleon Bonaparte', 'Sheryl Sandberg', 'Satya Nadella', 'Indra Nooyi', 'Jeff Bezos', 'Jack Ma', 'Margaret Thatcher'],
-        'Inquisitive': ['Elon Musk', 'Steve Jobs', 'Jeff Bezos', 'Marie Curie', 'Leonardo da Vinci', 'Thomas Edison', 'Ada Lovelace'],
-        'Prudence': ['Warren Buffett', 'Angela Merkel', 'Tim Cook', 'Queen Elizabeth II', 'George Washington', 'Dwight D. Eisenhower'],
-        'Interpersonal Sensitivity': ['Oprah Winfrey', 'Nelson Mandela', 'Mother Teresa', 'Princess Diana', 'Dalai Lama', 'Mahatma Gandhi'],
-        'Adjustment': ['Barack Obama', 'Captain Sully', 'Neil Armstrong', 'Winston Churchill', 'Franklin D. Roosevelt', 'Abraham Lincoln'],
-        'Sociability': ['Bill Clinton', 'Richard Branson', 'Will Smith', 'Ellen DeGeneres', 'Tony Robbins', 'Magic Johnson'],
-        'Learning Approach': ['Bill Gates', 'Albert Einstein', 'Isaac Newton', 'Charles Darwin', 'Stephen Hawking', 'Nikola Tesla']
-    };
+export const ConfidenceAndFamousSection: React.FC<ConfidenceAndWordsSectionProps> = ({ confidenceScore, reason, personalityWords = [] }) => {
 
-    const famousPeopleImages: Record<string, string> = {
-        'Elon Musk': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/220px-Elon_Musk_Royal_Society_%28crop2%29.jpg',
-        'Jeff Bezos': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg/220px-Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg',
-        'Steve Jobs': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg/220px-Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg',
-        'Bill Gates': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/220px-Bill_Gates_2017_%28cropped%29.jpg',
-        'Warren Buffett': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Warren_Buffett_KU_Visit.jpg/220px-Warren_Buffett_KU_Visit.jpg',
-        'Barack Obama': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/220px-President_Barack_Obama.jpg',
-        'Oprah Winfrey': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Oprah_in_2014.jpg/220px-Oprah_in_2014.jpg',
-        'Sheryl Sandberg': '/SherylSandberg.jpg',
-        'Satya Nadella': '/SatyaNadella.jpg',
-        'Indra Nooyi': '/IndraNooyi.jpg',
-        'Napoleon Bonaparte': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg/220px-Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg',
-        'Angela Merkel': '/AngelaMerkel.jpg',
-        'Tim Cook': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Tim_Cook_2009_cropped.jpg/220px-Tim_Cook_2009_cropped.jpg',
-        'Queen Elizabeth II': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/220px-Queen_Elizabeth_II_in_March_2015.jpg',
-        'Mahatma Gandhi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Mahatma-Gandhi-studio-1931.jpg/220px-Mahatma-Gandhi-studio-1931.jpg',
-        'Albert Einstein': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Albert_Einstein_Head.jpg/220px-Albert_Einstein_Head.jpg',
-        'Winston Churchill': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Sir_Winston_Churchill_-_19086236948.jpg/220px-Sir_Winston_Churchill_-_19086236948.jpg',
-        'Nelson Mandela': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Nelson_Mandela_1994.jpg/220px-Nelson_Mandela_1994.jpg',
-        'Abraham Lincoln': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Abraham_Lincoln_O-77_matte_collodion_print.jpg/220px-Abraham_Lincoln_O-77_matte_collodion_print.jpg',
-        'Margaret Thatcher': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Margaret_Thatcher.png/220px-Margaret_Thatcher.png',
-        'Richard Branson': '/RichardBranson.jpg',
-        'Captain Sully': '/CaptainSully.jpg',
-        'Marie Curie': '/MarieCurie.jpg'
-    };
-
-    const getRandomPeople = (list: string[], count: number) => {
-        const shuffled = [...list].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, count);
-    };
-
-    const getTraitForPerson = (name: string) => {
-        const entry = Object.entries(famousPeopleMapping).find(([_, people]) => people.includes(name));
-        return entry ? entry[0] : "Leadership";
-    };
-
-    // Find matching people or default to a mix of leaders
-    const matchedList = Object.entries(famousPeopleMapping).find(([key]) =>
-        personalityType.includes(key)
-    )?.[1];
-
-    const defaultPool = [
-        'Sheryl Sandberg', 'Satya Nadella', 'Elon Musk', 'Jeff Bezos', 'Oprah Winfrey',
-        'Barack Obama', 'Bill Gates', 'Warren Buffett', 'Steve Jobs', 'Indra Nooyi'
-    ];
-
-    const people = getRandomPeople(matchedList || defaultPool, 3);
-
-    const [imagesLoaded, setImagesLoaded] = React.useState(false);
-
-    React.useEffect(() => {
-        const preloadImages = async () => {
-            const promises = people.slice(0, 3).map(person => {
-                return new Promise<void>((resolve) => {
-                    const src = famousPeopleImages[person];
-                    if (!src) {
-                        resolve();
-                        return;
-                    }
-                    const img = new Image();
-                    img.src = src;
-                    img.onload = () => resolve();
-                    img.onerror = () => resolve(); // Resolve even on error to not block
-                });
-            });
-
-            await Promise.all(promises);
-            setImagesLoaded(true);
-        };
-
-        preloadImages();
-    }, [people.map(p => p).join(',')]); // Stable dependency
+    // Fallback words if none provided
+    const displayWords = personalityWords && personalityWords.length > 0
+        ? personalityWords
+        : ["Ambitious", "Strategic", "Thoughtful", "Driven", "Resilient"];
 
     return (
         <section className="container mx-auto">
@@ -100,7 +24,7 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 md:p-10 flex flex-col items-center justify-center relative overflow-hidden"
+                    className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 md:p-10 flex flex-col items-center relative overflow-hidden"
                 >
                     <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-400 to-emerald-600" />
 
@@ -109,105 +33,95 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
                         <span className="text-sm font-bold text-slate-500 uppercase tracking-wider">Confidence Score</span>
                     </div>
 
-                    <div className="relative w-40 h-40 shrink-0 flex items-center justify-center mb-8">
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
-                            <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-slate-100 dark:text-slate-800" />
-                            <motion.circle
-                                cx="80" cy="80" r="70"
-                                stroke="currentColor"
-                                strokeWidth="10"
-                                fill="transparent"
-                                strokeDasharray={439.82}
-                                initial={{ strokeDashoffset: 439.82 }}
-                                whileInView={{ strokeDashoffset: 439.82 * (1 - confidenceScore / 100) }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-                                className="text-emerald-500"
-                                strokeLinecap="round"
-                            />
-                        </svg>
-                        <div className="absolute flex flex-col items-center">
-                            <motion.span
-                                initial={{ opacity: 0, scale: 0.5 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.5, duration: 0.5 }}
-                                className="text-5xl font-heading text-slate-900 dark:text-white"
-                            >
-                                {confidenceScore}%
-                            </motion.span>
+                    <div className="flex-1 flex flex-col items-center justify-center w-full">
+                        <div className="relative w-40 h-40 shrink-0 flex items-center justify-center mb-8">
+                            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
+                                <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-slate-100 dark:text-slate-800" />
+                                <motion.circle
+                                    cx="80" cy="80" r="70"
+                                    stroke="currentColor"
+                                    strokeWidth="10"
+                                    fill="transparent"
+                                    strokeDasharray={439.82}
+                                    initial={{ strokeDashoffset: 439.82 }}
+                                    whileInView={{ strokeDashoffset: 439.82 * (1 - confidenceScore / 100) }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
+                                    className="text-emerald-500"
+                                    strokeLinecap="round"
+                                />
+                            </svg>
+                            <div className="absolute flex flex-col items-center">
+                                <motion.span
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.5, duration: 0.5 }}
+                                    className="text-5xl font-heading text-slate-900 dark:text-white"
+                                >
+                                    {confidenceScore}%
+                                </motion.span>
+                            </div>
                         </div>
-                    </div>
 
-                    <p className="text-center text-slate-600 dark:text-slate-400 text-sm max-w-xs leading-relaxed font-medium">
-                        This score reflects the consistency and clarity of your responses throughout the assessment.
-                    </p>
+                        <p className="text-center text-slate-600 dark:text-slate-400 text-sm max-w-xs leading-relaxed font-medium">
+                            This score reflects the consistency and clarity of your responses throughout the assessment.
+                        </p>
+                    </div>
                 </motion.div>
 
-                {/* You're in Good Company Card */}
+                {/* Personality in 5 Words Card */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 md:p-10 flex flex-col items-center justify-center relative overflow-hidden"
+                    className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 md:p-10 flex flex-col items-center relative overflow-hidden"
                 >
-                    <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-indigo-400 to-indigo-600" />
+                    <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-indigo-400 to-indigo-600 z-10" />
 
-                    <div className="mb-8 flex items-center gap-2">
+                    {/* Background decorations for visual appeal */}
+                    <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-50 dark:bg-indigo-900/10 rounded-full blur-3xl opacity-60 pointer-events-none" />
+                    <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-purple-50 dark:bg-purple-900/10 rounded-full blur-3xl opacity-60 pointer-events-none" />
+
+                    <div className="mb-8 flex items-center gap-2 relative z-10">
                         <div className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
-                        <span className="text-sm font-bold text-slate-500 uppercase tracking-wider">You're in Good Company</span>
+                        <span className="text-sm font-bold text-slate-500 uppercase tracking-wider">Your personality in 5 words</span>
                     </div>
 
-                    <div className="flex justify-center gap-4 md:gap-6 flex-wrap mb-8">
-                        {imagesLoaded ? (
-                            people.slice(0, 3).map((person, index) => (
-                                <motion.div
-                                    key={person}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: index * 0.1 }}
-                                    className="flex flex-col items-center gap-3 group"
-                                >
-                                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-xl md:text-2xl font-bold text-slate-400 dark:text-slate-500 border-2 border-slate-100 dark:border-slate-700 shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300 group-hover:border-indigo-100 dark:group-hover:border-indigo-900 overflow-hidden relative">
-                                        {famousPeopleImages[person] ? (
-                                            <img
-                                                src={famousPeopleImages[person]}
-                                                alt={person}
-                                                className="w-full h-full object-cover object-top"
-                                                onError={(e) => {
-                                                    e.currentTarget.style.display = 'none';
-                                                    e.currentTarget.parentElement?.classList.add('fallback-initials');
-                                                }}
-                                            />
-                                        ) : null}
-                                        <span className={`absolute inset-0 flex items-center justify-center ${famousPeopleImages[person] ? 'opacity-0' : 'opacity-100'} fallback-text`}>
-                                            {person.charAt(0)}
+                    <div className="flex-1 flex flex-col items-center justify-center w-full relative z-10 p-4">
+                        <div className="flex flex-wrap justify-center items-center content-center gap-6 w-full max-w-lg">
+                            {displayWords.map((word, index) => {
+                                // Cycle through 5 distinct color styles
+                                const styles = [
+                                    "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800",
+                                    "bg-purple-50 text-purple-700 border-purple-100 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800",
+                                    "bg-green-50 text-green-700 border-green-100 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800",
+                                    "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800",
+                                    "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-800"
+                                ];
+                                const style = styles[index % styles.length];
+
+                                // Fixed Symmetric Layout: No random rotations or margins
+                                return (
+                                    <motion.div
+                                        key={index}
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        whileInView={{ opacity: 1, scale: 1 }}
+                                        transition={{
+                                            delay: 0.2 + (index * 0.1),
+                                            type: "spring",
+                                            stiffness: 100
+                                        }}
+                                        className={`px-8 py-4 rounded-2xl border ${style} shadow-sm min-w-[140px] text-center backdrop-blur-sm hover:scale-105 transition-all duration-300 cursor-default`}
+                                    >
+                                        <span className="font-heading text-xl font-medium tracking-normal">
+                                            {word}
                                         </span>
-                                    </div>
-                                    <span className="font-heading font-medium text-slate-800 dark:text-slate-200 text-sm text-center max-w-[100px] leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                                        {person}
-                                    </span>
-                                    <span className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider border border-indigo-100">
-                                        {getTraitForPerson(person)}
-                                    </span>
-                                </motion.div>
-                            ))
-                        ) : (
-                            // Loading Skeletons
-                            Array(3).fill(0).map((_, i) => (
-                                <div key={i} className="flex flex-col items-center gap-3">
-                                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-slate-100 dark:bg-slate-800 animate-pulse" />
-                                    <div className="h-4 w-20 bg-slate-100 dark:bg-slate-800 rounded animate-pulse" />
-                                </div>
-                            ))
-                        )}
-                    </div>
-
-                    <div className="px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-full">
-                        <p className="text-xs font-medium text-indigo-600 dark:text-indigo-300">
-                            Leaders who share your {personalityType.split(' ')[0]} traits
-                        </p>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
                     </div>
                 </motion.div>
             </div>

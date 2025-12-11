@@ -237,6 +237,7 @@ export const HoganReportContentSchema = z.object({
 export const Part1_CoreSchema = z.object({
     hero: HeroSectionSchema,
     traitSummary: TraitSummarySchema,
+    personalityWords: z.array(z.string()).length(5).describe("5 distinct adjectives capturing the user's essence."),
 });
 
 export const Part2_AnalysisSchema = z.object({
@@ -258,7 +259,6 @@ export const Part3_ApplicationSchema = z.object({
     energy: EnergySchema,
 
     topTakeaways: TopTakeawaysSchema,
-    personalityWords: z.array(z.string()).length(5),
 
     // Include legacy fields here as they fit "application/summary"
     confidenceScoreReason: z.string().nullable(),

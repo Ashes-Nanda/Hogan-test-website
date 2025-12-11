@@ -6,6 +6,7 @@ import { AssessmentFlow } from './components/AssessmentFlow';
 import { AuthPage } from './components/auth/AuthPage';
 import { AssessmentLandingPage } from './components/AssessmentLandingPage';
 import { AccessRestricted } from './components/auth/AccessRestricted';
+import { MockReportPage } from './components/MockReportPage';
 import { Footer } from './components/ui/Footer';
 
 const App: React.FC = () => {
@@ -24,6 +25,9 @@ const App: React.FC = () => {
 
                     {/* Access Restricted Route */}
                     <Route path="/access-restricted" element={<AccessRestricted />} />
+
+                    {/* Mock Report Route - Public for Demo */}
+                    <Route path="/mock-report" element={<MockReportPage />} />
 
                     {/* Protected Admin Route - Dashboard handles its own auth check now */}
                     <Route

@@ -48,7 +48,7 @@ export async function generateHoganReportAI(
             model: "gpt-4o-2024-08-06",
             messages: [
                 { role: "system", content: HOGAN_SYSTEM_PROMPT },
-                { role: "user", content: `${userContext}\n\nTASK: Generate PART 1 - Core Identity & Trait Summary.` }
+                { role: "user", content: `${userContext}\n\nTASK: Generate PART 1 - Core Identity, Trait Summary, and 5 Personality Words.` }
             ],
             response_format: zodResponseFormat(Part1_CoreSchema, "part1_core"),
         }).then(res => {

@@ -44,17 +44,26 @@ import {
 
 import { generateHoganPDF } from "@/lib/generate-hogan-pdf";
 
+import { HoganReportContent } from "@/lib/ai/report-schema";
+
 interface HoganReportFullProps {
   resultData: HoganResultData;
   isPaidUser?: boolean;
   userEmail?: string;
   userId?: string;
+  initialAiContent?: HoganReportContent;
 }
 
-export default function HoganReportFull({ resultData, isPaidUser = false, userEmail, userId }: HoganReportFullProps) {
-  // State for AI Content
-  const [aiContent, setAiContent] = React.useState<any>(null);
-  const [isGenerating, setIsGenerating] = React.useState(true);
+export default function HoganReportFull({
+  resultData,
+  isPaidUser = false,
+  userEmail,
+  userId,
+  initialAiContent
+}: HoganReportFullProps) {
+  // State for AI Content - Initialize with initialAiContent if provided
+  const [aiContent, setAiContent] = React.useState<any>(initialAiContent || null);
+  const [isGenerating, setIsGenerating] = React.useState(!initialAiContent);
   const [isSidebarExpanded, setIsSidebarExpanded] = React.useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
 
@@ -62,7 +71,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
   React.useEffect(() => {
     async function fetchAI() {
       // Avoid re-fetching if already present (or check if cached)
-      if (aiContent) {
+      if (aiContent || initialAiContent) {
         setIsGenerating(false);
         return;
       }
@@ -318,7 +327,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
               <ConfidenceAndFamousSection
                 confidenceScore={confidenceScore.score}
                 reason={confidenceScore.reason}
-                personalityType={resultData.hoganProfile}
+                personalityWords={aiContent?.personalityWords}
               />
             )}
           </div>
@@ -429,7 +438,7 @@ export default function HoganReportFull({ resultData, isPaidUser = false, userEm
                 id="identity-summary-reputation-inner"
                 sectionNumber={9}
                 showTakeaways={false}
-                showWords={true}
+                showWords={false}
                 showSocial={true}
                 personalityWords={aiContent?.personalityWords}
                 socialExperience={aiContent?.socialExperience}

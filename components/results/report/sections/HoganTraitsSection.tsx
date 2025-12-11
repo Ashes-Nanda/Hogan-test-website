@@ -37,17 +37,20 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
     // Helper to find analysis for a trait
     const getAnalysis = (list: any[] | undefined, name: string) => {
         if (!list || !name) return undefined;
-        const searchName = name.toLowerCase();
+
+        // Normalize the search name: remove spaces and lowercase
+        const normalize = (str: string) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const searchName = normalize(name);
 
         return list.find((item: any) => {
-            const trait = item.traitName?.toLowerCase();
-            const value = item.valueName?.toLowerCase(); // MVPI
-            const style = item.styleName?.toLowerCase(); // HBRI
+            const trait = item.traitName ? normalize(item.traitName) : '';
+            const value = item.valueName ? normalize(item.valueName) : ''; // MVPI
+            const style = item.styleName ? normalize(item.styleName) : ''; // HBRI
 
             return (
-                (trait && (trait === searchName || trait.includes(searchName) || searchName.includes(trait))) ||
-                (value && (value === searchName || value.includes(searchName) || searchName.includes(value))) ||
-                (style && (style === searchName || style.includes(searchName) || searchName.includes(style)))
+                (trait && trait === searchName) ||
+                (value && value === searchName) ||
+                (style && style === searchName)
             );
         });
     };
@@ -76,6 +79,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                         {Object.entries(hpiScores as Record<string, any>).map(([name, score]) => {
                             const analysis = getAnalysis(hpiAnalysis, name);
+                            if (!analysis) return null;
                             return (
                                 <TraitAnalysisCard
                                     key={name}
@@ -118,6 +122,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                             {Object.entries(hdsScores as Record<string, any>).map(([name, score]) => {
                                 const analysis = getAnalysis(hdsAnalysis, name);
+                                if (!analysis) return null;
                                 return (
                                     <TraitAnalysisCard
                                         key={name}
@@ -161,6 +166,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                             {Object.entries(mvpiScores as Record<string, any>).map(([name, score]) => {
                                 const analysis = getAnalysis(mvpiAnalysis, name); // Might match valueName
+                                if (!analysis) return null;
                                 return (
                                     <TraitAnalysisCard
                                         key={name}
@@ -204,6 +210,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                             {Object.entries(hbriScores as Record<string, any>).map(([name, score]) => {
                                 const analysis = getAnalysis(hbriAnalysis, name); // Matches styleName
+                                if (!analysis) return null;
                                 return (
                                     <TraitAnalysisCard
                                         key={name}
