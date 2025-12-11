@@ -76,7 +76,7 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
             {/* Section 8: Top 5 Takeaways */}
             {showTakeaways && (
                 <div>
-                    <SectionHeader title="Identity" subtitle="The most defining insights from your profile." icon={Star} />
+                    <SectionHeader title="Key Takeaways" subtitle="The most defining insights from your profile." icon={Star} />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-8">
                         {[
                             { label: "Top Strength", data: normalizeTakeaway(takeaways.highestHPI), color: "bg-blue-100 text-blue-700 border-blue-200" },

@@ -26,7 +26,7 @@ function cn(...classes: (string | undefined | null | false)[]) {
 
 const SECTIONS = [
     { id: "hero", label: "Overview", icon: LayoutDashboard },
-    { id: "identity-summary-takeaways", label: "Identity", icon: Fingerprint },
+    { id: "identity-summary-takeaways", label: "Key Takeaways", icon: Fingerprint },
     { id: "trait-summary", label: "Trait Summary", icon: BarChart2 },
     { id: "explore-traits", label: "Trait Analysis", icon: Search },
     { id: "personal-examples", label: "Strengths & Risks", icon: Zap },
@@ -126,7 +126,7 @@ export const ReportSidebar: React.FC<ReportSidebarProps> = ({
                 <div className={cn("h-full flex flex-col", isExpanded ? "w-[260px]" : "w-[80px]")}> {/* Fixed width inner container */}
                     {/* Header / Brand area with Toggle */}
                     <div className={cn(
-                        "pt-20 pb-4 flex items-center border-b border-gray-50/50 relative shrink-0 transition-all duration-300",
+                        "pt-[70px] pb-4 flex items-center border-b border-gray-50/50 relative shrink-0 transition-all duration-300",
                         isExpanded ? "w-full justify-between px-5" : "w-[80px] justify-center"
                     )}>
                         {/* Spacer to push toggle to right or just empty if we want it centered? 
