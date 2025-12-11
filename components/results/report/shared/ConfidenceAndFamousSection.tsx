@@ -49,6 +49,11 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
         return shuffled.slice(0, count);
     };
 
+    const getTraitForPerson = (name: string) => {
+        const entry = Object.entries(famousPeopleMapping).find(([_, people]) => people.includes(name));
+        return entry ? entry[0] : "Leadership";
+    };
+
     // Find matching people or default to a mix of leaders
     const matchedList = Object.entries(famousPeopleMapping).find(([key]) =>
         personalityType.includes(key)
@@ -134,8 +139,8 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
                         </div>
                     </div>
 
-                    <p className="text-center text-slate-600 dark:text-slate-400 text-sm max-w-xs leading-relaxed">
-                        {reason || "High consistency in responses indicates reliable results."}
+                    <p className="text-center text-slate-600 dark:text-slate-400 text-sm max-w-xs leading-relaxed font-medium">
+                        This score reflects the consistency and clarity of your responses throughout the assessment.
                     </p>
                 </motion.div>
 
@@ -180,8 +185,11 @@ export const ConfidenceAndFamousSection: React.FC<ConfidenceAndFamousSectionProp
                                             {person.charAt(0)}
                                         </span>
                                     </div>
-                                    <span className="font-medium text-slate-700 dark:text-slate-300 text-xs md:text-sm text-center max-w-[100px] leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                    <span className="font-heading font-medium text-slate-800 dark:text-slate-200 text-sm text-center max-w-[100px] leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                                         {person}
+                                    </span>
+                                    <span className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider border border-indigo-100">
+                                        {getTraitForPerson(person)}
                                     </span>
                                 </motion.div>
                             ))

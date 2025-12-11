@@ -31,7 +31,7 @@ export const PersonalExamplesSection: React.FC<PersonalExamplesSectionProps> = (
     return (
         <section className="bg-gradient-to-b from-white to-slate-50 py-20 border-y border-border break-inside-avoid">
             <div className="container">
-                <SectionHeader title="Personal Examples" subtitle="Real-world scenarios where your traits shine or shadow." icon={Lightbulb} />
+                <SectionHeader title="Strengths & Risks" subtitle="Real-world scenarios where your traits shine or shadow." icon={Lightbulb} />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Superpowers */}

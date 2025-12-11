@@ -76,7 +76,7 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
             {/* Section 8: Top 5 Takeaways */}
             {showTakeaways && (
                 <div>
-                    <SectionHeader title="Your Top 5 Takeaways" subtitle="The most defining insights from your profile." icon={Star} />
+                    <SectionHeader title="Identity" subtitle="The most defining insights from your profile." icon={Star} />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-8">
                         {[
                             { label: "Top Strength", data: normalizeTakeaway(takeaways.highestHPI), color: "bg-blue-100 text-blue-700 border-blue-200" },
@@ -94,7 +94,7 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
                             >
                                 <span className="text-xs font-medium uppercase tracking-wider opacity-70">{item.label}</span>
                                 <div className="flex flex-col">
-                                    <span className="font-heading text-xl leading-tight mb-1">
+                                    <span className={`font-heading leading-tight mb-1 break-words hyphens-auto ${item.data.name.length > 13 ? 'text-lg' : 'text-xl'}`}>
                                         {item.data.name}
                                     </span>
                                     <span className="font-montserrat font-medium text-sm opacity-90 leading-tight">
@@ -152,7 +152,7 @@ export const IdentitySummary: React.FC<IdentitySummaryProps> = ({
             {/* Section 11: How Others Experience You */}
             {showSocial && (
                 <div>
-                    <SectionHeader title="How Others Experience You" subtitle="A mirror to your social impact." icon={Eye} />
+                    <SectionHeader title="Reputation" subtitle="A mirror to your social impact." icon={Eye} />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
                         {/* At Your Best */}
                         <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-8 relative overflow-hidden">

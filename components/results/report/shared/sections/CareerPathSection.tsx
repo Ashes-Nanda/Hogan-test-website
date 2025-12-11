@@ -59,7 +59,7 @@ export const CareerPathSection: React.FC<CareerPathSectionProps> = ({ career, ca
     return (
         <section id="career-path" className="bg-slate-50/50 py-24 border-y border-border break-before-page overflow-hidden">
             <div className="container">
-                <SectionHeader title="Career & Relationships" subtitle="Professional trajectory and interpersonal dynamics." icon={Briefcase} />
+                <SectionHeader title="Career Path" subtitle="Professional trajectory and interpersonal dynamics." icon={Briefcase} />
 
                 <motion.div
                     variants={containerVariants}
@@ -79,7 +79,7 @@ export const CareerPathSection: React.FC<CareerPathSectionProps> = ({ career, ca
                                 <h3 className="font-heading text-lg mb-4 flex items-center gap-2 text-slate-800 z-10 w-full">
                                     <Activity className="text-primary" size={20} /> Leadership Style
                                 </h3>
-                                <div className="w-full h-[280px] relative z-10">
+                                <div className="w-full h-[360px] relative z-10">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
                                             <PolarGrid stroke="#e2e8f0" />

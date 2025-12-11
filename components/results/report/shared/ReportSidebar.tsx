@@ -28,15 +28,15 @@ const SECTIONS = [
     { id: "hero", label: "Overview", icon: LayoutDashboard },
     { id: "identity-summary-takeaways", label: "Identity", icon: Fingerprint },
     { id: "trait-summary", label: "Trait Summary", icon: BarChart2 },
-    { id: "explore-traits", label: "Deep Dive", icon: Search },
-    { id: "personal-examples", label: "Strengths", icon: Zap },
-    { id: "values-motivators", label: "Values", icon: Heart },
-    { id: "career-path", label: "Career", icon: Briefcase },
+    { id: "explore-traits", label: "Trait Analysis", icon: Search },
+    { id: "personal-examples", label: "Strengths & Risks", icon: Zap },
+    { id: "values-motivators", label: "Core Values", icon: Heart },
+    { id: "career-path", label: "Career Path", icon: Briefcase },
     { id: "relationships", label: "Relationships", icon: Users },
-    { id: "growth-journey", label: "Growth", icon: TrendingUp },
+    { id: "growth-journey", label: "Growth Journey", icon: TrendingUp },
     { id: "identity-summary-reputation", label: "Reputation", icon: Star },
     { id: "work-style", label: "Work Style", icon: Monitor },
-    { id: "reflections-habits", label: "Habits", icon: Repeat },
+    { id: "reflections-habits", label: "Habits & Reflections", icon: Repeat },
 ];
 
 export interface ReportSidebarProps {
@@ -45,13 +45,18 @@ export interface ReportSidebarProps {
     // Mobile props
     isOpenMobile?: boolean;
     onCloseMobile?: () => void;
+    // Identity props
+    title?: string;
+    firstname?: string;
 }
 
 export const ReportSidebar: React.FC<ReportSidebarProps> = ({
     isExpanded,
     onToggle,
     isOpenMobile = false,
-    onCloseMobile
+    onCloseMobile,
+    title,
+    firstname
 }) => {
     const [activeSection, setActiveSection] = useState("hero");
 
@@ -107,51 +112,71 @@ export const ReportSidebar: React.FC<ReportSidebarProps> = ({
             <motion.aside
                 initial={false}
                 animate={{
-                    width: isExpanded ? 240 : 80,
+                    width: isExpanded ? 260 : 80, // Slightly wider to fit title
                     x: isOpenMobile ? 0 : 0
                 }}
                 className={cn(
                     // Desktop styles
-                    "h-screen sticky top-0 left-0 bg-white border-r border-gray-100 flex-shrink-0 overflow-hidden",
+                    "h-screen sticky top-0 left-0 bg-white border-r border-gray-100 flex-shrink-0 overflow-hidden z-[50]",
                     // Mobile styles overrides
                     "md:block", // Always block on MD
                     isOpenMobile ? "fixed inset-y-0 left-0 z-[70] block shadow-2xl" : "hidden" // Fixed overlay on mobile if open, else hidden
                 )}
             >
-                <div className="h-full flex flex-col w-[240px]"> {/* Fixed width inner container */}
+                <div className={cn("h-full flex flex-col", isExpanded ? "w-[260px]" : "w-[80px]")}> {/* Fixed width inner container */}
                     {/* Header / Brand area with Toggle */}
                     <div className={cn(
-                        "h-20 flex items-center border-b border-gray-50/50 relative shrink-0 transition-all duration-300",
-                        isExpanded ? "w-full justify-between px-4" : "w-[80px] justify-center"
+                        "h-24 flex items-center border-b border-gray-50/50 relative shrink-0 transition-all duration-300",
+                        isExpanded ? "w-full justify-between px-5" : "w-[80px] justify-center"
                     )}>
-                        {/* Mobile Close Button */}
-                        <button
-                            onClick={onCloseMobile}
-                            className="md:hidden p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
-                        >
-                            <Menu size={20} className="rotate-45" /> {/* Using rotate-45 Menu as X or import X */}
-                        </button>
+                        {/* Identity Title Area (Only when Expanded) */}
+                        <AnimatePresence>
+                            {isExpanded && (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="flex flex-col pr-2 overflow-hidden"
+                                >
+                                    <h2 className="font-heading font-bold text-lg text-slate-900 leading-tight line-clamp-2">
+                                        {title || "Your Report"}
+                                    </h2>
+                                    {firstname && (
+                                        <p className="text-[10px] uppercase tracking-wider font-semibold text-indigo-500 mt-1">
+                                            Prepared exclusively for {firstname}
+                                        </p>
+                                    )}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
-                        {/* Desktop Toggle Button */}
-                        <button
-                            onClick={onToggle}
-                            className={cn(
-                                "hidden md:flex items-center gap-2 text-gray-400 hover:text-gray-600 transition-colors bg-transparent border-0 p-2 rounded-md hover:bg-gray-50",
-                            )}
-                            title={isExpanded ? "Collapse" : "Expand"}
-                        >
-                            {isExpanded ? (
-                                <>
-                                    <span className="text-xs font-medium uppercase tracking-wider">Collapse</span>
+                        <div className="flex items-center gap-2">
+                            {/* Mobile Close Button */}
+                            <button
+                                onClick={onCloseMobile}
+                                className="md:hidden p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+                            >
+                                <Menu size={20} className="rotate-45" /> {/* Using rotate-45 Menu as X or import X */}
+                            </button>
+
+                            {/* Desktop Toggle Button */}
+                            <button
+                                onClick={onToggle}
+                                className={cn(
+                                    "hidden md:flex items-center gap-2 text-gray-400 hover:text-gray-600 transition-colors bg-transparent border-0 p-2 rounded-md hover:bg-gray-50",
+                                )}
+                                title={isExpanded ? "Collapse" : "Expand"}
+                            >
+                                {isExpanded ? (
                                     <ChevronLeft size={16} />
-                                </>
-                            ) : (
-                                <div className="flex flex-col items-center gap-0.5">
-                                    <ChevronRight size={20} className="text-gray-500" />
-                                    <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Expand</span>
-                                </div>
-                            )}
-                        </button>
+                                ) : (
+                                    <div className="flex flex-col items-center gap-0.5">
+                                        <ChevronRight size={20} className="text-gray-500" />
+                                        <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Expand</span>
+                                    </div>
+                                )}
+                            </button>
+                        </div>
                     </div>
 
                     <div className="flex-1 flex flex-col gap-1 py-6 px-3 overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>

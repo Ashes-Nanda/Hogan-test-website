@@ -55,7 +55,7 @@ export const HoganTraitsSection: React.FC<HoganTraitsSectionProps> = ({
     return (
         <section id={id} className="container py-12">
             <SectionHeader
-                title="Detailed Trait Analysis"
+                title="Trait Analysis"
                 subtitle="In-depth breakdown of your behavioural patterns across three key dimensions."
                 icon={Activity}
             />

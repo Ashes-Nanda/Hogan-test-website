@@ -1,6 +1,8 @@
 import React from 'react';
 import { Heart, TrendingUp } from 'lucide-react';
 
+import { SectionHeader } from '@/components/ui/SectionHeader';
+
 interface ValuesData {
     summary: {
         summaryParagraph: string;
@@ -44,12 +46,7 @@ export const ValuesMotivatorSection: React.FC<ValuesMotivatorSectionProps> = ({ 
                 </div>
             )}
 
-            <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 bg-pink-50 rounded-full text-pink-600">
-                    <Heart size={28} />
-                </div>
-                <h2 className="text-3xl font-heading text-foreground">Core Values & Drivers</h2>
-            </div>
+            <SectionHeader title="Core Values" subtitle="The core values that drive your decisions and fit." icon={Heart} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
                 {valuesData ? (
@@ -62,19 +59,23 @@ export const ValuesMotivatorSection: React.FC<ValuesMotivatorSectionProps> = ({ 
                                     </div>
                                     <h4 className="text-xl font-heading text-slate-800">{val.valueName}</h4>
                                 </div>
-                                <p className="text-sm font-medium text-pink-700">"{val.drivers}"</p>
+                                {/* Quote Section - Fixed Height */}
+                                <div className="min-h-[60px] flex items-center">
+                                    <p className="text-sm font-medium text-pink-700">{val.drivers}</p>
+                                </div>
                             </div>
 
-                            <div className="p-5 space-y-4">
-                                <div>
+                            <div className="p-5 space-y-2">
+                                {/* At Work Section - Fixed Height */}
+                                <div className="min-h-[140px]">
                                     <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">At Work</h5>
-                                    <p className="text-sm text-slate-600 leading-relaxed">{val.workBehaviour}</p>
+                                    <p className="text-sm text-slate-600 leading-snug">{val.workBehaviour}</p>
                                 </div>
 
                                 {(val.strengthSituations && val.strengthSituations.length > 0) && (
-                                    <div>
+                                    <div className="min-h-[120px]">
                                         <h5 className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-1">Thrives In</h5>
-                                        <ul className="list-disc list-inside text-sm text-slate-600 pl-1">
+                                        <ul className="list-disc list-inside text-sm text-slate-600 pl-1 leading-snug">
                                             {val.strengthSituations.slice(0, 2).map((s: string, i: number) => (
                                                 <li key={i}>{s}</li>
                                             ))}
@@ -83,9 +84,9 @@ export const ValuesMotivatorSection: React.FC<ValuesMotivatorSectionProps> = ({ 
                                 )}
 
                                 {(val.tensionSituations && val.tensionSituations.length > 0) && (
-                                    <div>
+                                    <div className="min-h-[120px]">
                                         <h5 className="text-xs font-bold uppercase tracking-wider text-amber-600 mb-1">Tension When</h5>
-                                        <ul className="list-disc list-inside text-sm text-slate-600 pl-1">
+                                        <ul className="list-disc list-inside text-sm text-slate-600 pl-1 leading-snug">
                                             {val.tensionSituations.slice(0, 2).map((s: string, i: number) => (
                                                 <li key={i}>{s}</li>
                                             ))}

@@ -45,7 +45,7 @@ export const WorkStyleAndEnvironment: React.FC<WorkStyleProps> = ({
 
             {/* Section 10: How You Work Best */}
             <div>
-                <SectionHeader title="How You Work Best" subtitle="Optimizing your environment for peak performance." icon={Layout} />
+                <SectionHeader title="Work Style" subtitle="Optimizing your environment for peak performance." icon={Layout} />
 
                 <div className="flex flex-wrap justify-center gap-6 mt-12">
                     <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
