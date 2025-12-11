@@ -126,29 +126,14 @@ export const ReportSidebar: React.FC<ReportSidebarProps> = ({
                 <div className={cn("h-full flex flex-col", isExpanded ? "w-[260px]" : "w-[80px]")}> {/* Fixed width inner container */}
                     {/* Header / Brand area with Toggle */}
                     <div className={cn(
-                        "h-24 flex items-center border-b border-gray-50/50 relative shrink-0 transition-all duration-300",
+                        "pt-20 pb-4 flex items-center border-b border-gray-50/50 relative shrink-0 transition-all duration-300",
                         isExpanded ? "w-full justify-between px-5" : "w-[80px] justify-center"
                     )}>
-                        {/* Identity Title Area (Only when Expanded) */}
-                        <AnimatePresence>
-                            {isExpanded && (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    className="flex flex-col pr-2 overflow-hidden"
-                                >
-                                    <h2 className="font-heading font-bold text-lg text-slate-900 leading-tight line-clamp-2">
-                                        {title || "Your Report"}
-                                    </h2>
-                                    {firstname && (
-                                        <p className="text-[10px] uppercase tracking-wider font-semibold text-indigo-500 mt-1">
-                                            Prepared exclusively for {firstname}
-                                        </p>
-                                    )}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                        {/* Spacer to push toggle to right or just empty if we want it centered? 
+                            Actually user wants "Collapse" beside arrow. 
+                            If we remove the title, we have space. 
+                        */}
+                        <div className="flex-1" /> {/* Spacer */}
 
                         <div className="flex items-center gap-2">
                             {/* Mobile Close Button */}
@@ -163,12 +148,15 @@ export const ReportSidebar: React.FC<ReportSidebarProps> = ({
                             <button
                                 onClick={onToggle}
                                 className={cn(
-                                    "hidden md:flex items-center gap-2 text-gray-400 hover:text-gray-600 transition-colors bg-transparent border-0 p-2 rounded-md hover:bg-gray-50",
+                                    "hidden md:flex items-center gap-2 text-gray-400 hover:text-gray-600 transition-colors bg-white border-transparent outline-none ring-0 focus:outline-none focus:ring-0 p-2 rounded-md hover:bg-gray-50",
                                 )}
                                 title={isExpanded ? "Collapse" : "Expand"}
                             >
                                 {isExpanded ? (
-                                    <ChevronLeft size={16} />
+                                    <>
+                                        <span className="text-sm font-medium uppercase tracking-wide text-gray-400">Collapse</span>
+                                        <ChevronLeft size={16} />
+                                    </>
                                 ) : (
                                     <div className="flex flex-col items-center gap-0.5">
                                         <ChevronRight size={20} className="text-gray-500" />
@@ -179,7 +167,7 @@ export const ReportSidebar: React.FC<ReportSidebarProps> = ({
                         </div>
                     </div>
 
-                    <div className="flex-1 flex flex-col gap-1 py-6 px-3 overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                    <div className="flex-1 flex flex-col gap-1 py-1 px-3 overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                         {SECTIONS.map((section) => {
                             const isActive = activeSection === section.id;
                             const Icon = section.icon;
@@ -189,7 +177,7 @@ export const ReportSidebar: React.FC<ReportSidebarProps> = ({
                                     key={section.id}
                                     onClick={() => scrollToSection(section.id)}
                                     className={cn(
-                                        "relative group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full",
+                                        "relative group flex items-center gap-3 p-2.5 rounded-xl transition-all duration-200 w-full",
                                         isActive
                                             ? "bg-indigo-50 text-indigo-700 font-medium"
                                             : "hover:bg-gray-50 text-gray-500 hover:text-gray-900"
@@ -258,7 +246,7 @@ export const ReportSidebar: React.FC<ReportSidebarProps> = ({
                         })}
                     </div>
                 </div>
-            </motion.aside>
+            </motion.aside >
         </>
     );
 };

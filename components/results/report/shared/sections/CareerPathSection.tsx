@@ -73,15 +73,15 @@ export const CareerPathSection: React.FC<CareerPathSectionProps> = ({ career, ca
                         variants={itemVariants}
                         className="col-span-1 lg:col-span-2 bg-white border border-slate-200 rounded-3xl p-8 shadow-sm hover:shadow-xl hover:shadow-indigo-50/50 transition-all duration-300 group"
                     >
-                        <div className="flex flex-col md:flex-row gap-10 items-center">
+                        <div className="flex flex-col md:flex-row gap-10 items-stretch">
                             {/* Chart Side */}
                             <div className="w-full md:w-1/3 flex flex-col items-center justify-center bg-slate-50 rounded-2xl p-6 border border-slate-100 relative">
                                 <h3 className="font-heading text-lg mb-4 flex items-center gap-2 text-slate-800 z-10 w-full">
                                     <Activity className="text-primary" size={20} /> Leadership Style
                                 </h3>
-                                <div className="w-full h-[360px] relative z-10">
+                                <div className="w-full flex-grow min-h-[360px] relative z-10">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
+                                        <RadarChart cx="45%" cy="50%" outerRadius="60%" data={radarData}>
                                             <PolarGrid stroke="#e2e8f0" />
                                             <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: '#64748b', fontWeight: 600 }} />
                                             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
